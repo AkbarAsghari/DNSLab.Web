@@ -28,19 +28,18 @@
                             @foreach (var item in sectionItem.Features.OrderBy(x => x.Order))
                             {
                                 <MudPaper Class="mb-2 pa-2" Outlined>
-                                    <MudStack Row AlignItems="AlignItems.Baseline" Justify="Justify.SpaceBetween" Spacing="10">
+                                    <MudStack Row AlignItems="AlignItems.Baseline" Justify="Justify.SpaceBetween" Spacing="5">
 
                                         <MudText>@item.Name</MudText>
 
-                                        <MudStack Justify="Justify.SpaceAround">
+                                        <MudStack Justify="Justify.SpaceAround" AlignItems="AlignItems.Center">
                                             @switch (item.Type)
                                             {
                                                 case Enums.FeatureTypeEnum.Toggle:
                                                     if (item.Pricing != null)
                                                     {
-                                                        <MudStack Row AlignItems="AlignItems.Center">
-                                                            <MudText Typo="Typo.caption">فعال سازی @((item.Pricing.ActivationPrice ?? 0).Separate3Digits()) ریال</MudText>
-                                                            <MudSwitch Color="Color.Primary" T="bool" ValueChanged="(x)=> ToggleFeatureChanged(item, x)" />
+                                                        <MudStack AlignItems="AlignItems.Center" Spacing="1" Justify="Justify.FlexStart">
+                                                            <MudSwitch Color="Color.Primary" T="bool" ValueChanged="(x)=> ToggleFeatureChanged(item, x)" Label="@($"فعال سازی {(item.Pricing.ActivationPrice ?? 0).Separate3Digits()} ریال")" />
                                                         </MudStack>
 
                                                     }
@@ -56,13 +55,12 @@
                                                     {
                                                         <MudStack Row AlignItems="AlignItems.Center">
                                                             <MudStack Spacing="0">
-                                                                <MudText Typo="Typo.caption">هر @item.Unit?.Name @((item.Pricing.UnitPrice ?? 0).Separate3Digits()) ریال</MudText>
+                                                                <MudNumericField Variant="Variant.Outlined" Margin="Margin.Dense" T="int" Label="@($"هر {item.Unit?.Name} {(item.Pricing.UnitPrice ?? 0).Separate3Digits()} ریال")" Min="item.Pricing.FreeCount??0" Value="@(_ActiveBundle.Features.FirstOrDefault(x=>x.Id == item.Id) == null ? (item.Pricing.FreeCount??0) : _ActiveBundle.Features.FirstOrDefault(x=>x.Id == item.Id)!.RequestCount!.Value)" ValueChanged="(x)=> CountableFeatureChanged(item,x)" />
                                                                 @if (item.Pricing.FreeCount != null && item.Pricing.FreeCount > 0)
                                                                 {
                                                                     <MudText Typo="Typo.caption">@item.Pricing.FreeCount @item.Unit?.Name رایگان میباشد</MudText>
                                                                 }
                                                             </MudStack>
-                                                            <MudNumericField Variant="Variant.Outlined" Margin="Margin.Dense" T="int" Min="item.Pricing.FreeCount??0" Value="@(_ActiveBundle.Features.FirstOrDefault(x=>x.Id == item.Id) == null ? (item.Pricing.FreeCount??0) : _ActiveBundle.Features.FirstOrDefault(x=>x.Id == item.Id)!.RequestCount!.Value)" ValueChanged="(x)=> CountableFeatureChanged(item,x)" />
                                                         </MudStack>
                                                     }
                                                     else

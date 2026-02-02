@@ -31,6 +31,10 @@
     text-align: left !important;
 }
 
+.mud-switch-label-medium {
+    font-size: inherit !important
+}
+
 /* Typewriter effect 1 */
 @keyframes typing {
     0.0000%, 27.3488% {

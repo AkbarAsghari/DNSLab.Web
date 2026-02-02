@@ -56,10 +56,10 @@
                                                     {
                                                         <MudStack Row AlignItems="AlignItems.Center">
                                                             <MudStack Spacing="0">
-                                                                <MudText Typo="Typo.caption">هر عدد @((item.Pricing.UnitPrice ?? 0).Separate3Digits()) ریال</MudText>
+                                                                <MudText Typo="Typo.caption">هر @item.Unit?.Name @((item.Pricing.UnitPrice ?? 0).Separate3Digits()) ریال</MudText>
                                                                 @if (item.Pricing.FreeCount != null && item.Pricing.FreeCount > 0)
                                                                 {
-                                                                    <MudText Typo="Typo.caption">@item.Pricing.FreeCount عدد رایگان میباشد</MudText>
+                                                                    <MudText Typo="Typo.caption">@item.Pricing.FreeCount @item.Unit?.Name رایگان میباشد</MudText>
                                                                 }
                                                             </MudStack>
                                                             <MudNumericField Variant="Variant.Outlined" Margin="Margin.Dense" T="int" Min="item.Pricing.FreeCount??0" Value="@(_ActiveBundle.Features.FirstOrDefault(x=>x.Id == item.Id) == null ? (item.Pricing.FreeCount??0) : _ActiveBundle.Features.FirstOrDefault(x=>x.Id == item.Id)!.RequestCount!.Value)" ValueChanged="(x)=> CountableFeatureChanged(item,x)" />

@@ -87,11 +87,9 @@
                         <TemplateColumn>
                             <CellTemplate>
                                 <MudStack Row Justify="Justify.FlexEnd" Spacing="1">
-                                    <AuthorizeView Roles="@($"{AuthorizeRoles.Admin},{AuthorizeRoles.Development}")" Context="authCTX">
-                                        <MudTooltip Arrow Text="ویرایش رکورد ها">
-                                            <BaseIconButton Href="@(AllRoutes.AllRecords+"/"+context.Item.Id)" DropShadow="false" Size="Size.Small" Variant="Variant.Filled" Icon="@DNSLabIcons.Edit" />
-                                        </MudTooltip>
-                                    </AuthorizeView>
+                                    <MudTooltip Arrow Text="ویرایش رکورد ها">
+                                        <BaseIconButton Href="@(AllRoutes.AllRecords+"/"+context.Item.Id)" DropShadow="false" Size="Size.Small" Variant="Variant.Filled" Icon="@DNSLabIcons.Edit" />
+                                    </MudTooltip>
                                     <BaseIconButton OnClick="()=> DisableZone(context.Item)" DropShadow="false" Size="Size.Small" Variant="Variant.Filled" Icon="@(context.Item.Disable? Icons.Material.Filled.ToggleOn : Icons.Material.Outlined.ToggleOff)" />
                                     <BaseIconButton OnClick="()=>  DeleteZone(context.Item)" DropShadow="false" Color="Color.Error" Size="Size.Small" Variant="Variant.Filled" Icon="@DNSLabIcons.Delete" />
                                 </MudStack>

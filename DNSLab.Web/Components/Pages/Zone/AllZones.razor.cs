@@ -1,6 +1,7 @@
 ﻿
 using DNSLab.Web.Components.Dialogs;
 using DNSLab.Web.Components.Dialogs.Zone;
+using DNSLab.Web.DTOs.Repositories.Record;
 using DNSLab.Web.DTOs.Repositories.Zone;
 using DNSLab.Web.Interfaces.Repositories;
 using DNSLab.Web.Repositories;
@@ -25,22 +26,26 @@ namespace DNSLab.Web.Components.Pages.Zone
             _IsSubscribeThisFeature = await _SubscriptionRepository.CheckSbscriptionFeature(Enums.FeatureEnum.PrivateZone);
         }
 
-        protected override async Task OnAfterRenderAsync(bool firstRender)
+        MudDataGrid<ZoneDTO> _Grid {  get; set; }
+
+        private async Task<GridData<ZoneDTO>> ServerReload(GridState<ZoneDTO> state)
         {
-            if (firstRender)
+            IEnumerable<ZoneDTO>? data = await _ZoneRepository.GetZones();
+
+            if (data is null)
             {
-                _IsLoading = true;
-
-                _Zones = await _ZoneRepository.GetZones();
-
-                _IsLoading = false;
-                await InvokeAsync(() => StateHasChanged());
+                return new GridData<ZoneDTO>();
             }
-        }
 
-        Task Refresh()
-        {
-            return OnAfterRenderAsync(true);
+            var totalItems = data.Count();
+
+            var pagedData = data.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
+
+            return new GridData<ZoneDTO>
+            {
+                TotalItems = totalItems,
+                Items = pagedData
+            };
         }
 
         async Task NewZone()
@@ -51,7 +56,7 @@ namespace DNSLab.Web.Components.Pages.Zone
             var result = await dialog.Result;
             if (!result!.Canceled)
             {
-                await Refresh();
+                await _Grid.ReloadServerData();
             }
         }
 
@@ -72,7 +77,7 @@ namespace DNSLab.Web.Components.Pages.Zone
             {
                 if (await _ZoneRepository.DeleteZone(zone.Id))
                 {
-                    await Refresh();
+                    await _Grid.ReloadServerData();
                 }
             }
         }

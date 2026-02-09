@@ -72,7 +72,7 @@
             </MudAlert>
         }
 
-        <MudDataGrid T="BaseRecordDTO" Items="_Records?.OrderBy(x=>x.Name)" Dense Hover Elevation="0" Loading="_IsLoading">
+        <MudDataGrid @ref="_Grid" T="BaseRecordDTO" ServerData="ServerReload" ExpandSingleRow Dense Hover Elevation="0" Filterable="false">
             <NoRecordsContent>
                 <NoRecordFound />
             </NoRecordsContent>

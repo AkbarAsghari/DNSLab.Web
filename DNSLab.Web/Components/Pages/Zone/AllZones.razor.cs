@@ -17,8 +17,6 @@ namespace DNSLab.Web.Components.Pages.Zone
         [Inject] IDialogService _DialogService { get; set; }
         [Inject] IBudleRepository _SubscriptionRepository { get; set; }
 
-        IEnumerable<ZoneDTO>? _Zones { get; set; }
-        bool _IsLoading = false;
         bool? _IsSubscribeThisFeature { get; set; } = null;
 
         protected override async Task OnInitializedAsync()
@@ -47,6 +45,8 @@ namespace DNSLab.Web.Components.Pages.Zone
                 Items = pagedData
             };
         }
+
+        async Task Refresh() => await _Grid.ReloadServerData();
 
         async Task NewZone()
         {

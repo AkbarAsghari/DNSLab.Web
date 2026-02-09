@@ -17,37 +17,46 @@ partial class AllRecords
     [Parameter] public Guid ZoneId { get; set; }
 
     ZoneDTO? _Zone { get; set; }
-    IEnumerable<BaseRecordDTO>? _Records { get; set; }
     IEnumerable<string>? _RequiredToUpdateNameServers { get; set; }
 
-    bool _IsLoading = true;
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            _IsLoading = true;
-
             _Zone = await _ZoneRepository.GetZone(ZoneId);
-            _Records = await _RecordRepository.GetRecords(ZoneId);
+            await CheckNameServers();
 
-            _IsLoading = false;
-            await InvokeAsync(() => StateHasChanged());
+            await InvokeAsync(StateHasChanged);
         }
     }
 
-    protected override async Task OnInitializedAsync()
+    MudDataGrid<BaseRecordDTO> _Grid { get; set; }
+    private async Task<GridData<BaseRecordDTO>> ServerReload(GridState<BaseRecordDTO> state)
     {
-        await CheckNameServers();
+        IEnumerable<BaseRecordDTO>? data = await _RecordRepository.GetRecords(ZoneId);
+
+        if (data is null)
+        {
+            return new GridData<BaseRecordDTO>();
+        }
+
+        var totalItems = data.Count();
+
+        var pagedData = data.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
+
+        return new GridData<BaseRecordDTO>
+        {
+            TotalItems = totalItems,
+            Items = pagedData
+        };
     }
+
+    async Task Refresh() => await _Grid.ReloadServerData();
+
 
     async Task CheckNameServers()
     {
         _RequiredToUpdateNameServers = await _ZoneRepository.GetRequiredToUpdateNameServers(ZoneId);
-    }
-
-    Task Refresh()
-    {
-        return OnAfterRenderAsync(true);
     }
 
     async Task DisableRecord(BaseRecordDTO record)
@@ -97,7 +106,7 @@ partial class AllRecords
         {
             if (await _RecordRepository.DeleteRecord(record.Type, record.Id))
             {
-                await Refresh();
+                await _Grid.ReloadServerData();
             }
         }
     }
@@ -112,7 +121,7 @@ partial class AllRecords
         var result = await dialog.Result;
         if (!result!.Canceled)
         {
-            await Refresh();
+            await _Grid.ReloadServerData();
         }
     }
 
@@ -126,7 +135,7 @@ partial class AllRecords
         var result = await dialog.Result;
         if (!result!.Canceled)
         {
-            await Refresh();
+            await _Grid.ReloadServerData();
         }
     }
 }

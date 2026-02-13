@@ -135,6 +135,9 @@
                     </CellTemplate>
                 </TemplateColumn>
             </Columns>
+            <PagerContent>
+                <MudDataGridPager T="BaseRecordDTO" RowsPerPageString="تعداد ردیف در هر صفحه" InfoFormat="{first_item}-{last_item} از {all_items}" />
+            </PagerContent>
         </MudDataGrid>
     </MudCardContent>
 </MudCard>

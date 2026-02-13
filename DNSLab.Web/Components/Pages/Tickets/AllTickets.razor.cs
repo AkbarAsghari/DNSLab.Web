@@ -2,6 +2,7 @@
 using DNSLab.Web.Components.Dialogs.Ticket;
 using DNSLab.Web.DTOs.Repositories.Record;
 using DNSLab.Web.DTOs.Repositories.Ticket;
+using DNSLab.Web.DTOs.Repositories.Zone;
 using DNSLab.Web.Enums;
 using DNSLab.Web.Interfaces.Repositories;
 using DNSLab.Web.Repositories;
@@ -12,23 +13,26 @@ namespace DNSLab.Web.Components.Pages.Tickets;
 partial class AllTickets
 {
     [Inject] ITicketRepository _TicketRepository { get; set; }
-    [Inject] IDialogService _DialogService { get; set; }
 
-    IEnumerable<TicketDTO>? _Tickets { get; set; }
-
-    bool _IsLoading = true;
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    private async Task<GridData<TicketDTO>> ServerReload(GridState<TicketDTO> state)
     {
-        if (firstRender)
+        IEnumerable<TicketDTO> ? data = await _TicketRepository.GetAllTickets();
+
+
+        if (data is null)
         {
-            _IsLoading = true;
-
-            _Tickets = await _TicketRepository.GetAllTickets();
-
-            _IsLoading = false;
-            await InvokeAsync(() => StateHasChanged());
+            return new GridData<TicketDTO>();
         }
+
+        var totalItems = data.Count();
+
+        var pagedData = data.OrderByDescending(x => x.UpdateDate ?? x.CreateDate).Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
+
+        return new GridData<TicketDTO>
+        {
+            TotalItems = totalItems,
+            Items = pagedData
+        };
     }
 
     async Task OnStatusChanged(TicketDTO ticket, TicketStatusEnum status)

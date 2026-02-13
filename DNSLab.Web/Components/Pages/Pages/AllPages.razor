@@ -14,7 +14,7 @@
         </CardHeaderActions>
     </MudCardHeader>
     <MudCardContent>
-        <MudDataGrid T="PageInfoDTO" Items="_Pages?.OrderByDescending(x=>x.UpdateDate?? x.CreateDate)" Loading="_IsLoading" Dense Hover Elevation="0" HorizontalScrollbar>
+        <MudDataGrid T="PageInfoDTO" ServerData="ServerReload" ExpandSingleRow Dense Hover Elevation="0" Filterable="false" SortMode="SortMode.None">
             <NoRecordsContent>
                 <NoRecordFound />
             </NoRecordsContent>
@@ -58,6 +58,9 @@
                     </CellTemplate>
                 </TemplateColumn>
             </Columns>
+            <PagerContent>
+                <MudDataGridPager T="PageInfoDTO" RowsPerPageString="تعداد ردیف در هر صفحه" InfoFormat="{first_item}-{last_item} از {all_items}" />
+            </PagerContent>
         </MudDataGrid>
     </MudCardContent>
 </MudCard>

@@ -8,7 +8,7 @@
 
 <MudCard Elevation="0">
     <MudCardContent>
-        <MudDataGrid T="TicketDTO" Items="_Tickets?.OrderByDescending(x=>x.CreateDate)" Dense Hover Elevation="0" Loading="_IsLoading">
+        <MudDataGrid T="TicketDTO" ServerData="ServerReload" ExpandSingleRow Dense Hover Elevation="0" Filterable="false" SortMode="SortMode.None">
             <NoRecordsContent>
                 <NoRecordFound />
             </NoRecordsContent>
@@ -37,6 +37,9 @@
                     </CellTemplate>
                 </TemplateColumn>
             </Columns>
+            <PagerContent>
+                <MudDataGridPager T="TicketDTO" RowsPerPageString="تعداد ردیف در هر صفحه" InfoFormat="{first_item}-{last_item} از {all_items}" />
+            </PagerContent>
         </MudDataGrid>
     </MudCardContent>
 </MudCard>

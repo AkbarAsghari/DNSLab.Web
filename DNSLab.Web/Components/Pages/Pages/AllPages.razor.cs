@@ -1,5 +1,6 @@
 ﻿using DNSLab.Web.Components.Dialogs;
 using DNSLab.Web.DTOs.Repositories.Page;
+using DNSLab.Web.DTOs.Repositories.Ticket;
 using DNSLab.Web.Interfaces.Repositories;
 using DNSLab.Web.Repositories;
 using Microsoft.AspNetCore.Components;
@@ -11,20 +12,26 @@ partial class AllPages
     [Inject] IPageRepository _PageRepository { get; set; }
     [Inject] IDialogService _DialogService { get; set; }
 
-    IEnumerable<PageInfoDTO>? _Pages { get; set; }
-    bool _IsLoading = false;
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    MudDataGrid<PageInfoDTO> _Grid;
+    private async Task<GridData<PageInfoDTO>> ServerReload(GridState<PageInfoDTO> state)
     {
-        if (firstRender)
+        IEnumerable<PageInfoDTO>? data = await _PageRepository.GetAllPages();
+
+
+        if (data is null)
         {
-            _IsLoading = true;
-
-            _Pages = await _PageRepository.GetAllPages();
-
-            _IsLoading = false;
-            await InvokeAsync(() => StateHasChanged());
+            return new GridData<PageInfoDTO>();
         }
+
+        var totalItems = data.Count();
+
+        var pagedData = data.OrderByDescending(x => x.UpdateDate ?? x.CreateDate).Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
+
+        return new GridData<PageInfoDTO>
+        {
+            TotalItems = totalItems,
+            Items = pagedData
+        };
     }
 
     async Task DeletePage(PageInfoDTO page)
@@ -44,7 +51,7 @@ partial class AllPages
         {
             if (await _PageRepository.DeletePage(page.Id))
             {
-                await OnAfterRenderAsync(true);
+                await _Grid.ReloadServerData();
             }
         }
     }

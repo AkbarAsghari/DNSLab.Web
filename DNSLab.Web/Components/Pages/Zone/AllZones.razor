@@ -5,11 +5,20 @@
 @attribute [Authorize]
 <SeoProvider Title="دامنه ها" />
 
+
+<MudText Typo="Typo.h1" Align="Align.Center">دامنه ها</MudText>
+<MudText Class="mt-5 mb-10" Align="Align.Center">
+    برای مدیریت DNS های دامنه شخصی خودتان میتوانید دامنه خود را در این صفحه تعریف نمایید.
+    <MudFlexBreak />
+    توجه کنید که بعد از تعریف رکورد حتما نِیم سرور (Name Server) های دامنه خود را به jupiter.ns.dnslab.link ویرایش نمایید.
+    <MudFlexBreak/>
+    شما می‌توانید در این بخش دامنه اختصاصی خود را اضافه کنید و رکوردهای را از منوی Dynamic DNS با این دامنه تنظیم نمایید.
+</MudText>
+
+
 <MudCard Elevation="0">
     <MudCardHeader>
-        <CardHeaderContent>
-            <MudText Typo="Typo.h5">دامنه ها</MudText>
-        </CardHeaderContent>
+        <CardHeaderContent/>
         <CardHeaderActions>
             @if (_IsSubscribeThisFeature == true)
             {
@@ -20,12 +29,6 @@
     <MudCardContent>
         @if (_IsSubscribeThisFeature != null)
         {
-            <MudAlert Class="mb-2" Severity="Severity.Info" Dense ContentAlignment="HorizontalAlignment.Start">
-                <MudText Typo="Typo.body2">شما می‌توانید در این بخش دامنه اختصاصی خود را اضافه کنید و رکوردهای Dynamic DNS را با این دامنه تنظیم نمایید.</MudText>
-            </MudAlert>
-            <MudAlert Class="mb-2" Severity="Severity.Warning" Dense ContentAlignment="HorizontalAlignment.Start">
-                <MudText Typo="Typo.body2">توجه کنید که بعد از تعریف رکورد حتما نِیم سرور (Name Server) های دامنه خود را به jupiter.ns.dnslab.link ویرایش نمایید.</MudText>
-            </MudAlert>
             <MudOverlay Visible="_IsSubscribeThisFeature == false" DarkBackground="true" LockScroll Absolute="true" Style="height:100vh">
                 <MudContainer>
                     <MudText Color="MudBlazor.Color.Warning">اشتراک فعلی شما این قابلیت را پوشش نمیدهد لطفا اشتراک تهیه فرمایید</MudText>
@@ -96,6 +99,9 @@
                             </CellTemplate>
                         </TemplateColumn>
                     </Columns>
+                    <PagerContent>
+                        <MudDataGridPager T="ZoneDTO" RowsPerPageString="تعداد ردیف در هر صفحه" InfoFormat="{first_item}-{last_item} از {all_items}" />
+                    </PagerContent>
                 </MudDataGrid>
             }
         }

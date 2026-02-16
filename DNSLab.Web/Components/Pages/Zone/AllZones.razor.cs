@@ -17,13 +17,6 @@ namespace DNSLab.Web.Components.Pages.Zone
         [Inject] IDialogService _DialogService { get; set; }
         [Inject] IBudleRepository _SubscriptionRepository { get; set; }
 
-        bool? _IsSubscribeThisFeature { get; set; } = null;
-
-        protected override async Task OnInitializedAsync()
-        {
-            _IsSubscribeThisFeature = await _SubscriptionRepository.CheckSbscriptionFeature(Enums.FeatureEnum.PrivateZone);
-        }
-
         MudDataGrid<ZoneDTO> _Grid {  get; set; }
 
         private async Task<GridData<ZoneDTO>> ServerReload(GridState<ZoneDTO> state)

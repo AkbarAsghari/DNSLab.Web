@@ -11,100 +11,83 @@
     برای مدیریت DNS های دامنه شخصی خودتان میتوانید دامنه خود را در این صفحه تعریف نمایید.
     <MudFlexBreak />
     توجه کنید که بعد از تعریف رکورد حتما نِیم سرور (Name Server) های دامنه خود را به jupiter.ns.dnslab.link ویرایش نمایید.
-    <MudFlexBreak/>
+    <MudFlexBreak />
     شما می‌توانید در این بخش دامنه اختصاصی خود را اضافه کنید و رکوردهای را از منوی Dynamic DNS با این دامنه تنظیم نمایید.
 </MudText>
 
 
 <MudCard Elevation="0">
     <MudCardHeader>
-        <CardHeaderContent/>
+        <CardHeaderContent />
         <CardHeaderActions>
-            @if (_IsSubscribeThisFeature == true)
-            {
-                <MudButton Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" OnClick="NewZone" EndIcon="@DNSLabIcons.Add">افزودن دامنه</MudButton>
-            }
+            <MudButton Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" OnClick="NewZone" EndIcon="@DNSLabIcons.Add">افزودن دامنه</MudButton>
         </CardHeaderActions>
     </MudCardHeader>
     <MudCardContent>
-        @if (_IsSubscribeThisFeature != null)
-        {
-            <MudOverlay Visible="_IsSubscribeThisFeature == false" DarkBackground="true" LockScroll Absolute="true" Style="height:100vh">
-                <MudContainer>
-                    <MudText Color="MudBlazor.Color.Warning">اشتراک فعلی شما این قابلیت را پوشش نمیدهد لطفا اشتراک تهیه فرمایید</MudText>
-                    <MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="MudBlazor.Color.Primary" EndIcon="@DNSLabIcons.Subscriptions" Href="@AllRoutes.Bundle">تهیه اشتراک</MudButton>
-                </MudContainer>
-            </MudOverlay>
-
-            @if (_IsSubscribeThisFeature == true)
-            {
-                <MudDataGrid @ref="_Grid" T="ZoneDTO" ServerData="ServerReload" ExpandSingleRow Dense Hover Elevation="0" Filterable="false">
-                    <NoRecordsContent>
-                        <NoRecordFound />
-                    </NoRecordsContent>
-                    <Columns>
-                        <PropertyColumn Property="x=>x.Name" Title="دامنه" />
-                        <TemplateColumn Title="نوع">
-                            <CellTemplate>
-                                <MudChip T="string" Color="Color.Primary" Size="Size.Small" Label="true">Primary</MudChip>
-                            </CellTemplate>
-                        </TemplateColumn>
-                        <TemplateColumn Title="وضعیت نیم سرور">
-                            <CellTemplate>
-                                @if (@context.Item.Status is not null)
+        <MudDataGrid @ref="_Grid" T="ZoneDTO" ServerData="ServerReload" ExpandSingleRow Dense Hover Elevation="0" Filterable="false">
+            <NoRecordsContent>
+                <NoRecordFound />
+            </NoRecordsContent>
+            <Columns>
+                <PropertyColumn Property="x=>x.Name" Title="دامنه" />
+                <TemplateColumn Title="نوع">
+                    <CellTemplate>
+                        <MudChip T="string" Color="Color.Primary" Size="Size.Small" Label="true">Primary</MudChip>
+                    </CellTemplate>
+                </TemplateColumn>
+                <TemplateColumn Title="وضعیت نیم سرور">
+                    <CellTemplate>
+                        @if (@context.Item.Status is not null)
+                        {
+                            <MudTooltip Text="@context.Item.Status!.Description">
+                                @switch ((ZoneStatusEnum)context.Item.Status.Id)
                                 {
-                                    <MudTooltip Text="@context.Item.Status!.Description">
-                                        @switch ((ZoneStatusEnum)context.Item.Status.Id)
-                                        {
-                                            case ZoneStatusEnum.Pending:
-                                                <MudChip T="string" Color="Color.Default" Size="Size.Small" Label="true">@context.Item.Status.Name</MudChip>
-                                                break;
-                                            case ZoneStatusEnum.Active:
-                                                <MudChip T="string" Color="Color.Success" Size="Size.Small" Label="true">@context.Item.Status.Name</MudChip>
-                                                break;
-                                            case ZoneStatusEnum.Warning:
-                                                <MudChip T="string" Color="Color.Warning" Size="Size.Small" Label="true">@context.Item.Status.Name</MudChip>
-                                                break;
-                                            case ZoneStatusEnum.Expired:
-                                            case ZoneStatusEnum.Deleted:
-                                            case ZoneStatusEnum.Suspended:
-                                                <MudChip T="string" Color="Color.Error" Size="Size.Small" Label="true">@context.Item.Status.Name</MudChip>
-                                                break;
-                                        }
-                                    </MudTooltip>
+                                    case ZoneStatusEnum.Pending:
+                                        <MudChip T="string" Color="Color.Default" Size="Size.Small" Label="true">@context.Item.Status.Name</MudChip>
+                                        break;
+                                    case ZoneStatusEnum.Active:
+                                        <MudChip T="string" Color="Color.Success" Size="Size.Small" Label="true">@context.Item.Status.Name</MudChip>
+                                        break;
+                                    case ZoneStatusEnum.Warning:
+                                        <MudChip T="string" Color="Color.Warning" Size="Size.Small" Label="true">@context.Item.Status.Name</MudChip>
+                                        break;
+                                    case ZoneStatusEnum.Expired:
+                                    case ZoneStatusEnum.Deleted:
+                                    case ZoneStatusEnum.Suspended:
+                                        <MudChip T="string" Color="Color.Error" Size="Size.Small" Label="true">@context.Item.Status.Name</MudChip>
+                                        break;
                                 }
-                            </CellTemplate>
-                        </TemplateColumn>
-                        <TemplateColumn Title="وضعیت">
-                            <CellTemplate>
-                                @if (context.Item.Disable)
-                                {
-                                    <MudChip T="string" Color="Color.Warning" Size="Size.Small" Label="true">غیرفعال</MudChip>
-                                }
-                                else
-                                {
-                                    <MudChip T="string" Color="Color.Success" Size="Size.Small" Label="true">فعال</MudChip>
-                                }
-                            </CellTemplate>
-                        </TemplateColumn>
-                        <TemplateColumn>
-                            <CellTemplate>
-                                <MudStack Row Justify="Justify.FlexEnd" Spacing="1">
-                                    <MudTooltip Arrow Text="ویرایش رکورد ها">
-                                        <BaseIconButton Href="@(AllRoutes.AllRecords+"/"+context.Item.Id)" DropShadow="false" Size="Size.Small" Variant="Variant.Filled" Icon="@DNSLabIcons.Edit" />
-                                    </MudTooltip>
-                                    <BaseIconButton OnClick="()=> DisableZone(context.Item)" DropShadow="false" Size="Size.Small" Variant="Variant.Filled" Icon="@(context.Item.Disable? Icons.Material.Filled.ToggleOn : Icons.Material.Outlined.ToggleOff)" />
-                                    <BaseIconButton OnClick="()=>  DeleteZone(context.Item)" DropShadow="false" Color="Color.Error" Size="Size.Small" Variant="Variant.Filled" Icon="@DNSLabIcons.Delete" />
-                                </MudStack>
-                            </CellTemplate>
-                        </TemplateColumn>
-                    </Columns>
-                    <PagerContent>
-                        <MudDataGridPager T="ZoneDTO" RowsPerPageString="تعداد ردیف در هر صفحه" InfoFormat="{first_item}-{last_item} از {all_items}" />
-                    </PagerContent>
-                </MudDataGrid>
-            }
-        }
-
+                            </MudTooltip>
+                        }
+                    </CellTemplate>
+                </TemplateColumn>
+                <TemplateColumn Title="وضعیت">
+                    <CellTemplate>
+                        @if (context.Item.Disable)
+                        {
+                            <MudChip T="string" Color="Color.Warning" Size="Size.Small" Label="true">غیرفعال</MudChip>
+                        }
+                        else
+                        {
+                            <MudChip T="string" Color="Color.Success" Size="Size.Small" Label="true">فعال</MudChip>
+                        }
+                    </CellTemplate>
+                </TemplateColumn>
+                <TemplateColumn>
+                    <CellTemplate>
+                        <MudStack Row Justify="Justify.FlexEnd" Spacing="1">
+                            <MudTooltip Arrow Text="ویرایش رکورد ها">
+                                <BaseIconButton Href="@(AllRoutes.AllRecords+"/"+context.Item.Id)" DropShadow="false" Size="Size.Small" Variant="Variant.Filled" Icon="@DNSLabIcons.Edit" />
+                            </MudTooltip>
+                            <BaseIconButton OnClick="()=> DisableZone(context.Item)" DropShadow="false" Size="Size.Small" Variant="Variant.Filled" Icon="@(context.Item.Disable? Icons.Material.Filled.ToggleOn : Icons.Material.Outlined.ToggleOff)" />
+                            <BaseIconButton OnClick="()=>  DeleteZone(context.Item)" DropShadow="false" Color="Color.Error" Size="Size.Small" Variant="Variant.Filled" Icon="@DNSLabIcons.Delete" />
+                        </MudStack>
+                    </CellTemplate>
+                </TemplateColumn>
+            </Columns>
+            <PagerContent>
+                <MudDataGridPager T="ZoneDTO" RowsPerPageString="تعداد ردیف در هر صفحه" InfoFormat="{first_item}-{last_item} از {all_items}" />
+            </PagerContent>
+        </MudDataGrid>
     </MudCardContent>
 </MudCard>

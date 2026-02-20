@@ -4,187 +4,175 @@
              Meta_Description="بدون IP ثابت، سرور خانگی، دوربین امنیتی یا پروژه خود را در ۵ دقیقه آنلاین کنید. سرویس DDNS و Reverse Proxy امن و سریع" />
 
 <!-- Hero Section with Gradient -->
-<MudContainer MaxWidth="MaxWidth.Large" Class="my-8 pa-12">
-    <MudText Typo="Typo.h2" Align="Align.Center" Class="mb-3 font-weight-bold">سرور خانگی خود را در ۵ دقیقه آنلاین کنید!</MudText>
-    <MudText Typo="Typo.h5" Align="Align.Center" Class="mt-4">بدون IP ثابت، بدون پورت فورواردینگ، با اتصال امن و پایدار</MudText>
-</MudContainer>
+<MudText Typo="Typo.h2" Align="Align.Center" Class="mt-8 mb-3 font-weight-bold">سرور خانگی خود را در ۵ دقیقه آنلاین کنید!</MudText>
+<MudText Typo="Typo.h5" Align="Align.Center" Class="mb-8 mt-4">بدون IP ثابت، بدون پورت فورواردینگ، با اتصال امن و پایدار</MudText>
 
 <!-- Stats Cards with Glassmorphism Effect -->
-<MudContainer MaxWidth="MaxWidth.Large" Class="my-12">
-    <MudGrid Spacing="3" Justify="Justify.Center">
-        <MudItem xs="12" sm="4">
-            <MudPaper Class="pa-6 rounded-lg" Outlined>
-                <MudIcon Icon="@Icons.Material.Filled.People" Class="my-2" Style="font-size: 3rem" />
-                <MudText Typo="Typo.subtitle1" Class="mt-2">کاربران فعال</MudText>
-                <MudText Typo="Typo.h4" Class="font-weight-bold">@((_AllUsersCount ?? 0).Separate3Digits())</MudText>
-            </MudPaper>
-        </MudItem>
-        <MudItem xs="12" sm="4">
-            <MudPaper Class="pa-6 rounded-lg" Outlined>
-                <MudIcon Icon="@Icons.Material.Filled.Dns" Class="my-2" Style="font-size: 3rem" />
-                <MudText Typo="Typo.subtitle1" Class="mt-2">هاست‌های فعال</MudText>
-                <MudText Typo="Typo.h4" Class="font-weight-bold">@((_AllDDNSsCount ?? 0).Separate3Digits())</MudText>
-            </MudPaper>
-        </MudItem>
-        <MudItem xs="12" sm="4">
-            <MudPaper Class="pa-6 rounded-lg" Outlined>
-                <MudIcon Icon="@Icons.Material.Filled.CompareArrows" Class="my-2" Style="font-size: 3rem" />
-                <MudText Typo="Typo.subtitle1" Class="mt-2">تغییرات IP روزانه</MudText>
-                <MudText Typo="Typo.h4" Class="font-weight-bold">@((_AllTodayChangesCount ?? 0).Separate3Digits())</MudText>
-            </MudPaper>
-        </MudItem>
-    </MudGrid>
-</MudContainer>
+<MudGrid Spacing="3" Justify="Justify.Center" Class="my-12">
+    <MudItem xs="12" sm="4">
+        <MudPaper Class="pa-6 rounded-lg" Outlined>
+            <MudIcon Icon="@Icons.Material.Filled.People" Class="my-2" Style="font-size: 3rem" />
+            <MudText Typo="Typo.subtitle1" Class="mt-2">کاربران فعال</MudText>
+            <MudText Typo="Typo.h4" Class="font-weight-bold">@((_AllUsersCount ?? 0).Separate3Digits())</MudText>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" sm="4">
+        <MudPaper Class="pa-6 rounded-lg" Outlined>
+            <MudIcon Icon="@Icons.Material.Filled.Dns" Class="my-2" Style="font-size: 3rem" />
+            <MudText Typo="Typo.subtitle1" Class="mt-2">هاست‌های فعال</MudText>
+            <MudText Typo="Typo.h4" Class="font-weight-bold">@((_AllDDNSsCount ?? 0).Separate3Digits())</MudText>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" sm="4">
+        <MudPaper Class="pa-6 rounded-lg" Outlined>
+            <MudIcon Icon="@Icons.Material.Filled.CompareArrows" Class="my-2" Style="font-size: 3rem" />
+            <MudText Typo="Typo.subtitle1" Class="mt-2">تغییرات IP روزانه</MudText>
+            <MudText Typo="Typo.h4" Class="font-weight-bold">@((_AllTodayChangesCount ?? 0).Separate3Digits())</MudText>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
 
 <!-- Three Simple Steps -->
-<MudContainer MaxWidth="MaxWidth.Large" Class="my-16">
-    <MudText Typo="Typo.h3" Align="Align.Center" Class="mb-8 font-weight-bold">شروع کار در سه مرحله ساده</MudText>
-    <MudGrid Spacing="4" Justify="Justify.Center">
-        <MudItem xs="12" md="4">
-            <MudCard Class="rounded-lg" Outlined>
-                <MudCardContent>
-                    <MudIcon Icon="@Icons.Material.Filled.Create" Style="font-size: 3rem" />
-                    <MudText Typo="Typo.h5" Class="mt-3 font-weight-bold">1. ثبت نام و ساخت هاست</MudText>
-                    <MudText Typo="Typo.body2" Class="mt-2">یک نام اختصاصی برای خود انتخاب کنید</MudText>
-                </MudCardContent>
-            </MudCard>
-        </MudItem>
-        <MudItem xs="12" md="4">
-            <MudCard Class="rounded-lg" Outlined>
-                <MudCardContent>
-                    <MudIcon Icon="@Icons.Material.Filled.Settings" Style="font-size: 3rem" />
-                    <MudText Typo="Typo.h5" Class="mt-3 font-weight-bold">2. تنظیم دستگاه</MudText>
-                    <MudText Typo="Typo.body2" Class="mt-2">روی روتر، رزبری‌پای یا سیستم خود نصب کنید</MudText>
-                </MudCardContent>
-            </MudCard>
-        </MudItem>
-        <MudItem xs="12" md="4">
-            <MudCard Class="rounded-lg" Outlined>
-                <MudCardContent>
-                    <MudIcon Icon="@Icons.Material.Filled.Public" Style="font-size: 3rem" />
-                    <MudText Typo="Typo.h5" Class="mt-3 font-weight-bold">3. استفاده کنید!</MudText>
-                    <MudText Typo="Typo.body2" Class="mt-2">همین حالا از هرجا به دستگاه‌تان دسترسی داشته باشید</MudText>
-                </MudCardContent>
-            </MudCard>
-        </MudItem>
-    </MudGrid>
-</MudContainer>
+<MudText Typo="Typo.h3" Align="Align.Center" Class="mt-16 mb-8 font-weight-bold">شروع کار در سه مرحله ساده</MudText>
+<MudGrid Spacing="4" Justify="Justify.Center" Class="mb-16">
+    <MudItem xs="12" md="4">
+        <MudCard Class="rounded-lg" Outlined>
+            <MudCardContent>
+                <MudIcon Icon="@Icons.Material.Filled.Create" Style="font-size: 3rem" />
+                <MudText Typo="Typo.h5" Class="mt-3 font-weight-bold">1. ثبت نام و ساخت هاست</MudText>
+                <MudText Typo="Typo.body2" Class="mt-2">یک نام اختصاصی برای خود انتخاب کنید</MudText>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+    <MudItem xs="12" md="4">
+        <MudCard Class="rounded-lg" Outlined>
+            <MudCardContent>
+                <MudIcon Icon="@Icons.Material.Filled.Settings" Style="font-size: 3rem" />
+                <MudText Typo="Typo.h5" Class="mt-3 font-weight-bold">2. تنظیم دستگاه</MudText>
+                <MudText Typo="Typo.body2" Class="mt-2">روی روتر، رزبری‌پای یا سیستم خود نصب کنید</MudText>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+    <MudItem xs="12" md="4">
+        <MudCard Class="rounded-lg" Outlined>
+            <MudCardContent>
+                <MudIcon Icon="@Icons.Material.Filled.Public" Style="font-size: 3rem" />
+                <MudText Typo="Typo.h5" Class="mt-3 font-weight-bold">3. استفاده کنید!</MudText>
+                <MudText Typo="Typo.body2" Class="mt-2">همین حالا از هرجا به دستگاه‌تان دسترسی داشته باشید</MudText>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+</MudGrid>
 
-<MudContainer MaxWidth="MaxWidth.Large" Class="my-16">
-    <MudText Typo="Typo.h3" Align="Align.Center" Class="mb-8 font-weight-bold">راه‌حل‌های ما برای نیازهای شما</MudText>
-    <MudGrid Spacing="4">
-        <!-- Reverse Proxy Card -->
-        <MudItem xs="12" md="6">
-            <MudCard Class="rounded-lg" Outlined>
-                <MudCardHeader>
-                    <MudText Typo="Typo.h4" Class="font-weight-bold">Reverse Proxy</MudText>
-                </MudCardHeader>
-                <MudCardContent>
-                    <MudText Typo="Typo.body1" Class="mb-4">هر سرویس لوکال را بدون IP ثابت روی اینترنت منتشر کنید</MudText>
-                    <MudGrid Spacing="2" Class="mb-4">
-                        <MudItem xs="6">
-                            <MudPaper Class="d-flex flex-column align-center pa-2" Elevation="0">
-                                <MudIcon Icon="@DNSLabIcons.Security" Style="width: 60px; height: 60px; color: #4caf50;" />
-                                <MudText Typo="Typo.body2" Class="mt-2">اتصال امن</MudText>
-                            </MudPaper>
-                        </MudItem>
-                        <MudItem xs="6">
-                            <MudPaper Class="d-flex flex-column align-center pa-2" Elevation="0">
-                                <MudIcon Icon="@DNSLabIcons.Speed" Style="width: 60px; height: 60px; color: #ff9800;" />
-                                <MudText Typo="Typo.body2" Class="mt-2">سرعت بالا</MudText>
-                            </MudPaper>
-                        </MudItem>
-                    </MudGrid>
-                    <MudButton Variant="Variant.Outlined" Color="Color.Primary" FullWidth="true" Href="wiki/reverse-proxy" Class="mt-2">اطلاعات بیشتر</MudButton>
-                </MudCardContent>
-            </MudCard>
-        </MudItem>
+<MudText Typo="Typo.h3" Align="Align.Center" Class="mt-16 mb-8 font-weight-bold">راه‌حل‌های ما برای نیازهای شما</MudText>
+<MudGrid Spacing="4" Class="mb-16">
+    <!-- Reverse Proxy Card -->
+    <MudItem xs="12" md="6">
+        <MudCard Class="rounded-lg" Outlined>
+            <MudCardHeader>
+                <MudText Typo="Typo.h4" Class="font-weight-bold">Reverse Proxy</MudText>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudText Typo="Typo.body1" Class="mb-4">هر سرویس لوکال را بدون IP ثابت روی اینترنت منتشر کنید</MudText>
+                <MudGrid Spacing="2" Class="mb-4">
+                    <MudItem xs="6">
+                        <MudPaper Class="d-flex flex-column align-center pa-2" Elevation="0">
+                            <MudIcon Icon="@DNSLabIcons.Security" Style="width: 60px; height: 60px; color: #4caf50;" />
+                            <MudText Typo="Typo.body2" Class="mt-2">اتصال امن</MudText>
+                        </MudPaper>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudPaper Class="d-flex flex-column align-center pa-2" Elevation="0">
+                            <MudIcon Icon="@DNSLabIcons.Speed" Style="width: 60px; height: 60px; color: #ff9800;" />
+                            <MudText Typo="Typo.body2" Class="mt-2">سرعت بالا</MudText>
+                        </MudPaper>
+                    </MudItem>
+                </MudGrid>
+                <MudButton Variant="Variant.Outlined" Color="Color.Primary" FullWidth="true" Href="wiki/reverse-proxy" Class="mt-2">اطلاعات بیشتر</MudButton>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
 
-        <!-- DDNS Card -->
-        <MudItem xs="12" md="6">
-            <MudCard Class="rounded-lg" Outlined>
-                <MudCardHeader>
-                    <MudText Typo="Typo.h4" Class="font-weight-bold">DDNS پویا</MudText>
-                </MudCardHeader>
-                <MudCardContent>
-                    <MudText Typo="Typo.body1" Class="mb-4">با تغییر IP همیشه به دستگاه‌های خود متصل بمانید</MudText>
-                    <MudGrid Spacing="2" Class="mb-4">
-                        <MudItem xs="6" md="3">
-                            <MudPaper Class="d-flex flex-column align-center pa-2" Elevation="0">
-                                <MudImage Src="images/icons/router.svg" Style="background-color: floralwhite; border-radius: 8px; width: 60px;" />
-                                <MudText Typo="Typo.body2" Class="mt-2">روتر</MudText>
-                            </MudPaper>
-                        </MudItem>
-                        <MudItem xs="6" md="3">
-                            <MudPaper Class="d-flex flex-column align-center pa-2" Elevation="0">
-                                <MudImage Src="images/icons/mikrotik.svg" Style="background-color: floralwhite; border-radius: 8px; width: 60px;" />
-                                <MudText Typo="Typo.body2" Class="mt-2">میکروتیک</MudText>
-                            </MudPaper>
-                        </MudItem>
-                        <MudItem xs="6" md="3">
-                            <MudPaper Class="d-flex flex-column align-center pa-2" Elevation="0">
-                                <MudImage Src="images/icons/raspberry.svg" Style="background-color: floralwhite; border-radius: 8px; width: 60px;" />
-                                <MudText Typo="Typo.body2" Class="mt-2">رزبری‌پای</MudText>
-                            </MudPaper>
-                        </MudItem>
-                        <MudItem xs="6" md="3">
-                            <MudPaper Class="d-flex flex-column align-center pa-2" Elevation="0">
-                                <MudImage Src="images/icons/script.svg" Style="background-color: floralwhite; border-radius: 8px; width: 60px;" />
-                                <MudText Typo="Typo.body2" Class="mt-2">اسکریپت</MudText>
-                            </MudPaper>
-                        </MudItem>
-                    </MudGrid>
-                    <MudButton Variant="Variant.Outlined" Color="Color.Primary" FullWidth="true" Href="wiki/dynamic-dns" Class="mt-2">اطلاعات بیشتر</MudButton>
-                </MudCardContent>
-            </MudCard>
-        </MudItem>
-    </MudGrid>
-</MudContainer>
+    <!-- DDNS Card -->
+    <MudItem xs="12" md="6">
+        <MudCard Class="rounded-lg" Outlined>
+            <MudCardHeader>
+                <MudText Typo="Typo.h4" Class="font-weight-bold">DDNS پویا</MudText>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudText Typo="Typo.body1" Class="mb-4">با تغییر IP همیشه به دستگاه‌های خود متصل بمانید</MudText>
+                <MudGrid Spacing="2" Class="mb-4">
+                    <MudItem xs="6" md="3">
+                        <MudPaper Class="d-flex flex-column align-center pa-2" Elevation="0">
+                            <MudImage Src="images/icons/router.svg" Style="background-color: floralwhite; border-radius: 8px; width: 60px;" />
+                            <MudText Typo="Typo.body2" Class="mt-2">روتر</MudText>
+                        </MudPaper>
+                    </MudItem>
+                    <MudItem xs="6" md="3">
+                        <MudPaper Class="d-flex flex-column align-center pa-2" Elevation="0">
+                            <MudImage Src="images/icons/mikrotik.svg" Style="background-color: floralwhite; border-radius: 8px; width: 60px;" />
+                            <MudText Typo="Typo.body2" Class="mt-2">میکروتیک</MudText>
+                        </MudPaper>
+                    </MudItem>
+                    <MudItem xs="6" md="3">
+                        <MudPaper Class="d-flex flex-column align-center pa-2" Elevation="0">
+                            <MudImage Src="images/icons/raspberry.svg" Style="background-color: floralwhite; border-radius: 8px; width: 60px;" />
+                            <MudText Typo="Typo.body2" Class="mt-2">رزبری‌پای</MudText>
+                        </MudPaper>
+                    </MudItem>
+                    <MudItem xs="6" md="3">
+                        <MudPaper Class="d-flex flex-column align-center pa-2" Elevation="0">
+                            <MudImage Src="images/icons/script.svg" Style="background-color: floralwhite; border-radius: 8px; width: 60px;" />
+                            <MudText Typo="Typo.body2" Class="mt-2">اسکریپت</MudText>
+                        </MudPaper>
+                    </MudItem>
+                </MudGrid>
+                <MudButton Variant="Variant.Outlined" Color="Color.Primary" FullWidth="true" Href="wiki/dynamic-dns" Class="mt-2">اطلاعات بیشتر</MudButton>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+</MudGrid>
 
 <!-- Why Choose Us -->
-<MudContainer MaxWidth="MaxWidth.Large" Class="my-16">
-    <MudText Typo="Typo.h3" Align="Align.Center" Class="mb-8 font-weight-bold">چرا کاربران ما DNSLab را انتخاب می‌کنند؟</MudText>
-    <MudGrid Spacing="6" Justify="Justify.Center">
-        <MudItem xs="12" md="4">
-            <MudPaper Class="pa-6 rounded-lg" Outlined>
-                <MudIcon Icon="@Icons.Material.Filled.Home" Style="font-size: 3.5rem" />
-                <MudText Typo="Typo.h5" Class="mt-3 font-weight-bold">دسترسی به شبکه خانگی</MudText>
-                <MudText Typo="Typo.body2" Class="mt-2">از هرجا به دستگاه‌های خانه متصل شوید</MudText>
-            </MudPaper>
-        </MudItem>
-        <MudItem xs="12" md="4">
-            <MudPaper Class="pa-6 rounded-lg" Outlined>
-                <MudIcon Icon="@Icons.Material.Filled.VideogameAsset" Style="font-size: 3.5rem" />
-                <MudText Typo="Typo.h5" Class="mt-3 font-weight-bold">سرورهای بازی</MudText>
-                <MudText Typo="Typo.body2" Class="mt-2">ماینکرفت و دیگر سرورهای بازی را میزبانی کنید</MudText>
-            </MudPaper>
-        </MudItem>
-        <MudItem xs="12" md="4">
-            <MudPaper Class="pa-6 rounded-lg" Outlined>
-                <MudIcon Icon="@Icons.Material.Filled.Computer" Style="font-size: 3.5rem" />
-                <MudText Typo="Typo.h5" Class="mt-3 font-weight-bold">دسترسی به کامپیوتر</MudText>
-                <MudText Typo="Typo.body2" Class="mt-2">کامپیوتر شخصی خود را از راه دور کنترل کنید</MudText>
-            </MudPaper>
-        </MudItem>
-    </MudGrid>
-</MudContainer>
+<MudText Typo="Typo.h3" Align="Align.Center" Class="mt-16 mb-8 font-weight-bold">چرا کاربران ما DNSLab را انتخاب می‌کنند؟</MudText>
+<MudGrid Spacing="6" Justify="Justify.Center" Class="mb-16">
+    <MudItem xs="12" md="4">
+        <MudPaper Class="pa-6 rounded-lg" Outlined>
+            <MudIcon Icon="@Icons.Material.Filled.Home" Style="font-size: 3.5rem" />
+            <MudText Typo="Typo.h5" Class="mt-3 font-weight-bold">دسترسی به شبکه خانگی</MudText>
+            <MudText Typo="Typo.body2" Class="mt-2">از هرجا به دستگاه‌های خانه متصل شوید</MudText>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" md="4">
+        <MudPaper Class="pa-6 rounded-lg" Outlined>
+            <MudIcon Icon="@Icons.Material.Filled.VideogameAsset" Style="font-size: 3.5rem" />
+            <MudText Typo="Typo.h5" Class="mt-3 font-weight-bold">سرورهای بازی</MudText>
+            <MudText Typo="Typo.body2" Class="mt-2">ماینکرفت و دیگر سرورهای بازی را میزبانی کنید</MudText>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" md="4">
+        <MudPaper Class="pa-6 rounded-lg" Outlined>
+            <MudIcon Icon="@Icons.Material.Filled.Computer" Style="font-size: 3.5rem" />
+            <MudText Typo="Typo.h5" Class="mt-3 font-weight-bold">دسترسی به کامپیوتر</MudText>
+            <MudText Typo="Typo.body2" Class="mt-2">کامپیوتر شخصی خود را از راه دور کنترل کنید</MudText>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
 
 <!-- Footer -->
 <MudPaper Outlined Class="py-16 mt-16">
-    <MudContainer MaxWidth="MaxWidth.Large">
-        <MudStack Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
-            <MudItem xs="12" md="6">
-                <MudStack Row AlignItems="AlignItems.Center" Spacing="2">
-                    <MudText Typo="Typo.body2">تمامی حقوق سایت برای دی‌ان‌اس لب محفوظ است ©</MudText>
-                    <MudLink Href="@AllRoutes.Terms" Underline="Underline.None" Color="Color.Inherit" Typo="Typo.body2" Class="mr-4">شرایط و ضوابط استفاده</MudLink>
-                </MudStack>
-            </MudItem>
-            <MudItem xs="12" md="6">
-                <MudStack Row Justify="Justify.FlexEnd" AlignItems="AlignItems.Center" Spacing="4">
-                    <MudImage Src="images/enamad.png" Height="90" />
-                    <MudImage Src="images/logo.png" Height="90" />
-                </MudStack>
-            </MudItem>
-        </MudStack>
-    </MudContainer>
+    <MudStack Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
+        <MudItem xs="12" md="6">
+            <MudStack Row AlignItems="AlignItems.Center" Spacing="2">
+                <MudText Typo="Typo.body2">تمامی حقوق سایت برای دی‌ان‌اس لب محفوظ است ©</MudText>
+                <MudLink Href="@AllRoutes.Terms" Underline="Underline.None" Color="Color.Inherit" Typo="Typo.body2" Class="mr-4">شرایط و ضوابط استفاده</MudLink>
+            </MudStack>
+        </MudItem>
+        <MudItem xs="12" md="6">
+            <MudStack Row Justify="Justify.FlexEnd" AlignItems="AlignItems.Center" Spacing="4">
+                <MudImage Src="images/enamad.png" Height="90" />
+                <MudImage Src="images/logo.png" Height="90" />
+            </MudStack>
+        </MudItem>
+    </MudStack>
 </MudPaper>

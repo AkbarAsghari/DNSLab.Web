@@ -10,7 +10,7 @@
 </MudText>
 <MudText Class="mt-5 mb-10">
     <MudStack Row AlignItems="AlignItems.Center" Justify="Justify.Center">
-        اگه شرایط مالی‌ت سخت بود، بی‌خیال نشو! یه پیام بده، با هم حلش می‌کنیم ❤️ @("AkbarAsghari@") <MudIcon Icon="@DNSLabIcons.Telegram" Size="Size.Small" />
+        اگه شرایط مالیت سخت بود، بی‌خیال نشو! یه پیام بده، با هم حلش می‌کنیم ❤️ @("AkbarAsghari@") <MudIcon Icon="@DNSLabIcons.Telegram" Size="Size.Small" />
     </MudStack>
 </MudText>
 <MudCard Elevation="0">
@@ -39,7 +39,6 @@
                                         </MudItem>
 
                                         <MudItem xs="12" sm="6">
-
                                             @switch (item.Type)
                                             {
                                                 case Enums.FeatureTypeEnum.Toggle:
@@ -76,49 +75,44 @@
                         </MudPaper>
                     </MudItem>
                 }
-            </MudGrid>
-
-        }
-        @if (_BundleDurations != null)
-        {
-            <MudGrid>
-                <MudItem xs="12" md="6">
-                    <MudStack AlignItems="AlignItems.Center" Class="pa-10">
-                        @if (_BundleDuration != null && CalculatePrice() > 0)
+                <MudItem xs="12">
+                    <MudContainer MaxWidth="MaxWidth.Small">
+                        @if (_BundleDurations != null)
                         {
-                            <MudText>جمع مبلغ پراختی : @CalculatePrice().Separate3Digits() ريال</MudText>
-                            <BaseButton Color="Color.Primary" Size="Size.Large" Variant="Variant.Filled" OnClick="Activate">تایید و تهیه اشتراک</BaseButton>
+                            <MudText Typo="Typo.h4" Class="my-3">مدت زمان اشتراک</MudText>
+                            <MudToggleGroup T="BundleDurationDTO" Color="Color.Primary" @bind-Value="_BundleDuration">
+                                @foreach (var item in _BundleDurations)
+                                {
+                                    <MudToggleItem Value="item">
+                                        <MudStack Justify="Justify.Center" Spacing="1">
+                                            <MudText>@item.Description</MudText>
+                                            <MudText Typo="Typo.caption">
+                                                @if (item.Discount.Percent > 0)
+                                                {
+                                                    <text>@item.Discount.Percent % تخفیف</text>
+                                                }
+                                            </MudText>
+                                        </MudStack>
+                                    </MudToggleItem>
+                                }
+                            </MudToggleGroup>
+                            <MudStack AlignItems="AlignItems.Center" Class="pa-10">
+                                @if (_BundleDuration != null && CalculatePrice() > 0)
+                                {
+                                    <MudText>جمع مبلغ پراختی : @CalculatePrice().Separate3Digits() ريال</MudText>
+                                    <BaseButton Color="Color.Primary" Size="Size.Large" Variant="Variant.Filled" OnClick="Activate">تایید و تهیه اشتراک</BaseButton>
+                                }
+                                else
+                                {
+                                    <MudChip ReadOnly T="string" Color="Color.Primary" Variant="Variant.Outlined" Label="true" Text="این قابلیت به صورت رایگان فعال میباشد" />
+                                }
+                            </MudStack>
                         }
-                        else
-                        {
-                            <MudChip ReadOnly T="string" Color="Color.Primary" Variant="Variant.Outlined" Label="true" Text="این قابلیت به صورت رایگان فعال میباشد" />
-                        }
-                    </MudStack>
-                </MudItem>
-                <MudItem xs="12" md="6">
-                    <MudText Typo="Typo.h4" Class="my-3">مدت زمان اشتراک</MudText>
-                    <MudToggleGroup T="BundleDurationDTO" Color="Color.Primary" @bind-Value="_BundleDuration">
-                        @foreach (var item in _BundleDurations)
-                        {
-                            <MudToggleItem Value="item">
-                                <MudStack Justify="Justify.Center" Spacing="1">
-                                    <MudText>@item.Description</MudText>
-                                    <MudText Typo="Typo.caption">
-                                        @if (item.Discount.Percent > 0)
-                                        {
-                                            <text>@item.Discount.Percent % تخفیف</text>
-                                        }
-                                    </MudText>
-                                </MudStack>
-                            </MudToggleItem>
-                        }
-                    </MudToggleGroup>
+                    </MudContainer>
                 </MudItem>
             </MudGrid>
 
         }
-
-
     </MudCardContent>
 </MudCard>
 

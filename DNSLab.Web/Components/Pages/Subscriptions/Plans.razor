@@ -2,21 +2,16 @@
 @using DNSLab.Web.DTOs.Repositories.Subscription
 <SeoProvider Title="پلن ها" Meta_Description="پلن های سایت DNSLab" />
 
+<MudText Typo="Typo.h1" Align="Align.Center">تهیه اشتراک</MudText>
+<MudText Class="mt-5 mb-10" Align="Align.Center">در این بخش شما با توجه به نیاز خود میتوانید پلن مورد نظر خود را انتخاب نمایید</MudText>
+
 <MudCard Elevation="0">
-    <MudCardHeader>
-        <CardHeaderContent>
-            <MudText Typo="Typo.h1">پلن ها</MudText>
-        </CardHeaderContent>
-    </MudCardHeader>
     <MudCardContent>
-        <MudAlert Class="mb-2" Dense Severity="Severity.Info" ContentAlignment="HorizontalAlignment.Start">
-            <MudText Typo="Typo.body2">در این بخش شما با توجه به نیاز خود میتوانید پلن مورد نظر خود را انتخاب نمایید</MudText>
-        </MudAlert>
         @if (_PlanSections != null)
         {
-            @foreach (var sectionItem in _PlanSections.Where(x => x.Id == 1))
+            @foreach (var sectionItem in _PlanSections)
             {
-                <MudText Typo="Typo.h2" Align="Align.Center" Class="mb-5">@sectionItem.Name</MudText>
+                <MudText Typo="Typo.h2" Align="Align.Center" Class="mb-3 mt-5">@sectionItem.Name</MudText>
                 <MudGrid Spacing="1">
                     @foreach (var plan in sectionItem.Plans)
                     {
@@ -32,7 +27,7 @@
                                 </MudCardHeader>
                                 <MudCardContent>
                                     <MudStack Spacing="0" AlignItems="AlignItems.Start">
-                                        @foreach (var feature in plan.Features)
+                                        @foreach (var feature in plan.Features.OrderBy(x=>x.Order))
                                         {
                                             <MudTooltip Text="@feature.Description" Arrow>
                                                 <MudChip T="string" Size="Size.Small" Variant="Variant.Text" Icon="@(feature.Supported ? Icons.Material.Rounded.CheckBox : Icons.Material.Rounded.Close)" IconColor="@(feature.Supported ? Color.Success : Color.Error)" Color="Color.Default">@feature.Name @(feature.FeatureValue == null ? String.Empty : $" : {feature.FeatureValue}")</MudChip>

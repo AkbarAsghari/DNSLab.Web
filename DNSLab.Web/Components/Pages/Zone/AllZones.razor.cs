@@ -15,7 +15,7 @@ namespace DNSLab.Web.Components.Pages.Zone
     {
         [Inject] IZoneRepository _ZoneRepository { get; set; }
         [Inject] IDialogService _DialogService { get; set; }
-        [Inject] IBudleRepository _SubscriptionRepository { get; set; }
+        [Inject] ISubscriptionRepository _SubscriptionRepository { get; set; }
 
         MudDataGrid<ZoneDTO> _Grid {  get; set; }
 

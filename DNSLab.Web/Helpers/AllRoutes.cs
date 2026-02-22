@@ -30,10 +30,9 @@
         public const string MyWallet = "/wallet/my";
         public const string WalletTransactions = "/wallet/transactions";
 
-        public const string Bundle = "bundle/features";
-        public const string MyBundles = "bundle/my";
-        public const string Renewal = "bundle/renewal";
-        public const string AllBundles = "bundle/all";
+        public const string Plans = "subscription/plans";
+        public const string MySubscriptions = "subscription/my";
+        public const string AllSubscriptions = "subscription/all";
 
         public const string AllTickets = "/tickets/all";
         public const string MyTickets = "/tickets/my";

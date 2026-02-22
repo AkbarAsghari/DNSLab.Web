@@ -12,7 +12,7 @@ partial class RecordDialog
     [Inject] IRecordRepository _RecordRepository { get; set; }
     [Inject] IDDNSRepository _DDNSRepository { get; set; }
     [Inject] IHttpContextAccessor _HttpContextAccessor { get; set; }
-    [Inject] IBudleRepository _SubscriptionRepository { get; set; }
+    [Inject] ISubscriptionRepository _SubscriptionRepository { get; set; }
 
     [Parameter] public ZoneDTO Zone { get; set; }
     [Parameter] public BaseRecordDTO Record { get; set; } = new() { Name = String.Empty, Type = Enums.RecordTypeEnum.A, TTL = 3600 };

@@ -9,7 +9,7 @@ namespace DNSLab.Web.Components.Pages.Records;
 partial class RecordChangesHistory
 {
     [Inject] IRecordRepository _RecordRepository { get; set; }
-    [Inject] IBudleRepository _SubscriptionRepository { get; set; }
+    [Inject] ISubscriptionRepository _SubscriptionRepository { get; set; }
 
     [SupplyParameterFromQuery] public Guid? RecordId { get; set; } = null;
 

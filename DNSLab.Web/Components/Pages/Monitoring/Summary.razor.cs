@@ -11,7 +11,7 @@ partial class Summary
 {
     [Inject] IDDNSRepository _DDNSRepository { get; set; }
     [Inject] IDNSLogRepository _DNSLogRepository { get; set; }
-    [Inject] IBudleRepository _SubscriptionRepository { get; set; }
+    [Inject] ISubscriptionRepository _SubscriptionRepository { get; set; }
 
     bool? _IsSubscribeThisFeature { get; set; } = null;
 

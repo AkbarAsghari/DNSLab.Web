@@ -1,0 +1,44 @@
+﻿@using DNSLab.Web.DTOs.Repositories.Subscription
+@using DNSLab.Web.Utilities
+@attribute [Route(AllRoutes.AllSubscriptions)]
+@attribute [Authorize(Roles = AuthorizeRoles.Admin)]
+<SeoProvider Title="اشتراک ها" />
+
+<MudCard Elevation="0">
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h5">اشتراک‌ها</MudText>
+        </CardHeaderContent>
+    </MudCardHeader>
+    <MudCardContent>
+        @if (_Subscriptions != null)
+        {
+            <MudDataGrid T="SubscriptionDTO" Items="_Subscriptions.OrderByDescending(x=>x.StartDate)" Dense Hover Outlined FixedHeader SortMode="SortMode.None" Striped Loading="_Loading">
+                <NoRecordsContent>
+                    <MudAlert Severity="Severity.Warning" Dense ContentAlignment="HorizontalAlignment.Center" NoIcon>
+                        <MudText Typo="Typo.body2">هیچ تراکنشی یافت نشد</MudText>
+                    </MudAlert>
+                </NoRecordsContent>
+                <Columns>
+                    <TemplateColumn Title="کاربر">
+                        <CellTemplate>
+                            <MudStack Row AlignItems="AlignItems.Center">
+                                @((MarkupString)ProfileImageCreator.GenerateSVG(context.Item.User!.Id, 25))
+                                @context.Item.User.FullName
+                            </MudStack>
+                        </CellTemplate>
+                    </TemplateColumn>
+                    <PropertyColumn Property="x=>x.Plan.Name" Title="پلن" />
+                    <TemplateColumn Title="مبغ(ريال)">
+                        <CellTemplate>
+                            <MudText>@context.Item.TotalPrice.Separate3Digits()</MudText>
+                        </CellTemplate>
+                    </TemplateColumn>
+                    <PropertyColumn Property="x=>x.Duration.Description" Title="مدت" />
+                    <PropertyColumn Property="x=>x.StartDate.ToLocalTime().ToPersianDateTime()" Title="زمان شروع" />
+                    <PropertyColumn Property="x=>x.EndDate.ToLocalTime().ToPersianDateTime()" Title="زمان پایان" />
+                </Columns>
+            </MudDataGrid>
+        }
+    </MudCardContent>
+</MudCard>

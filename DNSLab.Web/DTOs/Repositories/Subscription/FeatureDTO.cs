@@ -14,5 +14,6 @@ namespace DNSLab.Web.DTOs.Repositories.Subscription
         public bool Supported { get; set; }
         public int? FeatureValue { get; set; }
         public int Order { get; set; }
+        public string? Unit { get; set; }
     }
 }

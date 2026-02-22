@@ -11,7 +11,8 @@
         {
             @foreach (var sectionItem in _PlanSections)
             {
-                <MudText Typo="Typo.h2" Align="Align.Center" Class="mb-3 mt-5">@sectionItem.Name</MudText>
+                <MudText Typo="Typo.h2" Align="Align.Center" Class="mt-5">@sectionItem.Name</MudText>
+                <MudText Typo="Typo.body2" Align="Align.Center" Class="mb-3">@sectionItem.Description</MudText>
                 <MudGrid Spacing="1">
                     @foreach (var plan in sectionItem.Plans)
                     {
@@ -21,16 +22,13 @@
                                     <CardHeaderContent>
                                         <MudText Typo="Typo.h3">@plan.Name</MudText>
                                     </CardHeaderContent>
-                                    <CardHeaderActions>
-                                        <MudText Color="Color.Info">@plan.BasePrice.Separate3Digits() ريال</MudText>
-                                    </CardHeaderActions>
                                 </MudCardHeader>
                                 <MudCardContent>
                                     <MudStack Spacing="0" AlignItems="AlignItems.Start">
-                                        @foreach (var feature in plan.Features.OrderBy(x=>x.Order))
+                                        @foreach (var feature in plan.Features.OrderBy(x => x.Order))
                                         {
                                             <MudTooltip Text="@feature.Description" Arrow>
-                                                <MudChip T="string" Size="Size.Small" Variant="Variant.Text" Icon="@(feature.Supported ? Icons.Material.Rounded.CheckBox : Icons.Material.Rounded.Close)" IconColor="@(feature.Supported ? Color.Success : Color.Error)" Color="Color.Default">@feature.Name @(feature.FeatureValue == null ? String.Empty : $" : {feature.FeatureValue}")</MudChip>
+                                                <MudChip T="string" Size="Size.Small" Variant="Variant.Text" Icon="@(feature.Supported ? Icons.Material.Rounded.CheckBox : Icons.Material.Rounded.Close)" IconColor="@(feature.Supported ? Color.Success : Color.Error)" Color="Color.Default">@feature.Name @(feature.FeatureValue == null ? String.Empty : $" : {feature.FeatureValue} {feature.Unit}")</MudChip>
                                             </MudTooltip>
                                         }
                                     </MudStack>
@@ -45,10 +43,7 @@
                                                         <MudStack AlignItems="AlignItems.Center" Spacing="1">
                                                             <MudText>
                                                                 @discount.Duration.DurationInMonth ماهه
-                                                                @if (discount.Duration.DurationInMonth > 1)
-                                                                {
-                                                                    <text>(@((discount.Duration.DurationInMonth * (plan.BasePrice - (plan.BasePrice * discount.DiscountRate / 100))).Separate3Digits()))</text>
-                                                                }
+                                                                <text>(@((discount.Duration.DurationInMonth * (plan.BasePrice - (plan.BasePrice * discount.DiscountRate / 100))).Separate3Digits()))</text>
                                                             </MudText>
                                                             @if (discount.Duration.DurationInMonth > 1)
                                                             {

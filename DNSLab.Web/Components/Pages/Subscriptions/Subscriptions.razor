@@ -16,26 +16,27 @@
         </CardHeaderActions>
     </MudCardHeader>
     <MudCardContent>
-        @if (_Subscriptions != null)
-        {
-            <MudDataGrid T="SubscriptionDTO" Items="_Subscriptions.OrderByDescending(x=>x.StartDate)" Dense Hover Outlined FixedHeader SortMode="SortMode.None" Striped Loading="_Loading">
-                <NoRecordsContent>
-                    <MudAlert Dense Severity="Severity.Warning" ContentAlignment="HorizontalAlignment.Center" NoIcon>
-                        <MudText Typo="Typo.body2">هیچ تراکنشی یافت نشد</MudText>
-                    </MudAlert>
-                </NoRecordsContent>
-                <Columns>
-                    <PropertyColumn Property="x=>x.Plan.Name" Title="پلن" />
-                    <TemplateColumn Title="مبغ(ريال)">
-                        <CellTemplate>
-                            <MudText>@context.Item.TotalPrice.Separate3Digits()</MudText>
-                        </CellTemplate>
-                    </TemplateColumn>
-                    <PropertyColumn Property="x=>x.Duration.Description" Title="مدت" />
-                    <PropertyColumn Property="x=>x.StartDate.ToLocalTime().ToPersianDateTime()" Title="زمان شروع" />
-                    <PropertyColumn Property="x=>x.EndDate.ToLocalTime().ToPersianDateTime()" Title="زمان پایان" />
-                </Columns>
-            </MudDataGrid>
-        }
+        <MudDataGrid T="SubscriptionDTO" @ref="_Grid" ServerData="ServerReload" ExpandSingleRow Dense Hover Elevation="0" Filterable="false">
+            <NoRecordsContent>
+                <MudAlert Dense Severity="Severity.Warning" ContentAlignment="HorizontalAlignment.Center" NoIcon>
+                    <MudText Typo="Typo.body2">هیچ تراکنشی یافت نشد</MudText>
+                </MudAlert>
+            </NoRecordsContent>
+            <Columns>
+                <PropertyColumn Property="x=>x.Section.Name" Title="بخش" />
+                <PropertyColumn Property="x=>x.Plan.Name" Title="پلن" />
+                <TemplateColumn Title="مبغ(ريال)">
+                    <CellTemplate>
+                        <MudText>@context.Item.TotalPrice.Separate3Digits()</MudText>
+                    </CellTemplate>
+                </TemplateColumn>
+                <PropertyColumn Property="x=>x.Duration.Description" Title="مدت" />
+                <PropertyColumn Property="x=>x.StartDate.ToLocalTime().ToPersianDateTime()" Title="زمان شروع" />
+                <PropertyColumn Property="x=>x.EndDate.ToLocalTime().ToPersianDateTime()" Title="زمان پایان" />
+            </Columns>
+            <PagerContent>
+                <MudDataGridPager T="SubscriptionDTO" RowsPerPageString="تعداد ردیف در هر صفحه" InfoFormat="{first_item}-{last_item} از {all_items}" />
+            </PagerContent>
+        </MudDataGrid>
     </MudCardContent>
 </MudCard>

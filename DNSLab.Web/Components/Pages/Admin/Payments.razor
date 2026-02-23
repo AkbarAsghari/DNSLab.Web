@@ -1,4 +1,5 @@
 ﻿@using DNSLab.Web.DTOs.Repositories.Payment
+@using DNSLab.Web.Utilities
 @attribute [Route(AllRoutes.AllPayments)]
 @attribute [Authorize(Roles = AuthorizeRoles.Admin)]
 <SeoProvider Title="پرداخت ها" />
@@ -8,13 +9,19 @@
 
 <MudCard Elevation="0">
     <MudCardContent>
-        @if (_AllPayments != null)
-        {
-            <MudDataGrid T="PaymentDTO" Items="_AllPayments!.Results" Dense Hover Elevation="0" FixedHeader Striped SortMode="SortMode.None" Loading="_Loading">
+            <MudDataGrid T="PaymentDTO" @ref="_Grid" ServerData="ServerReload" ExpandSingleRow Dense Hover Elevation="0" Filterable="false">
                 <NoRecordsContent>
                     <NoRecordFound />
                 </NoRecordsContent>
                 <Columns>
+                    <TemplateColumn Title="کاربر">
+                        <CellTemplate>
+                            <MudStack Row AlignItems="AlignItems.Center">
+                                @((MarkupString)ProfileImageCreator.GenerateSVG(context.Item.User!.Id, 25))
+                                @context.Item.User.FullName
+                            </MudStack>
+                        </CellTemplate>
+                    </TemplateColumn>
                     <PropertyColumn Property="x=>x.Amount.Separate3Digits()" Title="مبلغ (ريال)" />
                     <PropertyColumn Property="x=>x.CreateDate" Title="زمان">
                         <CellTemplate>
@@ -24,9 +31,9 @@
                     <PropertyColumn Property="x=>x.Status" Title="وضعیت" />
                     <PropertyColumn Property="x=>x.Description" Title="توضیحات" />
                 </Columns>
+            <PagerContent>
+                <MudDataGridPager T="PaymentDTO" RowsPerPageString="تعداد ردیف در هر صفحه" InfoFormat="{first_item}-{last_item} از {all_items}" />
+            </PagerContent>
             </MudDataGrid>
-
-            <MudPagination Rectangular="true" Variant="Variant.Filled" Color="Color.Primary" DropShadow="false" Count="_AllPayments.PageCount" Class="mt-2" SelectedChanged="PageChanged" />
-        }
     </MudCardContent>
 </MudCard>

@@ -4,6 +4,7 @@ namespace DNSLab.Web.DTOs.Repositories.Payment
 {
     public class PaymentDTO
     {
+        public UserInfoDTO? User { get; set; }
         public long Amount { get; set; }
         public string? Description { get; set; }
         public PaymentStatusEnum StatusId { get; set; }

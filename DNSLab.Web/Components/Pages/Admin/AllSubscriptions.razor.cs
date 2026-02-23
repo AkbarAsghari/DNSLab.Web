@@ -8,12 +8,24 @@ partial class AllSubscriptions
 {
     [Inject] ISubscriptionRepository _SubscriptionsRepository { get; set; }
 
-    IEnumerable<SubscriptionDTO>? _Subscriptions;
-    bool _Loading = false;
-    protected override async Task OnInitializedAsync()
+    MudDataGrid<SubscriptionDTO> _Grid { get; set; }
+    private async Task<GridData<SubscriptionDTO>> ServerReload(GridState<SubscriptionDTO> state)
     {
-        _Loading = true;
-        _Subscriptions = await _SubscriptionsRepository.GetAllSubscribes();
-        _Loading = false;
+        IEnumerable<SubscriptionDTO>? data = await _SubscriptionsRepository.GetAllSubscribes();
+
+        if (data is null)
+        {
+            return new GridData<SubscriptionDTO>();
+        }
+
+        var totalItems = data.Count();
+
+        var pagedData = data.OrderByDescending(x=>x.CreateDate).Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
+
+        return new GridData<SubscriptionDTO>
+        {
+            TotalItems = totalItems,
+            Items = pagedData
+        };
     }
 }

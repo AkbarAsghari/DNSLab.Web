@@ -43,11 +43,11 @@
                                                         <MudStack AlignItems="AlignItems.Center" Spacing="1">
                                                             <MudText>
                                                                 @discount.Duration.DurationInMonth ماهه
-                                                                <text>(@((discount.Duration.DurationInMonth * (plan.BasePrice - (plan.BasePrice * discount.DiscountRate / 100))).Separate3Digits()))</text>
+                                                                <text>(@((discount.Duration.DurationInMonth * (plan.BasePrice - (plan.BasePrice * discount.DiscountRate / 100))).Separate3Digits())) ریال</text>
                                                             </MudText>
                                                             @if (discount.Duration.DurationInMonth > 1)
                                                             {
-                                                                <MudText Color="Color.Info" Typo="Typo.body2" Class="mr-2">هر ماه (@((plan.BasePrice - (plan.BasePrice * discount.DiscountRate / 100)).Separate3Digits()))</MudText>
+                                                                <MudText Color="Color.Info" Typo="Typo.body2" Class="mr-2">هر ماه (@((plan.BasePrice - (plan.BasePrice * discount.DiscountRate / 100)).Separate3Digits())) ریال</MudText>
                                                             }
                                                         </MudStack>
                                                         <MudChip T="object" Label="true" Variant="Variant.Text" Icon="@DNSLabIcons.Check" Color="Color.Success">انتخاب</MudChip>

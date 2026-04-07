@@ -18,10 +18,7 @@
             <Columns>
                 <TemplateColumn Title="کاربر">
                     <CellTemplate>
-                        <MudStack Row AlignItems="AlignItems.Center">
-                            @((MarkupString)ProfileImageCreator.GenerateSVG(context.Item.User!.Id, 25))
-                            @context.Item.User.FullName
-                        </MudStack>
+                        <UserIcon UserInfo="@context.Item.User" />
                     </CellTemplate>
                 </TemplateColumn>
                 <PropertyColumn Property="x=>x.Section.Name" Title="بخش" />

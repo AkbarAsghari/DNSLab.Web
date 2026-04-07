@@ -1,0 +1,6 @@
+﻿@using DNSLab.Web.Utilities
+<MudTooltip Text="@UserInfo.FullName">
+    <MudStack Row AlignItems="AlignItems.Center">
+        @((MarkupString)ProfileImageCreator.GenerateSVG(UserInfo.Id, Size))
+    </MudStack>
+</MudTooltip>

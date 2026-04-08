@@ -10,5 +10,7 @@ namespace DNSLab.Web.Interfaces.Repositories
         Task<IEnumerable<SubscriptionDTO>?> GetSubscribes();
         Task<IEnumerable<SubscriptionDTO>?> GetAllSubscribes();
         Task<bool> CheckSbscriptionFeature(FeatureEnum feature);
+        Task<long?> GetReverseProxyClientAvailableTraffics();
+        Task<long?> GetReverseProxyClientUsedTraffic();
     }
 }

@@ -11,6 +11,7 @@ partial class SetupAndInstallation
 {
     [Inject] AuthenticationStateProvider _AuthenticationStateProvider { get; set; }
     [Inject] IReverseProxyRepository _ReverseProxyRepository { get; set; }
+    [Inject] ISubscriptionRepository _SubscriptionRepository{ get; set; }
 
     public enum OS
     {
@@ -28,12 +29,15 @@ partial class SetupAndInstallation
 
     string _Token = "XXXXXXX-XX-XXXXXXXX";
 
+    long? _AvailableTraffic , _UsedTraffic = 0;
     protected override async Task OnInitializedAsync()
     {
         var authState = await _AuthenticationStateProvider.GetAuthenticationStateAsync();
         if (authState.User.Identity != null && authState.User.Identity.IsAuthenticated)
         {
             _Token = await _ReverseProxyRepository.GetClientToken() ?? String.Empty;
+            _AvailableTraffic = await _SubscriptionRepository.GetReverseProxyClientAvailableTraffics();
+            _UsedTraffic = await _SubscriptionRepository.GetReverseProxyClientUsedTraffic();
         }
         else
         {

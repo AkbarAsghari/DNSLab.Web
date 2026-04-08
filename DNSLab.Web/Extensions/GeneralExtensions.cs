@@ -7,6 +7,28 @@ namespace DNSLab.Web.Extensions
 {
     public static class GeneralExtensions
     {
+        public static string ToReadableSize(this long? bytes)
+        {
+            if (bytes is null)
+                return String.Empty;
+
+            const int scale = 1024;
+
+            string[] suffixes = { "B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB" };
+
+            if (bytes <= 0) return "0B";
+
+            int i = 0;
+            double dblBytes = bytes.Value;
+            while (Math.Round(dblBytes) >= scale && i < suffixes.Length - 1)
+            {
+                dblBytes /= scale;
+                i++;
+            }
+
+            return $"{dblBytes:N2}{suffixes[i]}";
+        }
+
         public static string Separate3Digits(this long value) => value.ToString("N0");
 
         public static string Separate3Digits(this int value) => Separate3Digits((long)value);

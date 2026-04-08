@@ -24,6 +24,16 @@ namespace DNSLab.Web.Repositories
             return _HttpServiceProvider.Get<IEnumerable<PlanSectionDTO>?>($"{APIController}/GetPlans", false);
         }
 
+        public Task<long?> GetReverseProxyClientAvailableTraffics()
+        {
+            return _HttpServiceProvider.Get<long?>($"{APIController}/GetReverseProxyClientAvailableTraffics");
+        }
+
+        public Task<long?> GetReverseProxyClientUsedTraffic()
+        {
+            return _HttpServiceProvider.Get<long?>($"{APIController}/GetReverseProxyClientUsedTraffic");
+        }
+
         public Task<IEnumerable<SubscriptionDTO>?> GetSubscribes()
         {
             return _HttpServiceProvider.Get<IEnumerable<SubscriptionDTO>?>($"{APIController}/GetSubscribes");

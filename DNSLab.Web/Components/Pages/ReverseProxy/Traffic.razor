@@ -6,7 +6,7 @@
 <MudText Class="mt-5 mb-10" Align="Align.Center">در این بخش جزئیات ترافیک مصرفی کلاینت شما قرار دارد</MudText>
 
 <MudPaper Class="mt-5 pa-10" Outlined>
-    <MudText>مقدار ترافیک مصرف شده تا این لحظه</MudText>
+    <MudText Typo="Typo.caption">مقدار ترافیک مصرف شده تا این لحظه</MudText>
     <MudText Align="Align.Center" Class="mt-2">@_AvailableTraffic.ToReadableSize() / @_UsedTraffic.ToReadableSize()</MudText>
     @if (_AvailableTraffic.HasValue && _AvailableTraffic.Value > 0)
     {

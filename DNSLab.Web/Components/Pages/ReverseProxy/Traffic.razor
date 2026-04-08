@@ -14,9 +14,9 @@
             ? Color.Error
             : (_UsedTraffic == 0)
                 ? Color.Success
-                : (_UsedTraffic / _AvailableTraffic * 100) < 70
+                : ((double)_UsedTraffic / _AvailableTraffic * 100) < 70
                     ? Color.Success
-                    : (_UsedTraffic / _AvailableTraffic * 100) <= 90
+                    : ((double)_UsedTraffic / _AvailableTraffic * 100) <= 90
                         ? Color.Warning
                         : Color.Error)" Size="Size.Large" Class="my-2" />
     }

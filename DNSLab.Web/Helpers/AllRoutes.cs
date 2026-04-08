@@ -68,5 +68,6 @@
         public const string TcpReverseProxy = "/reverse-proxy/tcp";
         public const string UdpReverseProxy = "/reverse-proxy/udp";
         public const string HttpReverseProxy = "/reverse-proxy/http";
+        public const string ReverseProxyTraffic = "/reverse-proxy/traffic";
     }
 }

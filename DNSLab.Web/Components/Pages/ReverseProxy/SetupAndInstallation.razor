@@ -8,13 +8,6 @@
     <BaseButton Class="px-10" StartIcon="@DNSLabIcons.Linux" Size="Size.Small" Color="@(_SelectedOs == OS.Linux ? Color.Primary : Color.Default)" Variant="@(_SelectedOs == OS.Linux ? Variant.Filled : Variant.Outlined)" OnClick="()=> ChangeOS(OS.Linux)">Linux</BaseButton>
 </MudStack>
 <MudPaper Class="mt-5 pa-10" Elevation="0">
-    <MudText Typo="Typo.h4" Class="mt-1">ترافیک مصرفی</MudText>
-
-    <MudText Align="Align.Center">@_AvailableTraffic.ToReadableSize() / @_UsedTraffic.ToReadableSize()</MudText>
-    @if (_AvailableTraffic.HasValue && _AvailableTraffic.Value > 0)
-    {
-        <MudProgressLinear Max="_AvailableTraffic!.Value" Value="_UsedTraffic!.Value" Rounded Striped Color="Color.Primary" Size="Size.Large" Class="my-2" />
-    }
     @switch (_SelectedOs)
     {
         case OS.Windows:

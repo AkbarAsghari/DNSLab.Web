@@ -1,0 +1,23 @@
+﻿@attribute [Route(AllRoutes.ReverseProxyTraffic)]
+@attribute [Authorize]
+<SeoProvider Title="ترافیک مصرفی" />
+
+<MudText Typo="Typo.h1" Align="Align.Center">ترافیک مصرفی</MudText>
+<MudText Class="mt-5 mb-10" Align="Align.Center">در این بخش جزئیات ترافیک مصرفی کلاینت شما قرار دارد</MudText>
+
+<MudPaper Class="mt-5 pa-10" Outlined>
+    <MudText>مقدار ترافیک مصرف شده تا این لحظه</MudText>
+    <MudText Align="Align.Center" Class="mt-2">@_AvailableTraffic.ToReadableSize() / @_UsedTraffic.ToReadableSize()</MudText>
+    @if (_AvailableTraffic.HasValue && _AvailableTraffic.Value > 0)
+    {
+        <MudProgressLinear Max="_AvailableTraffic!.Value" Value="_UsedTraffic!.Value" Rounded Striped Color="@((_AvailableTraffic == 0)
+            ? Color.Error
+            : (_UsedTraffic == 0)
+                ? Color.Success
+                : (_UsedTraffic / _AvailableTraffic * 100) < 70
+                    ? Color.Success
+                    : (_UsedTraffic / _AvailableTraffic * 100) <= 90
+                        ? Color.Warning
+                        : Color.Error)" Size="Size.Large" Class="my-2" />
+    }
+</MudPaper>

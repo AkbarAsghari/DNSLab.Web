@@ -12,6 +12,11 @@ namespace DNSLab.Web.Extensions
             if (bytes is null)
                 return String.Empty;
 
+            return ToReadableSize(bytes.Value);
+        }
+
+        public static string ToReadableSize(this long bytes)
+        {
             const int scale = 1024;
 
             string[] suffixes = { "B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB" };
@@ -19,7 +24,7 @@ namespace DNSLab.Web.Extensions
             if (bytes <= 0) return "0B";
 
             int i = 0;
-            double dblBytes = bytes.Value;
+            double dblBytes = bytes;
             while (Math.Round(dblBytes) >= scale && i < suffixes.Length - 1)
             {
                 dblBytes /= scale;

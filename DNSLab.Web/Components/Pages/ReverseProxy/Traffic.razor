@@ -15,7 +15,7 @@
     @if (_Traffics != null)
     {
         <MudGrid Spacing="3">
-            @foreach (var item in _Traffics.OrderByDescending(x => x.Type))
+            @foreach (var item in _Traffics)
             {
                 <MudItem xs="12" sm="6">
                     <MudStack Row AlignItems="AlignItems.Center" Spacing="0" Justify="Justify.SpaceBetween">

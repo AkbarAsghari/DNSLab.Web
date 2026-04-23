@@ -19,6 +19,7 @@ namespace DNSLab.Web.Interfaces.Repositories
         Task<bool> ChangeEmailAsync(string email);
         Task<string?> ChangeMobileAsync(string mobile);
         Task<bool> ConfirmOtpAsync(string token, string otp);
+        Task<bool> IsMobileApproved();
         Task<UserDTO?> GetCurrentUserAsync();
         Task<int> UsersCountAsync();
         Task<UserDTO?> GetUserAsync(Guid userId);

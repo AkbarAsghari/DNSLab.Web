@@ -34,6 +34,11 @@ namespace DNSLab.Web.Repositories
             return await _HttpServiceProvider.Post<bool>($"{APIController}/ConfirmOtpAsync?token={token}&otp={otp}");
         }
 
+        public async Task<bool> IsMobileApproved()
+        {
+            return await _HttpServiceProvider.Get<bool>($"{APIController}/IsMobileApproved");
+        }
+
         public async Task<bool> ChangePasswordAsync(ChangePasswordDTO model)
         {
             return await _HttpServiceProvider.Put<ChangePasswordDTO, bool>($"{APIController}/ChangePasswordAsync", model);

@@ -11,6 +11,7 @@ partial class SetupAndInstallation
 {
     [Inject] AuthenticationStateProvider _AuthenticationStateProvider { get; set; }
     [Inject] IReverseProxyRepository _ReverseProxyRepository { get; set; }
+    [Inject] IAccountRepository _AccountRepository { get; set; }
 
     public enum OS
     {
@@ -27,13 +28,14 @@ partial class SetupAndInstallation
     }
 
     string _Token = "XXXXXXX-XX-XXXXXXXX";
-
+    bool? _IsMobileApproved = null;
     protected override async Task OnInitializedAsync()
     {
         var authState = await _AuthenticationStateProvider.GetAuthenticationStateAsync();
         if (authState.User.Identity != null && authState.User.Identity.IsAuthenticated)
         {
             _Token = await _ReverseProxyRepository.GetClientToken() ?? String.Empty;
+            _IsMobileApproved = await _AccountRepository.IsMobileApproved();
         }
         else
         {

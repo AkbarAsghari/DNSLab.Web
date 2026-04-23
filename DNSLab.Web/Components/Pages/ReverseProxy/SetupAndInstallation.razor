@@ -33,6 +33,19 @@
     <MudFlexBreak Class="my-2" />
     <CodeSnippet Language="bash" Code="@($"token set {_Token}")" />
     <MudFlexBreak Class="my-2" />
+    @if (_IsMobileApproved is not null)
+    {
+        @if (_IsMobileApproved == false)
+        {
+            <MudAlert Severity="Severity.Warning" Dense ContentAlignment="HorizontalAlignment.Start">
+                <MudText Typo="Typo.caption">
+                    برای استفاده از این قابلیت، نیاز به تأیید شماره همراه شماست. لطفاً به صفحه
+                    <BaseButton Href="@AllRoutes.MyAccount" Size="Size.Small" Color="Color.Warning" Variant="Variant.Filled">حساب کاربری</BaseButton> ,
+                    مراجعه کرده و شماره موبایل خود را ویرایش کنید
+                </MudText>
+            </MudAlert>
+        }
+    }
     <MudText Typo="Typo.h4" Class="mt-1">روش اتصال</MudText>
     <MudText Typo="Typo.caption">
         برای اتصال باید بسته به نیاز خود در منوی Tunnels از پروتوکل های

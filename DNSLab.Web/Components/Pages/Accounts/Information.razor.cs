@@ -58,16 +58,20 @@ partial class Information
             }
 
             var token = await _AccountRepository.ChangeMobileAsync(_NewMobile);
-            if (String.IsNullOrEmpty(token))
+            if (token is not null)
             {
-                _CurrentUser!.Mobile = _NewMobile;
-                _NewMobile = String.Empty;
-                _EditMobileDialogVisible = false;
+                if (token == String.Empty)
+                {
+                    _CurrentUser!.Mobile = _NewMobile;
+                    _NewMobile = String.Empty;
+                    _EditMobileDialogVisible = false;
+                }
+                else
+                {
+                    _OtpToken = token;
+                }
             }
-            else
-            {
-                _OtpToken = token;
-            }
+
         }
     }
 

@@ -43,8 +43,10 @@ partial class Information
 
     MudForm _EditMobileForm;
     string _NewMobile;
+    string _OtpToken;
     async Task SaveNewMobile()
     {
+        _OtpToken = String.Empty;
         await _EditMobileForm.Validate();
         if (_EditMobileForm.IsValid)
         {
@@ -55,14 +57,35 @@ partial class Information
                 return;
             }
 
-            if (await _AccountRepository.ChangeMobileAsync(_NewMobile))
+            var token = await _AccountRepository.ChangeMobileAsync(_NewMobile);
+            if (String.IsNullOrEmpty(token))
             {
                 _CurrentUser!.Mobile = _NewMobile;
                 _NewMobile = String.Empty;
                 _EditMobileDialogVisible = false;
             }
+            else
+            {
+                _OtpToken = token;
+            }
         }
     }
+
+    string _Otp;
+    async Task ConfirmOtp()
+    {
+        if (await _AccountRepository.ConfirmOtpAsync(_OtpToken, _Otp))
+        {
+            _CurrentUser!.Mobile = _NewMobile;
+            _NewMobile = String.Empty;
+            _EditMobileDialogVisible = false;
+            _OtpToken = String.Empty;
+            _Otp = String.Empty;
+            _EditMobileDialogVisible = false;
+            _Snackbar.Add("شماره همراه شما ثبت شد", Severity.Success);
+        }
+    }
+
 
 
     bool _EditPasswordDialogVisible = false;

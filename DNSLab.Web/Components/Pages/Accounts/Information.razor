@@ -45,7 +45,7 @@
                             @if (_IsConfirmEmailLinkResend)
                             {
                                 <MudText Color="Color.Success" Typo="Typo.body2">لینک تایید ایمیل ارسال شد</MudText>
-                                            <MudText Typo="Typo.body2">لطفا پوشه Spam نیز بررسی شود</MudText>
+                                <MudText Typo="Typo.body2">لطفا پوشه Spam نیز بررسی شود</MudText>
                             }
                             else
                             {
@@ -70,8 +70,17 @@
         </TitleContent>
         <DialogContent>
             <MudForm @ref="_EditMobileForm">
-                <MudTextField T="string" Variant="Variant.Outlined" @bind-Value="_NewMobile" Label="شماره همراه" />
-                <BaseButton Variant="Variant.Filled" Class="mt-2" Color="Color.Primary" FullWidth OnClick="SaveNewMobile">ذخیره شماره همراه جدید</BaseButton>
+                <MudTextField T="string" ReadOnly="String.IsNullOrEmpty(_OtpToken)==false" Variant="Variant.Outlined" @bind-Value="_NewMobile" Label="شماره همراه" />
+                @if (String.IsNullOrEmpty(_OtpToken))
+                {
+                    <BaseButton Variant="Variant.Filled" Class="mt-2" Color="Color.Primary" FullWidth OnClick="SaveNewMobile">ذخیره شماره همراه جدید</BaseButton>
+                }
+                else
+                {
+                    <MudText Typo="Typo.caption">یک کد یکبار مصرف برای شما ارسال شد لطفا در کادر زیر وارد نمایید</MudText>
+                    <MudTextField T="string" Variant="Variant.Outlined" @bind-Value="_Otp" Label="کد احراز هویت" />
+                    <BaseButton Variant="Variant.Filled" Class="mt-2" Color="Color.Primary" FullWidth OnClick="ConfirmOtp">تایید</BaseButton>
+                }
             </MudForm>
         </DialogContent>
     </MudDialog>

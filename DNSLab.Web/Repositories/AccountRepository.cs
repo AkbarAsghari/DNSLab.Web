@@ -24,9 +24,14 @@ namespace DNSLab.Web.Repositories
             return await _HttpServiceProvider.Put<bool>($"{APIController}/ChangeEmailAsync?email={email}");
         }
 
-        public async Task<bool> ChangeMobileAsync(string mobile)
+        public async Task<string?> ChangeMobileAsync(string mobile)
         {
-            return await _HttpServiceProvider.Put<bool>($"{APIController}/ChangeMobileAsync?mobile={mobile}");
+            return await _HttpServiceProvider.Put<string?>($"{APIController}/ChangeMobileAsync?mobile={mobile}");
+        }
+
+        public async Task<bool> ConfirmOtpAsync(string token,string otp)
+        {
+            return await _HttpServiceProvider.Post<bool>($"{APIController}/ConfirmOtpAsync?token={token}&otp={otp}");
         }
 
         public async Task<bool> ChangePasswordAsync(ChangePasswordDTO model)

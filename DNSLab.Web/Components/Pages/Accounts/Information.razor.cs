@@ -50,14 +50,8 @@ partial class Information
         await _EditMobileForm.Validate();
         if (_EditMobileForm.IsValid)
         {
-            if (_NewMobile.Equals(_CurrentUser!.Mobile))
-            {
-                _NewMobile = String.Empty;
-                _EditMobileDialogVisible = false;
-                return;
-            }
-
             var token = await _AccountRepository.ChangeMobileAsync(_NewMobile);
+
             if (token is not null)
             {
                 if (token == String.Empty)
@@ -87,6 +81,7 @@ partial class Information
             _Otp = String.Empty;
             _EditMobileDialogVisible = false;
             _Snackbar.Add("شماره همراه شما ثبت شد", Severity.Success);
+            await OnInitializedAsync();
         }
     }
 

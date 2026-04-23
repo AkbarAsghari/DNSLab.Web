@@ -31,6 +31,17 @@
             <MudGrid>
                 <MudItem xs="12" md="6" lg="4">
                     <MudTextField T="string" Variant="Variant.Outlined" @bind-Value="_CurrentUser.Mobile" Label="شماره همراه" ReadOnly AdornmentIcon="@DNSLabIcons.Edit" OnAdornmentClick="EditMobile" Adornment="Adornment.End" />
+                    @if (_CurrentUser.IsMobileApproved)
+                    {
+                        <MudText Typo="Typo.body2">شماره همراه تایید شده است.</MudText>
+                    }
+                    else
+                    {
+                        <MudText Typo="Typo.body2" Color="Color.Warning">
+                            شماره همراه تایید نشده است.
+                            <BaseButton Color="Color.Warning" Size="Size.Small" Variant="Variant.Outlined" OnClick="EditMobile">ارسال رمز یکبار مصرف</BaseButton>
+                        </MudText>
+                    }
                 </MudItem>
                 <MudItem xs="12" md="6" lg="4">
                     <MudTextField T="string" Variant="Variant.Outlined" @bind-Value="_CurrentUser.Email" Label="آدرس ایمیل" ReadOnly AdornmentIcon="@DNSLabIcons.Edit" OnAdornmentClick="EditEmail" Adornment="Adornment.End" />

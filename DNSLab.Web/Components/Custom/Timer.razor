@@ -1,0 +1,88 @@
+﻿@using System.Timers
+
+<MudCard>
+    <MudCardContent>
+        <MudGrid>
+            <MudItem xs="12">
+                <MudText Typo="Typo.body1" Align="Align.Center">
+                    @if (!IsTimerRunning && !IsInitialLoad)
+                    {
+                        <span>کدی دریافت نکردی ؟ </span>
+                        <MudButton Variant="Variant.Text" Color="Color.Primary" Size="Size.Small" OnClick="ResendOtpCode">ارسال مجدد کد</MudButton>
+                    }
+                    else if (IsTimerRunning)
+                    {
+                        <text>امکان ارسال مجدد تا </text>
+                        <MudChip T="object" Size="Size.Small" Color="Color.Primary" Variant="Variant.Text">@TimeRemaining ثانیه</MudChip>
+                    }
+                </MudText>
+            </MudItem>
+        </MudGrid>
+    </MudCardContent>
+</MudCard>
+
+@code {
+    [Parameter]
+    public EventCallback ResendOtpCallBack { get; set; }
+
+    private System.Timers.Timer _timer;
+    private int TimeRemaining { get; set; } = 60; // Default OTP expiry
+    private bool IsTimerRunning { get; set; } = false;
+    private bool IsInitialLoad { get; set; } = true;
+
+    protected override void OnInitialized()
+    {
+        StartTimer();
+    }
+
+    private void StartTimer()
+    {
+        IsTimerRunning = true;
+        IsInitialLoad = false;
+        TimeRemaining = 60; // Reset to 30 seconds (or your desired TTL)
+
+        _timer?.Dispose();
+        _timer = new System.Timers.Timer(1000); // Tick every second
+        _timer.Elapsed += OnTimerElapsed;
+        _timer.AutoReset = true;
+        _timer.Start();
+    }
+
+    private void OnTimerElapsed(object sender, ElapsedEventArgs e)
+    {
+        if (TimeRemaining <= 1)
+        {
+            // Timer finished
+            _timer.Stop();
+            IsTimerRunning = false;
+            TimeRemaining = 0;
+            InvokeAsync(StateHasChanged);
+        }
+        else
+        {
+            TimeRemaining--;
+            InvokeAsync(StateHasChanged);
+        }
+    }
+
+
+    private async Task ResendOtpCode()
+    {
+        // 1. Disable the button logic quickly (UI feedback)
+        IsTimerRunning = true;
+        await InvokeAsync(StateHasChanged);
+
+        await ResendOtpCallBack.InvokeAsync();
+
+        // 3. Restart the timer
+        StartTimer();
+
+        // 4. Optionally show a notification to the user
+        // Snackbar.Add("OTP code resent successfully!", Severity.Success);
+    }
+
+    public void Dispose()
+    {
+        _timer?.Dispose();
+    }
+}

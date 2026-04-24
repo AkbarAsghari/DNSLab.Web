@@ -29,6 +29,11 @@ namespace DNSLab.Web.Repositories
             return await _HttpServiceProvider.Put<string?>($"{APIController}/ChangeMobileAsync?mobile={mobile}");
         }
 
+        public async Task<string?> ResendOtp(string existingToken)
+        {
+            return await _HttpServiceProvider.Put<string?>($"{APIController}/ResendOtp?existingToken={existingToken}");
+        }
+
         public async Task<bool> ConfirmOtpAsync(string token,string otp)
         {
             return await _HttpServiceProvider.Post<bool>($"{APIController}/ConfirmOtpAsync?token={token}&otp={otp}");

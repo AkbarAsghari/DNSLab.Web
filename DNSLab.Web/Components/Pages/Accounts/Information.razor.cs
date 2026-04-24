@@ -69,6 +69,15 @@ partial class Information
         }
     }
 
+    async Task ResendOtp()
+    {
+        var token = await _AccountRepository.ResendOtp(_OtpToken);
+        if (token is not null)
+        {
+            _OtpToken = token;
+        }
+    }
+
     string _Otp;
     async Task ConfirmOtp()
     {

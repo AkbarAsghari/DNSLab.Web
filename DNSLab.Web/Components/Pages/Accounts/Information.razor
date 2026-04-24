@@ -90,6 +90,7 @@
                 {
                     <MudText Typo="Typo.caption">یک کد یکبار مصرف برای شما ارسال شد لطفا در کادر زیر وارد نمایید</MudText>
                     <MudTextField T="string" Variant="Variant.Outlined" @bind-Value="_Otp" Label="کد احراز هویت" />
+                            <Timer ResendOtpCallBack="ResendOtp" />
                     <BaseButton Variant="Variant.Filled" Class="mt-2" Color="Color.Primary" FullWidth OnClick="ConfirmOtp">تایید</BaseButton>
                 }
             </MudForm>

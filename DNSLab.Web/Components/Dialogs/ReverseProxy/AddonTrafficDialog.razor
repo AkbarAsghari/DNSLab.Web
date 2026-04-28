@@ -1,0 +1,14 @@
+﻿<MudDialog ContentClass="py-2">
+    <DialogContent>
+        <MudText Typo="Typo.body1">ترافیک اضافه زمان مصرف ندارد و منقضی نمیشود و پس از مصرف ترافیک اشتراک تهیه شده ، شروع به مصرف از این ترافیک میشود.</MudText>
+        <MudSlider T="int" @bind-Value="_Traffic" Class="my-2" Min="1" Max="50" Color="Color.Primary" TickMarks Variant="Variant.Filled" />
+        <MudStack Row AlignItems="AlignItems.Center" Justify="Justify.Center">
+            <MudText Typo="Typo.body1">@_Traffic گیگابایت</MudText>
+            <MudText Typo="Typo.body1">@((_Traffic * 50_000).Separate3Digits()) ریال</MudText>
+        </MudStack>
+    </DialogContent>
+    <DialogActions>
+        <BaseButton OnClick="()=>_MudDialog.Close()">انصراف</BaseButton>
+        <BaseButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Pay">پرداخت</BaseButton>
+    </DialogActions>
+</MudDialog>

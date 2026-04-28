@@ -9,36 +9,46 @@
     اولویت مصرف ترافیک به ترتیب ترافیک هدیه ، ماهانه ، پلن و سپس ترافیک اضافه میباشد
 </MudText>
 
-<MudPaper Class="mt-5 pa-10" Outlined>
-    <MudText Typo="Typo.caption">مقدار ترافیک مصرف شده تا این لحظه</MudText>
-    <MudFlexBreak />
-    @if (_Traffics != null)
-    {
-        <MudGrid Spacing="3">
-            @foreach (var item in _Traffics)
+<MudCard Elevation="0">
+    <MudCardHeader>
+        <CardHeaderContent />
+        <CardHeaderActions>
+            <MudButton EndIcon="@DNSLabIcons.Add" Variant="Variant.Filled" Color="MudBlazor.Color.Primary" Size="MudBlazor.Size.Small" OnClick="RechargeTraffic">ترافیک اضافه</MudButton>
+        </CardHeaderActions>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudPaper Class="mt-5 pa-10" Elevation="0">
+            <MudText Typo="Typo.caption">مقدار ترافیک مصرف شده تا این لحظه</MudText>
+            <MudFlexBreak />
+            @if (_Traffics != null)
             {
-                <MudItem xs="12" sm="6">
-                    <MudStack Row AlignItems="AlignItems.Center" Spacing="0" Justify="Justify.SpaceBetween">
-                        <MudChip T="string" Label="true" Color="Color.Primary" Size="Size.Small">
-                            @(item.Type)
-                        </MudChip>
-                        <MudChip T="string" Label="true" Color="Color.Surface" Size="Size.Small">
-                            @(item.FromDate.HasValue ? item.FromDate.Value.ToPersianDate() : "♾️") - @(item.ToDate.HasValue ? item.ToDate.Value.ToPersianDate() : "♾️")
-                        </MudChip>
-                        <MudChip T="string" Label="true" Color="Color.Primary" Size="Size.Small">
-                            @item.Traffic.ToReadableSize() / @((item.Traffic - item.RemainTraffic).ToReadableSize())
-                        </MudChip>
-                    </MudStack>
-                    <MudProgressLinear Max="@item.Traffic" Value="(item.Traffic - item.RemainTraffic)" Rounded Striped Color="@((item.Traffic - item.RemainTraffic == 0)
+                <MudGrid Spacing="3">
+                    @foreach (var item in _Traffics)
+                    {
+                        <MudItem xs="12" sm="6">
+                            <MudStack Row AlignItems="AlignItems.Center" Spacing="0" Justify="Justify.SpaceBetween">
+                                <MudChip T="string" Label="true" Color="Color.Primary" Size="Size.Small">
+                                    @(item.Type)
+                                </MudChip>
+                                <MudChip T="string" Label="true" Color="Color.Surface" Size="Size.Small">
+                                    @(item.FromDate.HasValue ? item.FromDate.Value.ToPersianDate() : "♾️") - @(item.ToDate.HasValue ? item.ToDate.Value.ToPersianDate() : "♾️")
+                                </MudChip>
+                                <MudChip T="string" Label="true" Color="Color.Primary" Size="Size.Small">
+                                    @item.Traffic.ToReadableSize() / @((item.Traffic - item.RemainTraffic).ToReadableSize())
+                                </MudChip>
+                            </MudStack>
+                            <MudProgressLinear Max="@item.Traffic" Value="(item.Traffic - item.RemainTraffic)" Rounded Striped Color="@((item.Traffic - item.RemainTraffic == 0)
                         ? Color.Success
                         : ((double)(item.Traffic - item.RemainTraffic) / item.Traffic * 100) < 70
                             ? Color.Success
                             : ((double)(item.Traffic - item.RemainTraffic) / item.Traffic * 100) <= 90
                                 ? Color.Warning
                                 : Color.Default)" Size="Size.Large" Class="my-2" />
-                </MudItem>
+                        </MudItem>
+                    }
+                </MudGrid>
             }
-        </MudGrid>
-    }
 
-</MudPaper>
+        </MudPaper>
+    </MudCardContent>
+</MudCard>

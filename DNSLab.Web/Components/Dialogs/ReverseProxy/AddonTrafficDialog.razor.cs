@@ -8,7 +8,7 @@ partial class AddonTrafficDialog
     [Inject] ISubscriptionRepository _SubscriptionRepository { get; set; }
     [CascadingParameter] IMudDialogInstance _MudDialog { get; set; }
 
-    int _Traffic = 1;
+    int _Traffic = 10;
 
     async Task Pay()
     {

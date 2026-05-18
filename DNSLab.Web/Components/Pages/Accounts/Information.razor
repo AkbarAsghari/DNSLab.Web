@@ -30,7 +30,7 @@
         <MudCardContent>
             <MudGrid>
                 <MudItem xs="12" md="6" lg="4">
-                    <MudTextField T="string" Variant="Variant.Outlined" @bind-Value="_CurrentUser.Mobile" Label="شماره همراه" ReadOnly AdornmentIcon="@DNSLabIcons.Edit" OnAdornmentClick="EditMobile" Adornment="Adornment.End" />
+                    <MudTextField T="string" Variant="Variant.Outlined" @bind-Value="_CurrentUser.Mobile" Label="شماره همراه" ReadOnly AdornmentIcon="@DNSLabIcons.Edit" OnAdornmentClick="EditMobile" Adornment="@(_CurrentUser.IsMobileApproved ? Adornment.None : Adornment.End)" />
                     @if (_CurrentUser.IsMobileApproved)
                     {
                         <MudText Typo="Typo.body2">شماره همراه تایید شده است.</MudText>
@@ -44,7 +44,7 @@
                     }
                 </MudItem>
                 <MudItem xs="12" md="6" lg="4">
-                    <MudTextField T="string" Variant="Variant.Outlined" @bind-Value="_CurrentUser.Email" Label="آدرس ایمیل" ReadOnly AdornmentIcon="@DNSLabIcons.Edit" OnAdornmentClick="EditEmail" Adornment="Adornment.End" />
+                    <MudTextField T="string" Variant="Variant.Outlined" @bind-Value="_CurrentUser.Email" Label="آدرس ایمیل" ReadOnly AdornmentIcon="@DNSLabIcons.Edit" OnAdornmentClick="EditEmail" Adornment="@(_CurrentUser.IsEmailApproved ? Adornment.None : Adornment.End)" />
                     @if (_CurrentUser.IsEmailApproved)
                     {
                         <MudText Typo="Typo.body2">آدرس ایمیل تایید شده است.</MudText>
@@ -90,7 +90,7 @@
                 {
                     <MudText Typo="Typo.caption">یک کد یکبار مصرف برای شما ارسال شد لطفا در کادر زیر وارد نمایید</MudText>
                     <MudTextField T="string" Variant="Variant.Outlined" @bind-Value="_Otp" Label="کد احراز هویت" />
-                            <Timer ResendOtpCallBack="ResendOtp" />
+                    <Timer ResendOtpCallBack="ResendOtp" />
                     <BaseButton Variant="Variant.Filled" Class="mt-2" Color="Color.Primary" FullWidth OnClick="ConfirmOtp">تایید</BaseButton>
                 }
             </MudForm>

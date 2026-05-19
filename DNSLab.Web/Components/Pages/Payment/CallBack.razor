@@ -22,8 +22,17 @@
         else
         {
             <MudAlert ContentAlignment="HorizontalAlignment.Start" NoIcon Severity="@(IsVerified == true ? Severity.Success : Severity.Warning)">
-                <MudText>@(IsVerified == true ? "موفق" : "نا موفق")</MudText>
-                <MudText Typo="Typo.body2">توضیحات : @Result</MudText>
+                @if (IsVerified == true)
+                {
+                    <MudText Class="mb-1">کیف پول شما شارژ شد!</MudText>
+                    <MudText Typo="Typo.body2">هر تومنی که به این سایت واریز شود، انرژی و دلگرمی تازه‌ای برای ساختن امکانات بهتر به ما می‌دهد.</MudText>
+                    <MudText Typo="Typo.body2">خوشحالیم که کنارتان هستیم.</MudText>
+                }
+                else
+                {
+                    <MudText Class="mb-1">شارژ کیف پول نا موفق بود!</MudText>
+                    <MudText Typo="Typo.body2">توضیحات : @Result</MudText>
+                }
             </MudAlert>
         }
     </MudCardContent>

@@ -29,7 +29,7 @@ partial class DNSLookup
     public string query { get; set; } = String.Empty;
 
     QueryTypeEnum _QueryType;
-    string _NameServer = "8.8.4.4";
+    string _NameServer = "217.218.127.127";
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

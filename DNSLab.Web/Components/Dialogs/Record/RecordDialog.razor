@@ -13,7 +13,7 @@
                 }
             </MudSelect>
             <MudTooltip Text="@(_IsAbleToChangeTTL ? String.Empty : "اشتراک فعلی شما قابلیت ویرایش TTL را پوشش نمیدهد لطفا اشتراک تهیه فرمایید")">
-                <MudNumericField T="uint" @bind-Value="Record.TTL" Disabled="!_IsAbleToChangeTTL" Variant="Variant.Outlined" Min="0" Max="uint.MaxValue" Placeholder="60" Label="TTL" />
+                <MudNumericField T="uint" @bind-Value="Record.TTL" Disabled="!_IsAbleToChangeTTL" Variant="Variant.Outlined" Min="0" Max="uint.MaxValue" Placeholder="60" Label="TTL(s)" />
             </MudTooltip>
             @switch (Record.Type)
             {

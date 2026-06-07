@@ -1,0 +1,79 @@
+﻿@attribute [Route(AllRoutes.ConfigReverseProxy)]
+@attribute [Authorize]
+<SeoProvider Title="Config.yaml" />
+
+<MudText Typo="Typo.h1" Align="Align.Center">فایل Config.yaml</MudText>
+<MudText Class="mt-5 mb-10" Align="Align.Center">انتصال همزمان چند تونل با استفاده از config.yaml .</MudText>
+
+<MudPaper Class="mt-5 pa-10" Outlined>
+    <MudText Typo="Typo.h4" Class="my-2">روش کار با کانفیگ</MudText>
+    <MudText Typo="Typo.caption" Class="mb-2">برای این کار نیاز دارید در محلی که فایل CLI DNSLab قرار دارد یک فایل با پسوند <MudChip Size="Size.Small" Color="Color.Primary" Variant="Variant.Filled" Label="true" T="string">yaml.</MudChip> و نام دلخواه که در مثال ما config میباشد ایجاد کنید که محتوای آن مانند نمونه پایین باشد.</MudText>
+    <MudFlexBreak Class="my-3" />
+    <CodeSnippet Language="yaml" Code="@sampleYAML" />
+    <BaseButton Class="my-3" Size="Size.Small" EndIcon="@DNSLabIcons.Download" Color="Color.Primary" Variant="Variant.Filled" DropShadow="false" Href="https://cdn.dnslab.link/config.yaml">
+        دانلود فایل نمونه
+    </BaseButton>
+    <MudText Class="mb-2">سپس برای اجرا کافیست در CLI دستور زیر را وارد نمایید.</MudText>
+    <MudFlexBreak Class="my-3" />
+    <CodeSnippet Language="bash" Code="@($"start --config config.yaml")" />
+    <MudText Class="mb-2" >برای رزرو آدرس برای هر نوع تونل مانند مثال های زیر کانفیگ خود را تغییر دهید.</MudText>
+    <MudFlexBreak Class="my-3" />
+    <MudGrid Spacing="1">
+        <MudItem xs="12" sm="6" md="4">
+            <MudText>TCP</MudText>
+            <CodeSnippet Language="yaml" Code="@sampleReservedTcpYAML" />
+        </MudItem>
+        <MudItem xs="12" sm="6" md="4">
+            <MudText>HTML</MudText>
+            <CodeSnippet Language="yaml" Code="@sampleReservedHtmlYAML" />
+        </MudItem>
+        <MudItem xs="12" sm="6" md="4">
+            <MudText>UDP</MudText>
+            <CodeSnippet Language="yaml" Code="@sampleReservedUdpYAML" />
+        </MudItem>
+    </MudGrid>
+</MudPaper>
+
+
+@code {
+    string sampleYAML = """"
+        version: "2"
+        tunnels:
+          - name: database
+            proto: tcp
+            addr: 1433
+          - name: stream
+            proto: udp
+            addr: 78
+          - name: web
+            proto: http
+            addr: 80
+        """";
+
+    string sampleReservedTcpYAML = """"
+        version: "2"
+        tunnels:
+          - name: database
+            proto: tcp
+            addr: 1433
+            remote_addr: tcp.dnslab.ir:5001
+        """";
+
+    string sampleReservedUdpYAML = """"
+        version: "2"
+        tunnels:
+          - name: stream
+            proto: udp
+            addr: 78
+            remote_addr: udp.dnslab.ir:5001
+        """";
+
+    string sampleReservedHtmlYAML = """"
+        version: "2"
+        tunnels:
+          - name: web
+            proto: http
+            addr: 80
+            domain: test.http.dnslab.ir
+        """";
+}

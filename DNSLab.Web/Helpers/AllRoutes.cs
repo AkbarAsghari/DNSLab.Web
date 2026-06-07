@@ -69,6 +69,7 @@
         public const string UdpReverseProxy = "/reverse-proxy/udp";
         public const string HttpReverseProxy = "/reverse-proxy/http";
         public const string ReverseProxyTraffic = "/reverse-proxy/traffic";
+        public const string ConfigReverseProxy = "/reverse-proxy/config";
 
         public const string SocialChannel = "https://ble.ir/dnslab";
     }

@@ -2,18 +2,64 @@
 @attribute [Authorize]
 <SeoProvider Title="توکن احراز هویت شما" />
 
-<MudText Typo="Typo.h1" Align="Align.Center">توکن احراز هویت شما</MudText>
-<MudText Class="mt-5 mb-10" Align="Align.Center">از این توکن شخصی (Authtoken) برای احراز هویت ابزار خط فرمان dnslab در پروژه‌های خودت استفاده کن. یادت باشه مثل رمز عبور باید محرمانه نگهش داری.</MudText>
+<MudText Typo="Typo.h1" Align="Align.Center">
+    توکن احراز هویت
+</MudText>
 
-<MudPaper Class="mt-5 pa-10" Elevation="0">
-    <MudText Typo="Typo.h4" Class="mb-2">توکن احراز هویتت (Authtoken) رو از روش زیر به dnslab cli اضافه کن.</MudText>
+<MudText Class="mt-5" Align="Align.Center">
+    برای اتصال DNSLab CLI به حساب کاربری خود از Authtoken استفاده کنید.
+</MudText>
 
-    <MudText Typo="Typo.caption">عامل dnslab رو احراز هویت کن. این کار باعث می‌شه Authtoken‌ت داخل فایل تنظیمات پیش‌فرض ذخیره بشه و فقط یک بار لازم باشه انجامش بدی.</MudText>
-    <MudFlexBreak Class="mt-2 mb-5" />
-    <CodeSnippet Language="bash" Code="@($"token set {_Token}")" />
+<MudText Class="mb-10" Align="Align.Center">
+    این توکن مانند رمز عبور شما است و باید محرمانه نگهداری شود.
+</MudText>
 
-    <MudText Typo="Typo.h4" Class="mt-5 mb-2">توکن احراز هویتت رو بازنشانی کن</MudText>
-    <MudText Typo="Typo.caption">این کار قابل بازگشت نیست. بعد از بازنشانی، باید هر عامل (cli) رو با Authtoken جدید به‌روزرسانی کنی؛ با روشی که بالاتر گفته شد.</MudText>
-    <MudFlexBreak Class="my-3" />
-    <BaseButton DropShadow="false" Variant="Variant.Filled" Color="Color.Primary" OnClick="RevokeClientToken">بازنشانی توکن احراز هویت</BaseButton>
+<MudPaper Class="mt-5 pa-10" Outlined>
+
+    <MudAlert Severity="Severity.Warning"
+              ContentAlignment="HorizontalAlignment.Start"
+              Class="mb-6">
+        این توکن دسترسی کامل به حساب DNSLab شما را فراهم می‌کند. آن را در اختیار دیگران قرار ندهید.
+    </MudAlert>
+
+    <MudText Typo="Typo.h4" Class="mb-2">
+        توکن شما
+    </MudText>
+
+    <CodeSnippet Language="text" Code="@_Token" />
+
+    <MudText Typo="Typo.h4" Class="mt-6 mb-2">
+        فعال‌سازی در CLI
+    </MudText>
+
+    <MudText Class="mb-4">
+        برای اتصال DNSLab CLI به حساب خود، دستور زیر را اجرا کنید:
+    </MudText>
+
+    <CodeSnippet Language="bash"
+                 Code="@($"token set {_Token}")" />
+
+    <MudAlert Severity="Severity.Success"
+              ContentAlignment="HorizontalAlignment.Start"
+              Class="mt-4">
+        این عملیات فقط یک بار انجام می‌شود و توکن در تنظیمات CLI ذخیره خواهد شد.
+    </MudAlert>
+
+    <MudDivider Class="my-6" />
+
+    <MudText Typo="Typo.h4" Class="mb-2">
+        بازنشانی توکن
+    </MudText>
+
+    <MudText Class="mb-4">
+        پس از بازنشانی، تمامی CLI های متصل از دسترس خارج می‌شوند و باید مجدداً با توکن جدید احراز هویت شوند.
+    </MudText>
+
+    <BaseButton Variant="Variant.Filled"
+                Color="Color.Error"
+                DropShadow="false"
+                OnClick="RevokeClientToken">
+        بازنشانی توکن
+    </BaseButton>
+
 </MudPaper>

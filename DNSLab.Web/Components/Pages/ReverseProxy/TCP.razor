@@ -3,16 +3,95 @@
 <SeoProvider Title="TCP Tunnel" />
 
 <MudText Typo="Typo.h1" Align="Align.Center">تونل TCP</MudText>
-<MudText Class="mt-5 mb-10" Align="Align.Center">از تانل TCP برای مواردی مانند SSH , RDP , FTP و سایر پروتوکل هایی که در بستر TCP هستند میتوان استفاده کرد</MudText>
+<MudText Class="mt-5" Align="Align.Center">
+    سرویس‌های TCP مانند SSH، RDP، FTP، دیتابیس‌ها و سایر پروتکل‌های مبتنی بر TCP را بدون Port Forwarding و تنظیمات پیچیده شبکه از طریق اینترنت در دسترس قرار دهید.
+</MudText>
+<MudText Class="mb-10" Align="Align.Center">
+    مناسب برای: SSH، RDP، FTP، SQL Server، MySQL و سایر سرویس‌های TCP
+</MudText>
 
 <MudPaper Class="mt-5 pa-10" Outlined>
-    <MudText Typo="Typo.h4" Class="my-2">دسترسی به پورت های TCP سیستم از طریق اینترنت</MudText>
-    <MudText Typo="Typo.caption" Class="mb-2">دستور زیر رو توی خط فرمان DNSLab Cli اجرا کن.</MudText>
-    <MudFlexBreak Class="my-3" />
-    <CodeSnippet Language="bash" Code="@($"tcp 80")" />
-    <MudText Typo="Typo.caption">نشانی‌های TCP شامل یک نام میزبان (hostname) و شماره پورت هستند. مثلاً: tcp.dnslab.ir:12345</MudText>
-    <MudText Class="mb-2">برای رزرو پورت مورد نظر میتوانید از این دستور استفاده نمایید (نیاز به تهیه اشتراک دارد).</MudText>
-    <MudFlexBreak Class="my-3" />
-    <CodeSnippet Language="bash" Code="@($"tcp 80 tcp.dnslab.ir:5001")" />
-    <MudText Typo="Typo.caption" Class="mb-2" Color="Color.Info">در این مثال آدرس و پورت tcp.dnslab.ir:5001 بعنوان رزرو برای شما ثبت میشود.</MudText>
+
+    <MudText Typo="Typo.h4" Class="mb-4">
+        موارد استفاده
+    </MudText>
+
+    <MudGrid>
+        <MudItem xs="12" md="4">
+            <MudPaper Class="pa-4 fill-height" Outlined>
+                <MudIcon Icon="@Icons.Material.Filled.Terminal" Size="Size.Large" />
+                <MudText Typo="Typo.h6">SSH</MudText>
+                <MudText Typo="Typo.body2">
+                    دسترسی امن به سرور و تجهیزات شبکه
+                </MudText>
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12" md="4">
+            <MudPaper Class="pa-4 fill-height" Outlined>
+                <MudIcon Icon="@Icons.Material.Filled.DesktopWindows" Size="Size.Large" />
+                <MudText Typo="Typo.h6">RDP</MudText>
+                <MudText Typo="Typo.body2">
+                    اتصال Remote Desktop از طریق اینترنت
+                </MudText>
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12" md="4">
+            <MudPaper Class="pa-4 fill-height" Outlined>
+                <MudIcon Icon="@Icons.Material.Filled.Storage" Size="Size.Large" />
+                <MudText Typo="Typo.h6">دیتابیس</MudText>
+                <MudText Typo="Typo.body2">
+                    دسترسی به SQL Server، MySQL و PostgreSQL
+                </MudText>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+
+    <MudText Typo="Typo.h4" Class="my-2">
+        شروع سریع
+    </MudText>
+
+    <MudText Class="mb-4">
+        اگر سرویس TCP شما روی پورت 80 در حال اجرا است، دستور زیر را اجرا کنید:
+    </MudText>
+
+    <CodeSnippet Language="bash" Code="tcp 80" />
+
+    <MudAlert Severity="Severity.Success"
+              ContentAlignment="HorizontalAlignment.Start"
+              Class="mt-4">
+        پس از اجرا، DNSLab یک آدرس TCP عمومی در اختیار شما قرار می‌دهد.
+    </MudAlert>
+
+    <MudText Typo="Typo.h4" Class="my-2">
+        نمونه خروجی
+    </MudText>
+
+    <CodeSnippet Language="text"
+                 Code="tcp.dnslab.ir:12345" />
+
+    <MudAlert Severity="Severity.Success"
+              ContentAlignment="HorizontalAlignment.Start"
+              Class="mt-4">
+        کاربران می‌توانند از طریق این آدرس و پورت به سرویس شما متصل شوند.
+    </MudAlert>
+
+    <MudText Typo="Typo.h4" Class="my-2">
+        آدرس و پورت رزرو شده
+    </MudText>
+
+    <MudText Class="mb-2">
+        اگر اشتراک فعال دارید می‌توانید یک آدرس و پورت ثابت رزرو کنید.
+    </MudText>
+
+    <CodeSnippet Language="bash"
+                 Code="tcp 80 tcp.dnslab.ir:5001" />
+
+    <MudAlert Severity="Severity.Info"
+              ContentAlignment="HorizontalAlignment.Start"
+              Class="mt-4">
+        آدرس tcp.dnslab.ir:5001 برای شما رزرو خواهد شد.
+    </MudAlert>
+
 </MudPaper>

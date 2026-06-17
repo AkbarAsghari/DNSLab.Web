@@ -1,60 +1,163 @@
 ﻿@attribute [Route(AllRoutes.SetupAndInstallation)]
 <SeoProvider Title="DNSLab cli" />
 
-<MudText Typo="Typo.h1" Align="Align.Center">DNSLab cli</MudText>
-<MudText Typo="Typo.body1" Align="Align.Center" Class="mt-2 mb-10">DNSLab دروازه‌ی ورود اپلیکیشن شماست — و سریع‌ترین راه برای قرار دادن هر چیزی روی اینترنت.</MudText>
-<MudStack Row>
-    <BaseButton Class="px-7" StartIcon="@DNSLabIcons.Windows" Size="Size.Small" Color="@(_SelectedOs == OS.Windows ? Color.Primary : Color.Default)" Variant="@(_SelectedOs == OS.Windows ? Variant.Filled : Variant.Outlined)" OnClick="()=> ChangeOS(OS.Windows)">Windows</BaseButton>
-    <BaseButton Class="px-10" StartIcon="@DNSLabIcons.Linux" Size="Size.Small" Color="@(_SelectedOs == OS.Linux ? Color.Primary : Color.Default)" Variant="@(_SelectedOs == OS.Linux ? Variant.Filled : Variant.Outlined)" OnClick="()=> ChangeOS(OS.Linux)">Linux</BaseButton>
-</MudStack>
-<MudPaper Class="mt-5 pa-10" Elevation="0">
+<MudText Typo="Typo.h1" Align="Align.Center">
+    DNSLab CLI
+</MudText>
+
+<MudText Typo="Typo.body1"
+         Align="Align.Center"
+         Class="mt-2 mb-10">
+    سریع‌ترین راه برای انتشار سرویس‌های محلی روی اینترنت
+</MudText>
+
+<MudPaper Class="pa-10" Outlined>
+
+    <MudText Typo="Typo.h4" Class="mb-4">
+        1. نصب DNSLab CLI
+    </MudText>
+
+    <MudStack Row Class="mb-4">
+        <BaseButton Class="px-7"
+                    StartIcon="@DNSLabIcons.Windows"
+                    Size="Size.Small"
+                    Color="@(_SelectedOs == OS.Windows ? Color.Primary : Color.Default)"
+                    Variant="@(_SelectedOs == OS.Windows ? Variant.Filled : Variant.Outlined)"
+                    OnClick="()=> ChangeOS(OS.Windows)">
+            Windows
+        </BaseButton>
+
+        <BaseButton Class="px-10"
+                    StartIcon="@DNSLabIcons.Linux"
+                    Size="Size.Small"
+                    Color="@(_SelectedOs == OS.Linux ? Color.Primary : Color.Default)"
+                    Variant="@(_SelectedOs == OS.Linux ? Variant.Filled : Variant.Outlined)"
+                    OnClick="()=> ChangeOS(OS.Linux)">
+            Linux
+        </BaseButton>
+    </MudStack>
+
     @switch (_SelectedOs)
     {
         case OS.Windows:
-            <MudText Typo="Typo.h4" Class="mt-1">روش نصب</MudText>
-            <MudText Typo="Typo.caption">برای نصب کلاینت بر روی ویندوز فایل مناسب سیستم عامل خود را دانلود کنید.</MudText>
-            <MudFlexBreak />
-            <BaseButton Class="my-3" Size="Size.Small" EndIcon="@DNSLabIcons.Download" Color="Color.Primary" Variant="Variant.Filled" DropShadow="false" Href="https://cdn.dnslab.link/dnslab-windows-amd64.exe">
-                dnslab-windows-amd64.exe
+
+            <BaseButton Class="my-2"
+                        Size="Size.Small"
+                        EndIcon="@DNSLabIcons.Download"
+                        Color="Color.Primary"
+                        Variant="Variant.Filled"
+                        DropShadow="false"
+                        Href="https://cdn.dnslab.link/dnslab-windows-amd64.exe">
+                دانلود نسخه Windows x64
             </BaseButton>
-            <BaseButton Class="my-3" Size="Size.Small" EndIcon="@DNSLabIcons.Download" Color="Color.Primary" Variant="Variant.Filled" DropShadow="false" Href="https://cdn.dnslab.link/dnslab-windows-arm64.exe">
-                dnslab-windows-arm64.exe
+
+            <BaseButton Class="my-2"
+                        Size="Size.Small"
+                        EndIcon="@DNSLabIcons.Download"
+                        Color="Color.Primary"
+                        Variant="Variant.Filled"
+                        DropShadow="false"
+                        Href="https://cdn.dnslab.link/dnslab-windows-arm64.exe">
+                دانلود نسخه Windows ARM64
             </BaseButton>
+
             break;
+
         case OS.Linux:
-            <MudText Typo="Typo.h4" Class="mt-1">روش نصب</MudText>
-            <MudText Typo="Typo.caption">برای نصب کلاینت بر روی لینوکس دستور زیر را در ترمینال سیستم عامل خود وارد کنید.</MudText>
-            <CodeSnippet Language="bash" Code="curl -fsSL https://cdn.dnslab.link/linux/install.sh | sudo sh" />
+
+            <CodeSnippet Language="bash"
+                         Code="curl -fsSL https://cdn.dnslab.link/linux/install.sh | sudo sh" />
+
             break;
     }
 
-    <MudFlexBreak Class="my-4" />
-    <MudText Typo="Typo.caption" Class="mb-2">این دستور رو اجرا کن تا توکن احراز هویتت (token) به فایل پیکربندی پیش‌فرض dnslab اضافه بشه.</MudText>
-    <MudFlexBreak />
-    <MudText Typo="Typo.caption" Color="Color.Info" Class="mb-2">این عملیات نیازی به تکرار در هر بار اتصال ندارد و فقط کافی است یک بار انجام شود.</MudText>
-    <MudFlexBreak Class="my-2" />
-    <CodeSnippet Language="bash" Code="@($"token set {_Token}")" />
-    <MudFlexBreak Class="my-2" />
-    @if (_IsMobileApproved is not null)
-    {
-        @if (_IsMobileApproved == false)
-        {
-            <MudAlert Severity="Severity.Warning" Dense ContentAlignment="HorizontalAlignment.Start">
-                <MudText Typo="Typo.caption">
-                    برای استفاده از این قابلیت، نیاز به تأیید شماره همراه شماست. لطفاً به صفحه
-                    <BaseButton Href="@AllRoutes.MyAccount" Size="Size.Small" Color="Color.Warning" Variant="Variant.Filled">حساب کاربری</BaseButton> ,
-                    مراجعه کرده و شماره موبایل خود را ویرایش کنید
-                </MudText>
-            </MudAlert>
-        }
-    }
-    <MudText Typo="Typo.h4" Class="mt-1">روش اتصال</MudText>
-    <MudText Typo="Typo.caption">
-        برای اتصال باید بسته به نیاز خود در منوی Tunnels از پروتوکل های
-        <BaseButton Href="@AllRoutes.HttpReverseProxy" Size="Size.Small" Color="Color.Primary" Variant="Variant.Filled">HTTP</BaseButton> ,
-        <BaseButton Href="@AllRoutes.TcpReverseProxy" Size="Size.Small" Color="Color.Primary" Variant="Variant.Filled">TCP</BaseButton> و یا
-        <BaseButton Href="@AllRoutes.UdpReverseProxy" Size="Size.Small" Color="Color.Primary" Variant="Variant.Filled">UDP</BaseButton>
-        را انتخاب نمایید.
+    <MudDivider Class="my-6" />
+
+    <MudText Typo="Typo.h4" Class="mb-2">
+        2. احراز هویت
     </MudText>
-    <MudText Typo="Typo.caption">لطفا قبل از اتصال <MudLink Href="@AllRoutes.Terms" Underline="Underline.None">شرایط و ضوابط استفاده</MudLink> را به دقت مطالعه ‌نمایید.</MudText>
+
+    <MudText Class="mb-4">
+        این دستور را فقط یک بار اجرا کنید:
+    </MudText>
+
+    <CodeSnippet Language="bash"
+                 Code="@($"token set {_Token}")" />
+
+    <MudAlert Severity="Severity.Success"
+              Class="mt-4"
+              ContentAlignment="HorizontalAlignment.Start">
+        توکن شما در تنظیمات CLI ذخیره خواهد شد و نیازی به تکرار این مرحله نیست.
+    </MudAlert>
+
+    @if (_IsMobileApproved is not null && _IsMobileApproved == false)
+    {
+        <MudAlert Severity="Severity.Warning"
+                  Class="mt-4"
+                  ContentAlignment="HorizontalAlignment.Start">
+            برای استفاده از DNSLab ابتدا شماره همراه خود را تأیید کنید.
+        </MudAlert>
+    }
+
+    <MudDivider Class="my-6" />
+
+    <MudText Typo="Typo.h4" Class="mb-4">
+        3. ایجاد تونل
+    </MudText>
+
+    <MudGrid>
+
+        <MudItem xs="12" md="4">
+            <MudPaper Class="pa-4" Outlined>
+                <MudText Typo="Typo.h6">HTTP</MudText>
+                <MudText Typo="Typo.body2">
+                    وب‌سایت، API و Webhook
+                </MudText>
+
+                <BaseButton Href="@AllRoutes.HttpReverseProxy"
+                            Class="mt-3"
+                            Size="Size.Small"
+                            Variant="Variant.Filled"
+                            Color="Color.Primary">
+                    مشاهده آموزش
+                </BaseButton>
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12" md="4">
+            <MudPaper Class="pa-4" Outlined>
+                <MudText Typo="Typo.h6">TCP</MudText>
+                <MudText Typo="Typo.body2">
+                    SSH، RDP، FTP و دیتابیس‌ها
+                </MudText>
+
+                <BaseButton Href="@AllRoutes.TcpReverseProxy"
+                            Class="mt-3"
+                            Size="Size.Small"
+                            Variant="Variant.Filled"
+                            Color="Color.Primary">
+                    مشاهده آموزش
+                </BaseButton>
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12" md="4">
+            <MudPaper Class="pa-4" Outlined>
+                <MudText Typo="Typo.h6">UDP</MudText>
+                <MudText Typo="Typo.body2">
+                    DNS، بازی آنلاین و VoIP
+                </MudText>
+
+                <BaseButton Href="@AllRoutes.UdpReverseProxy"
+                            Class="mt-3"
+                            Size="Size.Small"
+                            Variant="Variant.Filled"
+                            Color="Color.Primary">
+                    مشاهده آموزش
+                </BaseButton>
+            </MudPaper>
+        </MudItem>
+
+    </MudGrid>
+
 </MudPaper>

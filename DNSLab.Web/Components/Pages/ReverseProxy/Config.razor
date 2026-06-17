@@ -2,36 +2,129 @@
 @attribute [Authorize]
 <SeoProvider Title="Config.yaml" />
 
-<MudText Typo="Typo.h1" Align="Align.Center">فایل Config.yaml</MudText>
-<MudText Class="mt-5 mb-10" Align="Align.Center">انتصال همزمان چند تونل با استفاده از config.yaml .</MudText>
+<MudText Typo="Typo.h1" Align="Align.Center">
+    فایل Config.yaml
+</MudText>
+
+<MudText Class="mt-5" Align="Align.Center">
+    با استفاده از فایل Config.yaml می‌توانید چندین تونل را به صورت همزمان مدیریت و اجرا کنید.
+</MudText>
+
+<MudText Class="mb-10" Align="Align.Center">
+    مناسب برای اجرای همزمان سرویس‌های HTTP، TCP و UDP با یک دستور
+</MudText>
 
 <MudPaper Class="mt-5 pa-10" Outlined>
-    <MudText Typo="Typo.h4" Class="my-2">روش کار با کانفیگ</MudText>
-    <MudText Typo="Typo.caption" Class="mb-2">برای این کار نیاز دارید در محلی که فایل CLI DNSLab قرار دارد یک فایل با پسوند <MudChip Size="Size.Small" Color="Color.Primary" Variant="Variant.Filled" Label="true" T="string">yaml.</MudChip> و نام دلخواه که در مثال ما config میباشد ایجاد کنید که محتوای آن مانند نمونه پایین باشد.</MudText>
-    <MudFlexBreak Class="my-3" />
-    <CodeSnippet Language="yaml" Code="@sampleYAML" />
-    <BaseButton Class="my-3" Size="Size.Small" EndIcon="@DNSLabIcons.Download" Color="Color.Primary" Variant="Variant.Filled" DropShadow="false" Href="https://cdn.dnslab.link/config.yaml">
-        دانلود فایل نمونه
-    </BaseButton>
-    <MudText Class="mb-2">سپس برای اجرا کافیست در CLI دستور زیر را وارد نمایید.</MudText>
-    <MudFlexBreak Class="my-3" />
-    <CodeSnippet Language="bash" Code="@($"start --config config.yaml")" />
-    <MudText Class="mb-2" >برای رزرو آدرس برای هر نوع تونل مانند مثال های زیر کانفیگ خود را تغییر دهید.</MudText>
-    <MudFlexBreak Class="my-3" />
-    <MudGrid Spacing="1">
-        <MudItem xs="12" sm="6" md="4">
-            <MudText>TCP</MudText>
-            <CodeSnippet Language="yaml" Code="@sampleReservedTcpYAML" />
+
+    <MudText Typo="Typo.h4" Class="mb-4">
+        موارد استفاده
+    </MudText>
+
+    <MudGrid>
+        <MudItem xs="12" md="4">
+            <MudPaper Class="pa-4 fill-height" Outlined>
+                <MudIcon Icon="@Icons.Material.Filled.Link" Size="Size.Large" />
+                <MudText Typo="Typo.h6">
+                    چند تونل همزمان
+                </MudText>
+                <MudText Typo="Typo.body2">
+                    اجرای همزمان HTTP، TCP و UDP
+                </MudText>
+            </MudPaper>
         </MudItem>
-        <MudItem xs="12" sm="6" md="4">
-            <MudText>HTML</MudText>
-            <CodeSnippet Language="yaml" Code="@sampleReservedHtmlYAML" />
+
+        <MudItem xs="12" md="4">
+            <MudPaper Class="pa-4 fill-height" Outlined>
+                <MudIcon Icon="@Icons.Material.Filled.Settings" Size="Size.Large" />
+                <MudText Typo="Typo.h6">
+                    مدیریت آسان
+                </MudText>
+                <MudText Typo="Typo.body2">
+                    نگهداری تنظیمات در یک فایل واحد
+                </MudText>
+            </MudPaper>
         </MudItem>
-        <MudItem xs="12" sm="6" md="4">
-            <MudText>UDP</MudText>
-            <CodeSnippet Language="yaml" Code="@sampleReservedUdpYAML" />
+
+        <MudItem xs="12" md="4">
+            <MudPaper Class="pa-4 fill-height" Outlined>
+                <MudIcon Icon="@Icons.Material.Filled.RestartAlt" Size="Size.Large" />
+                <MudText Typo="Typo.h6">
+                    اجرای مجدد سریع
+                </MudText>
+                <MudText Typo="Typo.body2">
+                    راه‌اندازی همه تونل‌ها با یک دستور
+                </MudText>
+            </MudPaper>
         </MudItem>
     </MudGrid>
+
+    <MudText Typo="Typo.h4" Class="my-2">
+        نمونه فایل
+    </MudText>
+
+    <MudText Class="mb-4">
+        یک فایل با نام دلخواه مانند config.yaml در کنار DNSLab CLI ایجاد کنید.
+    </MudText>
+
+    <CodeSnippet Language="yaml" Code="@sampleYAML" />
+
+    <BaseButton Class="my-4"
+                Size="Size.Small"
+                EndIcon="@DNSLabIcons.Download"
+                Color="Color.Primary"
+                Variant="Variant.Filled"
+                DropShadow="false"
+                Href="https://cdn.dnslab.link/config.yaml">
+        دانلود فایل نمونه
+    </BaseButton>
+
+    <MudText Typo="Typo.h4" Class="my-2">
+        اجرای فایل
+    </MudText>
+
+    <MudText Class="mb-4">
+        برای اجرای تمامی تونل‌های تعریف شده در فایل:
+    </MudText>
+
+    <CodeSnippet Language="bash"
+                 Code="start --config config.yaml" />
+
+    <MudAlert Severity="Severity.Success"
+              ContentAlignment="HorizontalAlignment.Start"
+              Class="mt-4">
+        تمامی تونل‌های تعریف شده در فایل به صورت همزمان اجرا خواهند شد.
+    </MudAlert>
+
+    <MudText Typo="Typo.h4" Class="my-4">
+        رزرو آدرس
+    </MudText>
+
+    <MudText Class="mb-4">
+        در صورت داشتن اشتراک می‌توانید برای هر تونل آدرس یا پورت ثابت رزرو کنید.
+    </MudText>
+
+    <MudGrid Spacing="2">
+
+        <MudItem xs="12" md="4">
+            <MudText Typo="Typo.h6">TCP</MudText>
+            <CodeSnippet Language="yaml"
+                         Code="@sampleReservedTcpYAML" />
+        </MudItem>
+
+        <MudItem xs="12" md="4">
+            <MudText Typo="Typo.h6">HTTP</MudText>
+            <CodeSnippet Language="yaml"
+                         Code="@sampleReservedHtmlYAML" />
+        </MudItem>
+
+        <MudItem xs="12" md="4">
+            <MudText Typo="Typo.h6">UDP</MudText>
+            <CodeSnippet Language="yaml"
+                         Code="@sampleReservedUdpYAML" />
+        </MudItem>
+
+    </MudGrid>
+
 </MudPaper>
 
 

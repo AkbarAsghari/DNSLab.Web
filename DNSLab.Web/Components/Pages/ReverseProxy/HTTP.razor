@@ -3,15 +3,72 @@
 <SeoProvider Title="HTTP Tunnel" />
 
 <MudText Typo="Typo.h1" Align="Align.Center">تونل HTTP</MudText>
-<MudText Class="mt-5 mb-10" Align="Align.Center">از تانل HTTP برای مواردی مانند وب سایت ها یا API و سایر پروتوکل هایی که در بستر HTTP هستند میتوان استفاده کرد</MudText>
+<MudText Class="mt-5" Align="Align.Center">وب‌سایت، API یا هر سرویس HTTP را بدون Port Forwarding و تنظیمات پیچیده شبکه از طریق اینترنت در دسترس قرار دهید.</MudText>
+<MudText Class="mb-10" Align="Align.Center">مناسب برای: وب‌سایت‌ها، API ها، پنل‌های مدیریتی، Webhook ها و سرویس‌های تحت HTTP</MudText>
 
 <MudPaper Class="mt-5 pa-10" Outlined>
-    <MudText Typo="Typo.h4" Class="my-2">عمومی کردن یک سرویس HTTP برروی اینترنت</MudText>
-    <MudText Typo="Typo.caption" Class="mb-2">دستور زیر رو توی خط فرمان DNSLab Cli اجرا کن.</MudText>
-    <MudFlexBreak Class="my-3" />
-    <CodeSnippet Language="bash" Code="@($"http 80")" />
-    <MudText Class="mb-2">برای رزرو اجرا با آدرس دلخواه میتوانید از این دستور استفاده نمایید (نیاز به تهیه اشتراک دارد).</MudText>
-    <MudFlexBreak Class="my-3" />
-    <CodeSnippet Language="bash" Code="@($"http 80 example.http.dnslab.ir")" />
-    <MudText Typo="Typo.caption" Class="mb-2" Color="Color.Info">در این مثال نشانی example.http.dnslab.ir بعنوان رزرو برای شما ثبت میشود.</MudText>
+    <MudText Typo="Typo.h4" Class="mb-4">
+        موارد استفاده
+    </MudText>
+
+    <MudGrid>
+        <MudItem xs="12" md="4">
+            <MudPaper Class="pa-4 fill-height" Outlined>
+                <MudIcon Icon="@Icons.Material.Filled.Language" Size="Size.Large" />
+                <MudText Typo="Typo.h6">وب‌سایت</MudText>
+                <MudText Typo="Typo.body2">
+                    انتشار وب‌سایت محلی بر روی اینترنت
+                </MudText>
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12" md="4">
+            <MudPaper Class="pa-4 fill-height" Outlined>
+                <MudIcon Icon="@Icons.Material.Filled.Api" Size="Size.Large" />
+                <MudText Typo="Typo.h6">REST API</MudText>
+                <MudText Typo="Typo.body2">
+                    دسترسی عمومی به API های توسعه و تست
+                </MudText>
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12" md="4">
+            <MudPaper Class="pa-4 fill-height" Outlined>
+                <MudIcon Icon="@Icons.Material.Filled.Webhook" Size="Size.Large" />
+                <MudText Typo="Typo.h6">Webhook</MudText>
+                <MudText Typo="Typo.body2">
+                    دریافت Webhook از سرویس‌های خارجی
+                </MudText>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+
+    <MudText Typo="Typo.h4" Class="my-2">شروع سریع</MudText>
+
+    <MudText Class="mb-4">
+        اگر سرویس HTTP شما روی پورت 80 در حال اجرا است، دستور زیر را اجرا کنید:
+    </MudText>
+
+    <CodeSnippet Language="bash" Code="http 80" />
+
+    <MudAlert Severity="Severity.Success" ContentAlignment="HorizontalAlignment.Start" Class="mt-4">
+        پس از اجرا، DNSLab یک آدرس عمومی در اختیار شما قرار می‌دهد که از طریق اینترنت قابل دسترسی است.
+    </MudAlert>
+    <MudText Typo="Typo.h4" Class="my-2">نمونه خروجی</MudText>
+
+    <CodeSnippet Language="text" Code="https://abc123.http.dnslab.ir" />
+
+    <MudAlert Severity="Severity.Success" ContentAlignment="HorizontalAlignment.Start" Class="mt-4">
+        کاربران اینترنت می‌توانند از طریق این آدرس به سرویس شما متصل شوند.
+    </MudAlert>
+
+    <MudText Typo="Typo.h4">دامنه رزرو شده</MudText>
+
+    <MudText Class="my-2">اگر اشتراک فعال دارید می‌توانید یک آدرس ثابت و دلخواه رزرو کنید.</MudText>
+
+    <CodeSnippet Language="bash" Code="http 80 example.http.dnslab.ir" />
+
+    <MudAlert Severity="Severity.Info" ContentAlignment="HorizontalAlignment.Start" Class="mt-4">
+        دامنه example.http.dnslab.ir برای شما رزرو خواهد شد.
+    </MudAlert>
 </MudPaper>

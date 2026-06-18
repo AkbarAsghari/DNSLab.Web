@@ -27,7 +27,7 @@ namespace DNSLab.Web.Exceptions
                     case HttpStatusCode.Conflict:
                         break;
                     case HttpStatusCode.TooManyRequests:
-                        _Snackbar.Add("محدودیت تعداد درخواست", Severity.Info);
+                        _Snackbar.Add("محدودیت تعداد درخواست لطفا دقایقی دیگر مجددا تلاش فرمایید", Severity.Info);
                         break;
                     case HttpStatusCode.Unauthorized:
                         _NavigationManager.NavigateTo($"/Accounts/Login", true);

@@ -19,7 +19,7 @@ partial class Login
     {
         RedirectTo = _NavigationManager.Uri.Substring(_NavigationManager.BaseUri.Length).ToLower();
 
-        if (!RedirectTo.ToLower().EndsWith("login"))
+        if (!RedirectTo.ToLower().EndsWith("login-with-password"))
             _Snackbar.Add("برای ادامه ابتدا باید وارد شوید", Severity.Info);
     }
 
@@ -32,7 +32,7 @@ partial class Login
         if (response != null)
         {
             await _AuthenticationProvider.Login(response);
-            if (RedirectTo.ToLower().EndsWith("login"))
+            if (RedirectTo.ToLower().EndsWith("login-with-password"))
             {
                 _NavigationManager.NavigateTo("/Dashboard");
             }

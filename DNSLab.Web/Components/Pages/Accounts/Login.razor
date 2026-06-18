@@ -1,18 +1,17 @@
-﻿@attribute [Route(AllRoutes.Login)]
+﻿@attribute [Route(AllRoutes.LoginWithPassword)]
 <SeoProvider Title="صفحه ورود" Meta_Description="ورود به سیستم سایت DNSLab" />
 
-<MudText Typo="Typo.h1" Align="Align.Center">ورود به سیستم</MudText>
-<MudText Class="mt-5 mb-10" Align="Align.Center">برای شروع ابتدا اطلاعات کاربری خود را وارد کنید</MudText>
+<MudText Typo="Typo.h1" Align="Align.Center">ورود</MudText>
 
 <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center" Class="pt-10">
     <MudGrid Justify="Justify.Center">
-        <MudItem lg="4" md="6" sm="8" xs="12">
+        <MudItem lg="5" md="6" sm="8" xs="12">
             <MudCard Elevation="0" Class="pa-5">
                 <MudCardContent>
                     <EditForm Model="_AuthenticateDTO" Context="ctx">
                         <DataAnnotationsValidator />
-                        <MudText Typo="Typo.caption">نام کاربری یا ایمیل</MudText>
-                        <MudTextField T="string" Placeholder="نام کاربری یا ایمیل" Variant="Variant.Outlined" Class="my-2 dnslab-ltr" @bind-Value="_AuthenticateDTO.UsernameOrEmail" For="()=>_AuthenticateDTO.UsernameOrEmail"></MudTextField>
+                        <MudText Typo="Typo.caption">شماره موبایل، ایمیل و یا نام کاربری خود را وارد کنید.</MudText>
+                        <MudTextField T="string" Placeholder="شماره موبایل، ایمیل و یا نام کاربری" Variant="Variant.Outlined" Class="my-2 dnslab-ltr" @bind-Value="_AuthenticateDTO.MobileOrEmailOrUsername" For="()=>_AuthenticateDTO.MobileOrEmailOrUsername"></MudTextField>
                         <MudStack Row Justify="Justify.SpaceBetween">
                             <MudText Typo="Typo.caption">رمز عبور</MudText>
                             <MudLink Underline="Underline.None" Href="@AllRoutes.ForgetPassword">
@@ -21,7 +20,7 @@
                         </MudStack>
                         <MudTextField T="string" InputType="InputType.Password" Placeholder="رمز عبور" Variant="Variant.Outlined" Class="mt-2 mb-4 dnslab-ltr" @bind-Value="_AuthenticateDTO.Password" For="()=>_AuthenticateDTO.Password"></MudTextField>
                         <BaseButton Color="Color.Primary" EditContext="ctx" OnClick="Authenticate" ButtonType="ButtonType.Submit" Variant="Variant.Filled" FullWidth>ورود</BaseButton>
-                        <MudText Align="Align.Center" Class="mt-3">حساب کاربری نداری ؟ <MudLink Href="@AllRoutes.RegisterAccount" Underline="Underline.None">ثبت نام</MudLink></MudText>
+                        <BaseButton Href="@AllRoutes.Login" Variant="Variant.Text" FullWidth Class="mt-2">ورود با رمز یکبار مصرف</BaseButton>
                     </EditForm>
                 </MudCardContent>
             </MudCard>

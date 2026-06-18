@@ -11,22 +11,38 @@ partial class Register
     [Inject] ISnackbar _Snachbar { get; set; }
     [Inject] NavigationManager _NavigationManager { get; set; }
 
-    RegisterUserDTO _RegisterUserDTO = new();
+    string _Mobile = String.Empty;
+    string _Token = String.Empty;
+    string _Otp = String.Empty;
 
     public async Task RegisterUser()
     {
-        if (!_RegisterUserDTO.Password.Equals(_RegisterUserDTO.ConfirmPassword))
-        {
-            _Snachbar.Add("رمز عبور و تکرار رمز عبور برابر نیست", Severity.Warning);
-            return;
-        }
+        var response = await _AccountRepository.RegisterOrAuthenticationAsync(_Mobile);
 
-        var response = await _AccountRepository.RegisterAsync(_RegisterUserDTO);
+        if (response != null)
+        {
+            _Token = response;
+        }
+    }
+
+    public async Task ConfirmOtp()
+    {
+        var response = await _AccountRepository.RegisterOrAuthenticationConfirmAsync(_Token, _Otp);
 
         if (response != null)
         {
             await _AuthenticationProvider.Login(response);
             _NavigationManager.NavigateTo("/Dashboard");
+        }
+    }
+
+    public async Task ResendOtp()
+    {
+        var token = await _AccountRepository.ResendOtp(_Token);
+        if (token is not null)
+        {
+            _Token = token;
+            _Otp = String.Empty;
         }
     }
 }

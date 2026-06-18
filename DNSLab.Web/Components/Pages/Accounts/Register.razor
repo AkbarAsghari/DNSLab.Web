@@ -1,26 +1,36 @@
-﻿@attribute [Route(AllRoutes.RegisterAccount)]
-<SeoProvider Title="صفحه ثبت نام" Meta_Description="ثبت نام در سیستم سایت DNSLab" />
+﻿@attribute [Route(AllRoutes.Login)]
+<SeoProvider Title="ثبت نام / ورود" Meta_Description="ثبت نام / ورود سایت DNSLab" />
 
-<MudText Typo="Typo.h1" Align="Align.Center">ثبت نام</MudText>
-<MudText Class="mt-5 mb-10" Align="Align.Center">برای ثبت نام در سایت DNSLab لطفا اطلاعات زیر رو تکمیل نمایید</MudText>
+<MudText Typo="Typo.h1" Align="Align.Center">
+    ورود/ثبت نام
+</MudText>
 
 <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center" Class="pt-10">
     <MudGrid Justify="Justify.Center">
-        <MudItem lg="4" md="6" sm="8" xs="12">
+        <MudItem lg="5" md="6" sm="8" xs="12">
             <MudCard Elevation="0" Class="pa-5">
                 <MudCardContent>
-                    <EditForm Model="_RegisterUserDTO" Context="ctx">
-                        <DataAnnotationsValidator />
-                        <MudText Typo="Typo.caption">ایمیل</MudText>
-                        <MudTextField T="string" Placeholder="ایمیل" Variant="Variant.Outlined" Class="my-2 dnslab-ltr" For="()=>_RegisterUserDTO.Email" @bind-Value="_RegisterUserDTO.Email"></MudTextField>
-                        <MudText Typo="Typo.caption">رمز عبور</MudText>
-                        <MudTextField T="string" InputType="InputType.Password" Placeholder="رمز عبور" Variant="Variant.Outlined" Class="my-2 dnslab-ltr" For="()=>_RegisterUserDTO.Password" @bind-Value="_RegisterUserDTO.Password"></MudTextField>
-                        <MudText Typo="Typo.caption">تکرار رمز عبور</MudText>
-                        <MudTextField T="string" InputType="InputType.Password" Placeholder="تکرار رمز عبور" Variant="Variant.Outlined" Class="my-2 dnslab-ltr" For="()=>_RegisterUserDTO.ConfirmPassword" @bind-Value="_RegisterUserDTO.ConfirmPassword"></MudTextField>
-                        <MudText Typo="Typo.caption">با ثبت‌نام، شما موافقت خود را با <MudLink Href="@AllRoutes.Terms" Underline="Underline.None">شرایط و ضوابط استفاده</MudLink> از خدمات DNSLab اعلام می‌نمایید.</MudText>
-                        <BaseButton Color="Color.Primary" Class="mt-2" ButtonType="ButtonType.Submit" EditContext="ctx" OnClick="RegisterUser" Variant="Variant.Filled" FullWidth>ثبت نام</BaseButton>
-                        <MudText Align="Align.Center" Class="mt-3">حساب کاربری داری ؟ <MudLink Href="@AllRoutes.Login" Underline="Underline.None">وارد شو</MudLink></MudText>
-                    </EditForm>
+                    @if (String.IsNullOrEmpty(_Token))
+                    {
+                        <MudText Typo="Typo.caption">شماره موبایل خود را وارد کنید</MudText>
+                        <MudTextField T="string" Placeholder="شماره موبایل" Variant="Variant.Outlined" Class="my-2 dnslab-ltr" @bind-Value="_Mobile"></MudTextField>
+                        <BaseButton Color="Color.Primary" Class="mt-2" ButtonType="ButtonType.Submit" OnClick="RegisterUser" Variant="Variant.Filled" FullWidth>ارسال کد</BaseButton>
+                    }
+                    else
+                    {
+                        <MudText Typo="Typo.caption">
+                            کد تایید ارسال شده به شماره 09227118272 را وارد کنید.
+                        </MudText>
+                        <MudTextField T="string" Placeholder="***********" Variant="Variant.Outlined" Class="my-2 dnslab-ltr" @bind-Value="_Otp"></MudTextField>
+                        <MudStack Row Spacing="1" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
+                            <MudButton Size="Size.Small" EndIcon="@DNSLabIcons.Edit">ویرایش شماره موبایل</MudButton>
+                            <Timer ResendOtpCallBack="ResendOtp" />
+                        </MudStack>
+                        <BaseButton Color="Color.Primary" Class="mt-2" ButtonType="ButtonType.Submit" OnClick="ConfirmOtp" Variant="Variant.Filled" FullWidth>ورود به پنل کاربری</BaseButton>
+
+                    }
+                    <BaseButton Href="@AllRoutes.LoginWithPassword" Variant="Variant.Text" FullWidth Class="mt-2">ورود با رمز عبور</BaseButton>
+
                 </MudCardContent>
             </MudCard>
         </MudItem>

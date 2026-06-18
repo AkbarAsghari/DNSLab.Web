@@ -40,8 +40,8 @@
 
         public const string MyAccount = "/accounts/my";
         public const string Login = "/accounts/login";
+        public const string LoginWithPassword = "/accounts/login-with-password";
         public const string Logout = "/accounts/logout";
-        public const string RegisterAccount = "/accounts/register";
         public const string AllAcounts = "/accounts/all";
         public const string ForgetPassword = "/accounts/forget";
         public const string ResetPassword = "/accounts/reset";

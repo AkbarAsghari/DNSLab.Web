@@ -5,6 +5,8 @@ namespace DNSLab.Web.Interfaces.Repositories
 {
     public interface IAccountRepository
     {
+        Task<string?> RegisterOrAuthenticationAsync(string mobile);
+        Task<AuthUserDTO?> RegisterOrAuthenticationConfirmAsync(string token, string otp);
         Task<AuthUserDTO?> AuthenticateAsync(AuthenticateDTO model);
         Task<AuthUserDTO?> GenerateTokenWithRefreshTokenAsync(AuthUserDTO model);
         Task<bool> ForgetPasswordAsync(ForgetPasswordDTO model);

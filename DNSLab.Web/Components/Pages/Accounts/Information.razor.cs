@@ -112,6 +112,7 @@ partial class Information
             {
                 _ChangePasswordDTO = new();
                 _EditPasswordDialogVisible = false;
+                _Snackbar.Add("رمز عبور شما تغییر یافت", Severity.Success);
             }
         }
     }

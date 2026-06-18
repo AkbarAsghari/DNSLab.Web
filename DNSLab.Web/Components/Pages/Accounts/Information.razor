@@ -125,7 +125,8 @@
         </TitleContent>
         <DialogContent>
             <MudForm @ref="_EditPasswordForm">
-                <MudTextField T="string" InputType="InputType.Password" Variant="Variant.Outlined" Required RequiredError="رمز عبور جاری را وارد نمایید" @bind-Value="_ChangePasswordDTO.CurrentPassword" Label="رمز عبور جاری" />
+                <MudText Typo="Typo.caption" Color="Color.Info">در صورتی که تا به حال رمز عبور تنظیم نکرده‌ اید رمز عبور جاری را وارد ننمایید</MudText>
+                <MudTextField T="string" InputType="InputType.Password" Variant="Variant.Outlined" @bind-Value="_ChangePasswordDTO.CurrentPassword" Label="رمز عبور جاری" />
                 <MudTextField T="string" InputType="InputType.Password" Variant="Variant.Outlined" Required RequiredError="رمز عبور جدید را وارد نمایید" @bind-Value="_ChangePasswordDTO.NewPassword" Label="رمز عبور جدید" />
                 <BaseButton Variant="Variant.Filled" Class="mt-2" Color="Color.Primary" FullWidth OnClick="SaveNewPassword">ذخیره رمز عبور جدید</BaseButton>
             </MudForm>

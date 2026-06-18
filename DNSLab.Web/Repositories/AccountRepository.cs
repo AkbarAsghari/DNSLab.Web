@@ -85,11 +85,6 @@ namespace DNSLab.Web.Repositories
             return await _HttpServiceProvider.Get<UserDTO>($"{APIController}/");
         }
 
-        public async Task<AuthUserDTO?> RegisterAsync(RegisterUserDTO model)
-        {
-            return await _HttpServiceProvider.Post<RegisterUserDTO, AuthUserDTO>($"{APIController}/RegisterAsync", model);
-        }
-
         public async Task<bool> ResendConfirmEmailTokenAsync()
         {
             return await _HttpServiceProvider.Post<bool>($"{APIController}/ResendConfirmEmailTokenAsync");

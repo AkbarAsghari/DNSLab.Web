@@ -13,7 +13,6 @@ namespace DNSLab.Web.Interfaces.Repositories
         Task<bool> ResetPasswordAsync(ResetPasswordDTO model);
         Task<bool> ChangePasswordAsync(ChangePasswordDTO model);
         Task<bool> ChangeUserRoleAsync(Guid userId, RolesEnum role);
-        Task<AuthUserDTO?> RegisterAsync(RegisterUserDTO model);
         Task<bool> ConfirmEmailWithTokenAsync(string token);
         Task<bool> ResendConfirmEmailTokenAsync();
         Task<bool> UpdateAsync(UpdateUserPersonalInfoDTO model);

@@ -5,7 +5,7 @@ using DNSLab.Web.Interfaces.Repositories;
 
 namespace DNSLab.Web.Components.Pages.Accounts;
 
-partial class Login
+partial class LoginWithPassword
 {
     [Inject] IAccountRepository _AccountRepository { get; set; }
     [Inject] IAuthenticationProvider _AuthenticationProvider { get; set; }

@@ -4,7 +4,7 @@ using DNSLab.Web.Interfaces.Repositories;
 
 namespace DNSLab.Web.Components.Pages.Accounts;
 
-partial class Register
+partial class RegisterOrLogin
 {
     [Inject] IAccountRepository _AccountRepository { get; set; }
     [Inject] IAuthenticationProvider _AuthenticationProvider { get; set; }
@@ -44,5 +44,11 @@ partial class Register
             _Token = token;
             _Otp = String.Empty;
         }
+    }
+
+    public async Task ChangeMobile()
+    {
+        _Token = String.Empty;
+        _Otp = String.Empty;
     }
 }

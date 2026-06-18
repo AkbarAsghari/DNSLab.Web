@@ -71,6 +71,6 @@
         public const string ReverseProxyTraffic = "/reverse-proxy/traffic";
         public const string ConfigReverseProxy = "/reverse-proxy/config";
 
-        public const string SocialChannel = "https://ble.ir/dnslab";
+        public const string SocialChannel = "https://t.me/DNSLabLink";
     }
 }

@@ -100,11 +100,6 @@
                             </MudTooltip>
                         }
                     </MudStack>
-                    <MudAlert Severity="Severity.Info" Dense ContentAlignment="HorizontalAlignment.Start">
-                        <MudText Typo="Typo.body2" class="mt-2">
-                            شما در حال تهیه اشتراک @_SelectedPlanDiscount!.Duration.Description برای پلن @_SelectedPlan.Name میباشید و در صورت تایید مبلغ (@((_SelectedPlanDiscount.Duration.DurationInMonth * (_SelectedPlan.BasePrice - (_SelectedPlan.BasePrice * _SelectedPlanDiscount.DiscountRate / 100))).Separate3Digits()) ريال) از کیف پول شما کسر خواهد شد.
-                        </MudText>
-                    </MudAlert>
                 </DialogContent>
             </MudDialog>
         }

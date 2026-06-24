@@ -1,0 +1,14 @@
+﻿@inject NavigationManager Navigation
+
+@code {
+    [Parameter]
+    public string TargetUrl { get; set; } = String.Empty;
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            Navigation.NavigateTo(TargetUrl);
+        }
+    }
+}

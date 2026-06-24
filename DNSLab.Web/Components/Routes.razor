@@ -1,4 +1,4 @@
-﻿@inject NavigationManager _NavigationManager
+﻿@inject NavigationManager Navigation
 
 <Router AppAssembly="typeof(Program).Assembly">
     <Found Context="routeData">
@@ -9,7 +9,7 @@
             <NotAuthorized>
                 @if (context.User.Identity == null)
                 {
-                    _NavigationManager.NavigateTo($"{AllRoutes.Login}?RedirectTo={routeData.Template}");
+                    <RedirectToLogin TargetUrl="@($"{AllRoutes.Login}?RedirectTo={Navigation.ToBaseRelativePath(Navigation.Uri)}")" />
                 }
                 else if (!context.User.IsInRole("Admin"))
                 {

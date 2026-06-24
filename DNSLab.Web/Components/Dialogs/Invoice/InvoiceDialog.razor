@@ -1,0 +1,38 @@
+﻿@using DNSLab.Web.Enums
+<MudDialog ContentClass="py-2">
+    <DialogContent>
+        @if (InvoiceType != InvoiceTypeEnum.Topup)
+        {
+            <MudStack Row AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+                <MudText>مبلغ صورتحساب</MudText>
+                <MudText>@Amount.Separate3Digits() ریال</MudText>
+            </MudStack>
+            <MudPaper Outlined Class="my-5 pa-5">
+                <MudStack AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Spacing="0">
+                    <MudStack Row Spacing="0" AlignItems="AlignItems.Center">
+                        <MudSwitch T="bool" Color="Color.Primary" Label="استفاده از اعتبار حساب" @bind-Value=_UseWallet />
+                        <MudIcon Size="Size.Medium" Color="Color.Primary" class="mr-2" Icon="@DNSLabIcons.Wallet" />
+                    </MudStack>
+                    <MudText Typo="Typo.caption">
+                        اعتبار
+                        @if (_MyWallet != null)
+                        {
+                            @((_MyWallet.Balance - (_UseWallet ? Math.Min(Amount, _MyWallet.Balance) : 0)).Separate3Digits())
+                        }
+                        ریال
+                    </MudText>
+                </MudStack>
+            </MudPaper>
+            <MudDivider Class="mb-5" />
+            <MudStack Row AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+                <MudText Typo="Typo.h5">قابل پرداخت</MudText>
+                <MudText Color="Color.Info" Typo="Typo.h5">
+                    @((Amount - (_UseWallet ? Math.Min(Amount, _MyWallet.Balance) : 0)).Separate3Digits()) ریال
+                </MudText>
+            </MudStack>
+        }
+    </DialogContent>
+    <DialogActions>
+        <BaseButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Purchass">پرداخت صورتحساب</BaseButton>
+    </DialogActions>
+</MudDialog>

@@ -20,16 +20,6 @@ namespace DNSLab.Web.Repositories
             return await _HttpServiceProvider.Get<PagedResult<PaymentDTO>?>($"{APIController}/GetPayments?page={page}&pageSize={pageSize}");
         }
 
-        public async Task<int?> GetPaymentsCount()
-        {
-            return await _HttpServiceProvider.Get<int?>($"{APIController}/GetPaymentsCount");
-        }
-
-        public async Task<string?> RequestPaymentUrl(long amount)
-        {
-            return await _HttpServiceProvider.Get<string?>($"{APIController}/RequestPaymentUrl?Amount={amount}");
-        }
-
         public async Task<bool> Verify(long trackId)
         {
             return await _HttpServiceProvider.Get<bool>($"{APIController}/Verify?TrackId={trackId}");

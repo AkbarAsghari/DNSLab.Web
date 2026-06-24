@@ -7,7 +7,7 @@
             <NotAuthorized>
                 @if (context.User.Identity == null)
                 {
-                    <DNSLab.Web.Components.Pages.Accounts.Login />
+                    <DNSLab.Web.Components.Pages.Accounts.RegisterOrLogin />
                 }
                 else if (!context.User.IsInRole("Admin"))
                 {

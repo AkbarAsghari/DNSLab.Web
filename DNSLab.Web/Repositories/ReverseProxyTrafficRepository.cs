@@ -1,4 +1,5 @@
 ﻿using DNSLab.Shared.DTOs.ReverseProxy;
+using DNSLab.Web.DTOs.Repositories.Invoice;
 using DNSLab.Web.Enums;
 using DNSLab.Web.Interfaces.Providers;
 using DNSLab.Web.Interfaces.Repositories;
@@ -12,6 +13,11 @@ namespace DNSLab.Web.Repositories
         public Task<IEnumerable<ReverseProxyTrafficDTO>?> GetCurrentTraffics()
         {
             return _HttpServiceProvider.Get<IEnumerable<ReverseProxyTrafficDTO>?>($"{APIController}/GetCurrentTraffics");
+        }
+
+        public Task<InvoiceResponseDTO?> PurchaseAdditionalTraffic(PurchaseAdditionalTrafficDTO model)
+        {
+            return _HttpServiceProvider.Post<PurchaseAdditionalTrafficDTO, InvoiceResponseDTO?>($"{APIController}/PurchaseAdditionalTraffic", model);
         }
     }
 }

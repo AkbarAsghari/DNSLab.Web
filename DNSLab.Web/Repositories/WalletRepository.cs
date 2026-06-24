@@ -1,4 +1,5 @@
-﻿using DNSLab.Web.DTOs.Repositories.Shared;
+﻿using DNSLab.Web.DTOs.Repositories.Invoice;
+using DNSLab.Web.DTOs.Repositories.Shared;
 using DNSLab.Web.DTOs.Repositories.Wallet;
 using DNSLab.Web.Interfaces.Providers;
 using DNSLab.Web.Interfaces.Repositories;
@@ -23,6 +24,11 @@ namespace DNSLab.Web.Repositories
         public async Task<PagedResult<WalletTransactionDTO>?> GetWalletTransactions(int page = 1, int pageSize = 10)
         {
             return await _HttpServiceProvider.Get<PagedResult<WalletTransactionDTO>?>($"{APIController}/GetWalletTransactions?page={page}&pageSize={pageSize}");
+        }
+
+        public async Task<InvoiceResponseDTO?> Topup(PurchaseTopupDTO model)
+        {
+            return await _HttpServiceProvider.Post<PurchaseTopupDTO, InvoiceResponseDTO?>($"{APIController}/Topup", model);
         }
     }
 }

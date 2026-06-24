@@ -83,7 +83,7 @@
                 <DialogContent>
                     <MudText Typo="Typo.body2">
                         مدت :
-                        @_SelectedPlanDiscount.Duration.DurationInMonth ماهه
+                        @_SelectedPlanDiscount!.Duration.DurationInMonth ماهه
                         (@((_SelectedPlanDiscount.Duration.DurationInMonth * (_SelectedPlan.BasePrice - (_SelectedPlan.BasePrice * _SelectedPlanDiscount.DiscountRate / 100))).Separate3Digits())) ريال
                         @if (_SelectedPlanDiscount.Duration.DurationInMonth > 1)
                         {

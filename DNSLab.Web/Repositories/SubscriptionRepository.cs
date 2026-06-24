@@ -1,4 +1,5 @@
-﻿using DNSLab.Web.DTOs.Repositories.Subscription;
+﻿using DNSLab.Web.DTOs.Repositories.Invoice;
+using DNSLab.Web.DTOs.Repositories.Subscription;
 using DNSLab.Web.Enums;
 using DNSLab.Web.Interfaces.Providers;
 using DNSLab.Web.Interfaces.Repositories;
@@ -27,6 +28,11 @@ namespace DNSLab.Web.Repositories
         public Task<IEnumerable<SubscriptionDTO>?> GetSubscribes()
         {
             return _HttpServiceProvider.Get<IEnumerable<SubscriptionDTO>?>($"{APIController}/GetSubscribes");
+        }
+
+        public Task<InvoiceResponseDTO?> PurchaseSubscribe(PurchaseSubscriptionDTO model)
+        {
+            return _HttpServiceProvider.Post<PurchaseSubscriptionDTO, InvoiceResponseDTO?>($"{APIController}/PurchaseSubscribe", model);
         }
 
         public Task<bool> RechargeTraffic(int value)

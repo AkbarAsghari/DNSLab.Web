@@ -1,16 +1,25 @@
 ﻿using DNSLab.Web.Components.Dialogs;
+using DNSLab.Web.Components.Dialogs.Invoice;
+using DNSLab.Web.Components.Pages.ReverseProxy;
 using DNSLab.Web.DTOs.Repositories.Subscription;
 using DNSLab.Web.Helpers;
+using DNSLab.Web.Interfaces.Providers;
 using DNSLab.Web.Interfaces.Repositories;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
+using MudBlazor;
 
 namespace DNSLab.Web.Components.Pages.Subscriptions;
 
 partial class Plans
 {
+    [Inject] AuthenticationStateProvider _AuthenticationStateProvider { get; set; }
     [Inject] ISubscriptionRepository _SubscriptionRepository { get; set; }
     [Inject] ISnackbar _Snackbar { get; set; }
     [Inject] NavigationManager _NavigationManager { get; set; }
+    [Inject] IDialogService _DialogService { get; set; }
+
 
     IEnumerable<PlanSectionDTO>? _PlanSections { get; set; }
 
@@ -43,10 +52,23 @@ partial class Plans
 
     async Task Subscriptionn()
     {
-        if (await _SubscriptionRepository.Subscribe(_SelectedPlan.Id, _SelectedPlanDiscount!.Id))
+        var authState = await _AuthenticationStateProvider.GetAuthenticationStateAsync();
+        if (authState.User.Identity != null && authState.User.Identity.IsAuthenticated)
         {
-            _Snackbar.Add($"پلن {_SelectedPlan.Name} به مدت {_SelectedPlanDiscount.Duration.Description} برای شما فعال شد", Severity.Success);
-            _NavigationManager.NavigateTo(AllRoutes.Dashboard);
+            var options = new DialogOptions() { CloseButton = true, FullWidth = true, MaxWidth = MaxWidth.ExtraSmall };
+            var parameters = new DialogParameters<InvoiceDialog>() {
+                { x => x.InvoiceType, Enums.InvoiceTypeEnum.Subscription},
+                { x => x.Amount , (_SelectedPlanDiscount!.Duration.DurationInMonth * (_SelectedPlan.BasePrice - (_SelectedPlan.BasePrice * _SelectedPlanDiscount.DiscountRate / 100))) },
+                { x => x.PlanId, _SelectedPlan.Id },
+                { x => x.DiscountId, _SelectedPlanDiscount!.Id },
+            };
+            var dialog = await _DialogService.ShowAsync<InvoiceDialog>("صورتحساب", parameters, options);
+            var result = await dialog.Result;
+            if (!result!.Canceled)
+            {
+                _NavigationManager.NavigateTo(AllRoutes.Dashboard);
+            }
         }
+        _NavigationManager.NavigateTo(AllRoutes.Login);
     }
 }

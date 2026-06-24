@@ -9,18 +9,19 @@
             </MudStack>
             <MudPaper Outlined Class="my-5 pa-5">
                 <MudStack AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Spacing="0">
-                    <MudStack Row Spacing="0" AlignItems="AlignItems.Center">
-                        <MudSwitch T="bool" Color="Color.Primary" Label="استفاده از اعتبار حساب" @bind-Value=_UseWallet />
-                        <MudIcon Size="Size.Medium" Color="Color.Primary" class="mr-2" Icon="@DNSLabIcons.Wallet" />
-                    </MudStack>
-                    <MudText Typo="Typo.caption">
-                        اعتبار
-                        @if (_MyWallet != null)
-                        {
+                    @if (_MyWallet != null)
+                    {
+                        <MudStack Row Spacing="0" AlignItems="AlignItems.Center">
+                            <MudSwitch T="bool" Color="Color.Primary" Label="استفاده از اعتبار حساب" @bind-Value=_UseWallet Disabled="@(_MyWallet.Balance == 0)" />
+                            <MudIcon Size="Size.Medium" Color="Color.Primary" class="mr-2" Icon="@DNSLabIcons.Wallet" />
+                        </MudStack>
+                        <MudText Typo="Typo.caption">
+                            اعتبار
+
                             @((_MyWallet.Balance - (_UseWallet ? Math.Min(Amount, _MyWallet.Balance) : 0)).Separate3Digits())
-                        }
-                        ریال
-                    </MudText>
+                            ریال
+                        </MudText>
+                    }
                 </MudStack>
             </MudPaper>
             <MudDivider Class="mb-5" />

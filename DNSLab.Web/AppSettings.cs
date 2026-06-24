@@ -9,8 +9,8 @@ public sealed class GlobalSettings
     public const string Version = "1.15.3.1";
 
 #if DEBUG
-    public const string APIBaseAddress = "https://localhost:7046/";
-    //public const string APIBaseAddress = "https://api.dnslab.link/";
+    //public const string APIBaseAddress = "https://localhost:7046/";
+    public const string APIBaseAddress = "https://api.dnslab.link/";
 
 #else
     public const string APIBaseAddress = "https://api.dnslab.link/";

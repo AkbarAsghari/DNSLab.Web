@@ -5,6 +5,7 @@ using System;
 using System.Net;
 using System.Text.Json;
 using DNSLab.Web.Enums;
+using DNSLab.Web.Helpers;
 
 namespace DNSLab.Web.Exceptions
 {
@@ -30,7 +31,7 @@ namespace DNSLab.Web.Exceptions
                         _Snackbar.Add("محدودیت تعداد درخواست لطفا دقایقی دیگر مجددا تلاش فرمایید", Severity.Info);
                         break;
                     case HttpStatusCode.Unauthorized:
-                        _NavigationManager.NavigateTo($"/Accounts/Login", true);
+                        _NavigationManager.NavigateTo(AllRoutes.Login, true);
                         break;
                     case HttpStatusCode.NotFound:
                         _NavigationManager.NavigateTo("/Errors/404", true);

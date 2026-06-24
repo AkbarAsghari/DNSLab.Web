@@ -1,4 +1,6 @@
-﻿<Router AppAssembly="typeof(Program).Assembly">
+﻿@inject NavigationManager _NavigationManager
+
+<Router AppAssembly="typeof(Program).Assembly">
     <Found Context="routeData">
         <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(Layout.MainLayout)">
             <Authorizing>
@@ -7,7 +9,7 @@
             <NotAuthorized>
                 @if (context.User.Identity == null)
                 {
-                    <DNSLab.Web.Components.Pages.Accounts.RegisterOrLogin />
+                    _NavigationManager.NavigateTo($"{AllRoutes.Login}?RedirectTo={routeData.Template}");
                 }
                 else if (!context.User.IsInRole("Admin"))
                 {

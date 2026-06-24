@@ -29,7 +29,7 @@
                         <BaseButton Color="Color.Primary" Class="mt-2" ButtonType="ButtonType.Submit" OnClick="ConfirmOtp" Variant="Variant.Filled" FullWidth>ورود به پنل کاربری</BaseButton>
 
                     }
-                    <BaseButton Href="@AllRoutes.LoginWithPassword" Variant="Variant.Text" FullWidth Class="mt-2">ورود با رمز عبور</BaseButton>
+                    <BaseButton Href="@($"{AllRoutes.LoginWithPassword}{(String.IsNullOrEmpty(RedirectTo) ? String.Empty : $"?RedirectTo={RedirectTo}")}")" Variant="Variant.Text" FullWidth Class="mt-2">ورود با رمز عبور</BaseButton>
 
                 </MudCardContent>
             </MudCard>

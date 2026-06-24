@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using DNSLab.Web.Interfaces.Providers;
 using DNSLab.Web.Interfaces.Repositories;
+using DNSLab.Web.Helpers;
 
 namespace DNSLab.Web.Components.Pages.Accounts;
 
@@ -8,12 +9,22 @@ partial class RegisterOrLogin
 {
     [Inject] IAccountRepository _AccountRepository { get; set; }
     [Inject] IAuthenticationProvider _AuthenticationProvider { get; set; }
-    [Inject] ISnackbar _Snachbar { get; set; }
+    [Inject] ISnackbar _Snackbar { get; set; }
     [Inject] NavigationManager _NavigationManager { get; set; }
+
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public string RedirectTo { get; set; }
 
     string _Mobile = String.Empty;
     string _Token = String.Empty;
     string _Otp = String.Empty;
+
+    protected override void OnInitialized()
+    {
+        if (!String.IsNullOrEmpty(RedirectTo) && !RedirectTo.ToLower().EndsWith(AllRoutes.LoginWithPassword) && !RedirectTo.ToLower().EndsWith(AllRoutes.Login))
+            _Snackbar.Add("برای ادامه ابتدا باید وارد شوید", Severity.Info);
+    }
 
     public async Task RegisterUser()
     {
@@ -32,7 +43,14 @@ partial class RegisterOrLogin
         if (response != null)
         {
             await _AuthenticationProvider.Login(response);
-            _NavigationManager.NavigateTo("/Dashboard");
+            if (String.IsNullOrEmpty(RedirectTo) || RedirectTo.ToLower().EndsWith(AllRoutes.LoginWithPassword) || RedirectTo.ToLower().EndsWith(AllRoutes.Login))
+            {
+                _NavigationManager.NavigateTo(AllRoutes.Dashboard);
+            }
+            else
+            {
+                _NavigationManager.NavigateTo(RedirectTo);
+            }
         }
     }
 

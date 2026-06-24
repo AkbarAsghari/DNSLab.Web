@@ -69,6 +69,6 @@ partial class Plans
                 _NavigationManager.NavigateTo(AllRoutes.Dashboard);
             }
         }
-        _NavigationManager.NavigateTo(AllRoutes.Login);
+        _NavigationManager.NavigateTo($"{AllRoutes.Login}?RedirectTo={AllRoutes.Plans}");
     }
 }

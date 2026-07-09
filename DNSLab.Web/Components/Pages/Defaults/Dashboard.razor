@@ -1,42 +1,69 @@
 ﻿@attribute [Route(AllRoutes.Dashboard)]
 @attribute [Authorize]
+
 <SeoProvider Title="داشبورد" />
 
-<MudText Typo="Typo.h1" Align="Align.Center">داشبورد</MudText>
-<MudText Class="mt-5 mb-10" Align="Align.Center">وضعیت کلی رکورد ها و دامنه ها و هاست نیم ها</MudText>
+<MudContainer MaxWidth="MaxWidth.False">
+    <MudStack Spacing="1" Class="mb-8">
+        <MudText Typo="Typo.h3">داشبورد</MudText>
+        <MudText Typo="Typo.body1">نمای کلی از دامنه‌ها، رکوردها و هاست‌نیم‌های شما</MudText>
+    </MudStack>
 
-<MudGrid>
-    <MudItem xs="12" md="6" lg="3">
-        <MudPaper Elevation="0">
-            <MudStack AlignItems="AlignItems.Center" Class="py-1" Spacing="1">
-                <MudText>دامنه ها</MudText>
-                <MudText Typo="Typo.h3">@ZoneCount</MudText>
-            </MudStack>
-        </MudPaper>
-    </MudItem>
-    <MudItem xs="12" md="6" lg="3">
-        <MudPaper Elevation="0">
-            <MudStack AlignItems="AlignItems.Center" Class="py-1" Spacing="1">
-                <MudText>رکورد ها</MudText>
-                <MudText Typo="Typo.h3">@RecordsCount</MudText>
-            </MudStack>
-        </MudPaper>
-    </MudItem>
-    <MudItem xs="12" md="6" lg="3">
-        <MudPaper Elevation="0">
-            <MudStack AlignItems="AlignItems.Center" Class="py-1" Spacing="1">
-                <MudText>هاست‌نِیم ها</MudText>
-                <MudText Typo="Typo.h3">@DDNSsCount</MudText>
-            </MudStack>
-        </MudPaper>
-    </MudItem>
-</MudGrid>
+    <MudGrid Spacing="3">
+        <MudItem xs="12" sm="6" lg="4">
+            <MudPaper Elevation="1" Class="pa-5 rounded-lg h-100">
+                <MudStack Row="true" Justify="Justify.SpaceBetween">
+                    <MudAvatar Color="Color.Primary" Variant="Variant.Filled">
+                        <MudIcon Icon="@Icons.Material.Filled.Language" />
+                    </MudAvatar>
+                    <MudText Typo="Typo.h4" Color="Color.Primary">@ZoneCount</MudText>
+                </MudStack>
+                <MudText Class="mt-4" Typo="Typo.subtitle1">دامنه‌ها</MudText>
+            </MudPaper>
+        </MudItem>
 
-<MudAlert Class="mt-2" Severity="Severity.Normal" Dense ContentAlignment="HorizontalAlignment.Start" Variant="Variant.Text">
-    @if (DDNSsCount != null && DDNSsCount == 0)
-    {
-        <MudText Typo="Typo.body2">تا کنون هیچ هاست نِیمی ثبت نشده است.</MudText>
-    }
-    <MudLink Underline="Underline.None" Href="@AllRoutes.DDNSHostNames"><MudText Typo="Typo.body2">مدیریت هاست نِیم ها</MudText></MudLink>
-</MudAlert>
+        <MudItem xs="12" sm="6" lg="4">
+            <MudPaper Elevation="1" Class="pa-5 rounded-lg h-100">
+                <MudStack Row="true" Justify="Justify.SpaceBetween">
+                    <MudAvatar Color="Color.Info" Variant="Variant.Filled">
+                        <MudIcon Icon="@Icons.Material.Filled.Dns" />
+                    </MudAvatar>
+                    <MudText Typo="Typo.h4" Color="Color.Info">@RecordsCount</MudText>
+                </MudStack>
+                <MudText Class="mt-4" Typo="Typo.subtitle1">رکوردها</MudText>
+            </MudPaper>
+        </MudItem>
 
+        <MudItem xs="12" sm="6" lg="4">
+            <MudPaper Elevation="1" Class="pa-5 rounded-lg h-100">
+                <MudStack Row="true" Justify="Justify.SpaceBetween">
+                    <MudAvatar Color="Color.Success" Variant="Variant.Filled">
+                        <MudIcon Icon="@Icons.Material.Filled.Router" />
+                    </MudAvatar>
+                    <MudText Typo="Typo.h4" Color="Color.Success">@DDNSsCount</MudText>
+                </MudStack>
+                <MudText Class="mt-4" Typo="Typo.subtitle1">هاست‌نیم‌ها</MudText>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+
+    <MudPaper Elevation="0" Outlined="true" Class="pa-5 mt-6">
+        <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
+            <MudStack>
+                <MudText Typo="Typo.h6">وضعیت هاست‌نیم‌ها</MudText>
+                @if (DDNSsCount == 0)
+                {
+                    <MudText Typo="Typo.body2" Color="Color.Secondary">هنوز هیچ هاست‌نیمی ایجاد نشده است.</MudText>
+                }
+                else
+                {
+                    <MudText Typo="Typo.body2">برای مدیریت هاست‌نیم‌ها وارد بخش مربوطه شوید.</MudText>
+                }
+            </MudStack>
+
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@AllRoutes.DDNSHostNames" EndIcon="@Icons.Material.Filled.ArrowForward">
+                مدیریت هاست‌نیم‌ها
+            </MudButton>
+        </MudStack>
+    </MudPaper>
+</MudContainer>

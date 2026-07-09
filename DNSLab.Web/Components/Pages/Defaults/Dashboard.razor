@@ -10,60 +10,98 @@
     </MudStack>
 
     <MudGrid Spacing="3">
-        <MudItem xs="12" sm="6" lg="4">
-            <MudPaper Elevation="1" Class="pa-5 rounded-lg h-100">
+        <MudItem xs="12" sm="6" lg="3">
+            <MudPaper Outlined Class="pa-5 rounded-lg">
                 <MudStack Row="true" Justify="Justify.SpaceBetween">
                     <MudAvatar Color="Color.Primary" Variant="Variant.Filled">
                         <MudIcon Icon="@Icons.Material.Filled.Language" />
                     </MudAvatar>
                     <MudText Typo="Typo.h4" Color="Color.Primary">@ZoneCount</MudText>
                 </MudStack>
-                <MudText Class="mt-4" Typo="Typo.subtitle1">دامنه‌ها</MudText>
+                <MudText Class="mt-4" Typo="Typo.h6">دامنه‌ها</MudText>
             </MudPaper>
         </MudItem>
 
-        <MudItem xs="12" sm="6" lg="4">
-            <MudPaper Elevation="1" Class="pa-5 rounded-lg h-100">
+        <MudItem xs="12" sm="6" lg="3">
+            <MudPaper Outlined Class="pa-5 rounded-lg">
                 <MudStack Row="true" Justify="Justify.SpaceBetween">
                     <MudAvatar Color="Color.Info" Variant="Variant.Filled">
                         <MudIcon Icon="@Icons.Material.Filled.Dns" />
                     </MudAvatar>
                     <MudText Typo="Typo.h4" Color="Color.Info">@RecordsCount</MudText>
                 </MudStack>
-                <MudText Class="mt-4" Typo="Typo.subtitle1">رکوردها</MudText>
+                <MudText Class="mt-4" Typo="Typo.h6">رکوردها</MudText>
             </MudPaper>
         </MudItem>
 
-        <MudItem xs="12" sm="6" lg="4">
-            <MudPaper Elevation="1" Class="pa-5 rounded-lg h-100">
+        <MudItem xs="12" sm="6" lg="3">
+            <MudPaper Outlined Class="pa-5 rounded-lg">
                 <MudStack Row="true" Justify="Justify.SpaceBetween">
                     <MudAvatar Color="Color.Success" Variant="Variant.Filled">
                         <MudIcon Icon="@Icons.Material.Filled.Router" />
                     </MudAvatar>
                     <MudText Typo="Typo.h4" Color="Color.Success">@DDNSsCount</MudText>
                 </MudStack>
-                <MudText Class="mt-4" Typo="Typo.subtitle1">هاست‌نیم‌ها</MudText>
+                <MudText Class="mt-4" Typo="Typo.h6">هاست‌نیم‌ها</MudText>
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12" sm="6" lg="3">
+            <MudPaper Outlined Class="pa-5 rounded-lg">
+                <MudStack Row="true" Justify="Justify.SpaceBetween">
+                    <MudAvatar Color="Color.Warning" Variant="Variant.Filled">
+                        <MudIcon Icon="@DNSLabIcons.Tunnels" />
+                    </MudAvatar>
+                    <MudText Typo="Typo.h4" Color="Color.Warning">@OnlineTunnelsCount</MudText>
+                </MudStack>
+                <MudText Class="mt-4" Typo="Typo.h6">تعداد تونل های فعال</MudText>
             </MudPaper>
         </MudItem>
     </MudGrid>
 
-    <MudPaper Elevation="0" Outlined="true" Class="pa-5 mt-6">
-        <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
-            <MudStack>
-                <MudText Typo="Typo.h6">وضعیت هاست‌نیم‌ها</MudText>
-                @if (DDNSsCount == 0)
-                {
-                    <MudText Typo="Typo.body2" Color="Color.Secondary">هنوز هیچ هاست‌نیمی ایجاد نشده است.</MudText>
-                }
-                else
-                {
-                    <MudText Typo="Typo.body2">برای مدیریت هاست‌نیم‌ها وارد بخش مربوطه شوید.</MudText>
-                }
-            </MudStack>
+    <MudText Typo="Typo.h5" Class="my-4">
+        دسترسی سریع
+    </MudText>
 
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@AllRoutes.DDNSHostNames" EndIcon="@Icons.Material.Filled.ArrowForward">
-                مدیریت هاست‌نیم‌ها
-            </MudButton>
-        </MudStack>
-    </MudPaper>
+    <MudGrid Spacing="3">
+        <MudItem xs="12" sm="6" md="3">
+            <MudPaper Outlined Class="pa-5 rounded-lg cursor-pointer" @onclick="@(() => _NavigationManager.NavigateTo(AllRoutes.DDNSHostNames))">
+                <MudAvatar Size="Size.Large" Color="Color.Primary" Variant="Variant.Filled">
+                    <MudIcon Icon="@Icons.Material.Filled.AddLink" />
+                </MudAvatar>
+                <MudText Typo="Typo.h6" Class="mt-4">ایجاد هاست‌نیم</MudText>
+                <MudText Typo="Typo.body2" Color="Color.Primary">ثبت یک هاست‌نیم جدید برای اتصال به سرویس‌های خود</MudText>
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12" sm="6" md="3">
+            <MudPaper Outlined Class="pa-5 rounded-lg cursor-pointer" @onclick="@(() => _NavigationManager.NavigateTo(AllRoutes.SetupAndInstallation))">
+                <MudAvatar Size="Size.Large" Color="Color.Success" Variant="Variant.Filled">
+                    <MudIcon Icon="@Icons.Material.Filled.Terminal" />
+                </MudAvatar>
+                <MudText Typo="Typo.h6" Class="mt-4">راه‌اندازی Tunnel</MudText>
+                <MudText Typo="Typo.body2" Color="Color.Primary">دانلود DNSLab CLI و اتصال اولین دستگاه</MudText>
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12" sm="6" md="3">
+            <MudPaper Outlined Class="pa-5 rounded-lg cursor-pointer" @onclick="@(() => _NavigationManager.NavigateTo(AllRoutes.MyWallet))">
+                <MudAvatar Size="Size.Large" Color="Color.Warning" Variant="Variant.Filled">
+                    <MudIcon Icon="@Icons.Material.Filled.AccountBalanceWallet" />
+                </MudAvatar>
+                <MudText Typo="Typo.h6" Class="mt-4">کیف پول</MudText>
+                <MudText Typo="Typo.body2" Color="Color.Primary">افزایش موجودی برای خرید و تمدید سرویس‌ها</MudText>
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12" sm="6" md="3">
+            <MudPaper Outlined Class="pa-5 rounded-lg cursor-pointer" @onclick="@(() => _NavigationManager.NavigateTo(AllRoutes.Plans))">
+                <MudAvatar Size="Size.Large" Color="Color.Tertiary" Variant="Variant.Filled">
+                    <MudIcon Icon="@Icons.Material.Filled.RocketLaunch" />
+                </MudAvatar>
+                <MudText Typo="Typo.h6" Class="mt-4">ارتقای اشتراک</MudText>
+                <MudText Typo="Typo.body2" Color="Color.Primary">مشاهده پلن‌ها و دسترسی به امکانات بیشتر</MudText>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
 </MudContainer>

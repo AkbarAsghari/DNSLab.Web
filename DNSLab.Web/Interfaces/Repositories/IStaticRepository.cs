@@ -9,5 +9,6 @@
         Task<int?> GetAllUsersCount();
         Task<int?> GetAllPremiumUsersCount();
         Task<int?> GetAllTodayChangesCount();
+        Task<int?> OnlineTunnelsCount();
     }
 }

@@ -41,5 +41,10 @@ namespace DNSLab.Web.Repositories
         {
             return await _HttpServiceProvider.Get<int?>($"{APIController}/GetZonesCount");
         }
+
+        public async Task<int?> OnlineTunnelsCount()
+        {
+            return await _HttpServiceProvider.Get<int?>($"{APIController}/OnlineTunnelsCount");
+        }
     }
 }

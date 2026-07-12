@@ -1,0 +1,168 @@
+﻿@using DNSLab.Web.Enums
+@attribute [Route(AllRoutes.RunTunnelOnStartUp)]
+@attribute [Authorize]
+<SeoProvider Title="اجرا در Startup" />
+
+<MudText Typo="Typo.h1" Align="Align.Center">اجرای خودکار تونل هنگام راه‌اندازی سیستم عامل</MudText>
+<MudText Class="mt-5 mb-10" Align="Align.Center">
+    برای اجرای برنامه هنگام استارت سیستم عامل مراحل زیر را دنبال کنید.
+</MudText>
+
+<MudCard Elevation="0">
+    <MudCardContent>
+        <MudPaper Class="mt-5 pa-10" Elevation="0">
+            <MudText Typo="Typo.h4" Class="mb-4">
+                1. دانلود DNSLab CLI
+            </MudText>
+
+            <MudStack Row Class="mb-4">
+                <BaseButton Class="px-7"
+                            StartIcon="@DNSLabIcons.Windows"
+                            Size="Size.Small"
+                            Color="@(_SelectedOs == OS.Windows ? Color.Primary : Color.Default)"
+                            Variant="@(_SelectedOs == OS.Windows ? Variant.Filled : Variant.Outlined)"
+                            OnClick="()=> ChangeOS(OS.Windows)">
+                    Windows
+                </BaseButton>
+            </MudStack>
+
+            @switch (_SelectedOs)
+            {
+                case OS.Windows:
+
+                    <MudStack Row>
+                        <BaseButton Size="Size.Small"
+                                    EndIcon="@DNSLabIcons.Download"
+                                    Color="Color.Primary"
+                                    Variant="Variant.Filled"
+                                    DropShadow="false"
+                                    Href="https://cdn.dnslab.link/dnslab-windows-amd64.exe">
+                            دانلود نسخه Windows x64
+                        </BaseButton>
+
+                        <BaseButton Size="Size.Small"
+                                    EndIcon="@DNSLabIcons.Download"
+                                    Color="Color.Primary"
+                                    Variant="Variant.Filled"
+                                    DropShadow="false"
+                                    Href="https://cdn.dnslab.link/dnslab-windows-arm64.exe">
+                            دانلود نسخه Windows ARM64
+                        </BaseButton>
+                    </MudStack>
+
+                    break;
+
+                case OS.Linux:
+
+                    <CodeSnippet Language="bash"
+                                 Code="curl -fsSL https://cdn.dnslab.link/linux/install.sh | bash" />
+
+                    break;
+            }
+
+            <MudText Typo="Typo.h4" Class="mt-4">
+                2. تغییر نام فایل .exe
+            </MudText>
+            <MudText Class="my-2">
+                فایل دانلودشده را به dnslab.exe تغییر نام دهید.
+            </MudText>
+            <MudText Typo="Typo.h4" Class="mt-2">
+                3. نرم افزار Notepad یا هر ادیتور متن را باز کنید
+            </MudText>
+            <MudText Class="my-2">
+                برای نمونه، دستور زیر را در فایل Batch وارد کنید.
+                <MudFlexBreak />
+                در صورت نیاز، می‌توانید با استفاده از تنظیمات زیر، دستور موردنظر خود را به‌صورت سفارشی ایجاد کنید.
+            </MudText>
+            <MudPaper Outlined Class="pa-5">
+                <CodeSnippet Language="bat" Code="@_Script" />
+                <MudGrid>
+                    <MudItem xs="12" md="7">
+                        <MudText Class="my-2">
+                            تنظیمات دستور:
+                        </MudText>
+                        <MudGrid>
+                            <MudItem xs="12" sm="6">
+                                <MudSelect T="TunnelType" Dense Margin="Margin.Dense" Label="نوع تونل" Variant="Variant.Outlined" @bind-Value="_SelectedTunnelType">
+                                    <MudSelectItem T="TunnelType" Value="TunnelType.HTTP">
+                                        Http
+                                    </MudSelectItem>
+                                    <MudSelectItem T="TunnelType" Value="TunnelType.TCP">
+                                        Tcp
+                                    </MudSelectItem>
+                                    <MudSelectItem T="TunnelType" Value="TunnelType.UDP">
+                                        Udp
+                                    </MudSelectItem>
+                                </MudSelect>
+                            </MudItem>
+                            <MudItem xs="12" sm="6">
+                                <MudTextField InputType="InputType.Number" Margin="Margin.Dense" Class="dnslab-ltr" Label="Port" T="int" @bind-Value="_Port" Variant="Variant.Outlined" />
+                            </MudItem>
+                            <MudFlexBreak />
+                            <MudItem xs="12" sm="6">
+                                <MudSwitch Label="اجرای برنامه به‌صورت Minimized" T="bool" Color="Color.Primary" @bind-Value="_Minimize" />
+                            </MudItem>
+                            <MudItem xs="12" sm="6">
+                                <MudSwitch Label="تنظیم خودکار توکن قبل از اجرا" T="bool" Color="Color.Primary" @bind-Value="_AddToken" />
+                            </MudItem>
+                        </MudGrid>
+                    </MudItem>
+                    <MudItem xs="12" md="5">
+                        <MudText Class="my-2" Color="Color.Primary">
+                            تنظیمات پیشرفته (ویژه کاربران دارای اشتراک):
+                        </MudText>
+                        <MudGrid>
+                            <MudItem xs="12">
+                                <MudStack Row AlignItems="AlignItems.Center" Spacing="0">
+                                    @switch (_SelectedTunnelType)
+                                    {
+                                        case TunnelType.HTTP:
+                                            <MudTextField T="string" Class="dnslab-ltr" Margin="Margin.Dense" Variant="Variant.Outlined" ReadOnly Label="دامنه" Text="@($".http.dnslab.ir")" />
+                                            <MudTextField T="string" @bind-Value="_CustomDomain" Margin="Margin.Dense" Variant="Variant.Outlined" Class="dnslab-ltr" FullWidth Label="نام سفارشی" />
+                                            break;
+                                        case TunnelType.TCP:
+                                            <MudTextField T="int" @bind-Value="_CustomPort" Margin="Margin.Dense" InputType="InputType.Number" Variant="Variant.Outlined" Class="dnslab-ltr" FullWidth Label="پورت سفارشی" />
+                                            <MudTextField T="string" Class="dnslab-ltr" Margin="Margin.Dense" Variant="Variant.Outlined" ReadOnly Label="دامنه" Text="@($"tcp.dnslab.ir:")" />
+                                            break;
+                                        case TunnelType.UDP:
+                                            <MudTextField T="int" @bind-Value="_CustomPort" Margin="Margin.Dense" InputType="InputType.Number" Variant="Variant.Outlined" Class="dnslab-ltr" FullWidth Label="پورت سفارشی" />
+                                            <MudTextField T="string" Class="dnslab-ltr" Margin="Margin.Dense" Variant="Variant.Outlined" ReadOnly Label="دامنه" Text="@($"udp.dnslab.ir:")" />
+                                            break;
+                                    }
+                                </MudStack>
+                            </MudItem>
+                        </MudGrid>
+                    </MudItem>
+                </MudGrid>
+
+
+            </MudPaper>
+            <MudText Typo="Typo.h4" Class="mt-2">
+                4. ذخیره فایل
+            </MudText>
+            <MudText Class="my-2">
+                پس از وارد کردن دستور DNSLab در ویرایشگر متن (مانند Notepad)، از منوی File گزینه Save As را انتخاب کنید.
+                <MudFlexBreak />
+                برای فایل خود یک نام قابل تشخیص، مانند <MudChip T="string" Label="true" Color="Color.Primary" Variant="Variant.Text" Size="Size.Small">dnslab_tunnel.bat</MudChip> انتخاب کنید.
+                <MudFlexBreak />
+                نکته مهم: قبل از ذخیره، از قسمت Save as type گزینه All Files را انتخاب کنید. در غیر این صورت، ممکن است فایل به اشتباه با پسوند .txt ذخیره شود و قابل اجرا نباشد.
+                <MudFlexBreak />
+                در نهایت روی Save کلیک کنید تا فایل Batch شما ایجاد شود.
+            </MudText>
+            <MudText Typo="Typo.h4" Class="mt-2">
+                5. دسترسی به پوشه Startup
+            </MudText>
+            <MudText Class="my-2">
+                برای اینکه DNSLab به‌صورت خودکار پس از ورود به ویندوز اجرا شود، باید فایل <MudChip T="string" Label="true" Color="Color.Primary" Variant="Variant.Text" Size="Size.Small">bat.</MudChip> و <MudChip T="string" Label="true" Color="Color.Primary" Variant="Variant.Text" Size="Size.Small">dnslab.exe</MudChip> را داخل پوشه Startup ویندوز قرار دهید.
+                <MudFlexBreak />
+                برای باز کردن این پوشه، کلیدهای Win + R را فشار دهید، عبارت <MudChip T="string" Label="true" Color="Color.Primary" Variant="Variant.Text" Size="Size.Small">shell:startup</MudChip> را وارد کرده و سپس Enter بزنید.
+            </MudText>
+            <MudText Typo="Typo.h4" Class="mt-2">
+                6. اجرای خودکار تونل هنگام روشن شدن ویندوز
+            </MudText>
+            <MudText Class="my-2">
+                از این پس، هر بار که وارد حساب کاربری ویندوز شوید، فایل Batch به‌صورت خودکار اجرا شده و تونل DNSLab بدون نیاز به اجرای دستی برقرار خواهد شد.
+            </MudText>
+        </MudPaper>
+    </MudCardContent>
+</MudCard>

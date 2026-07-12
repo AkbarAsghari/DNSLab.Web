@@ -70,6 +70,7 @@
         public const string HttpReverseProxy = "/reverse-proxy/http";
         public const string ReverseProxyTraffic = "/reverse-proxy/traffic";
         public const string ConfigReverseProxy = "/reverse-proxy/config";
+        public const string RunTunnelOnStartUp = "/reverse-proxy/run-tunnel-on-startup";
 
         public const string SocialChannel = "https://t.me/DNSLabLink";
     }

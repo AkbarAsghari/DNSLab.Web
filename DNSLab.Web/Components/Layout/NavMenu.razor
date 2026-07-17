@@ -41,35 +41,39 @@
                 <MudNavGroup Title="Reverse Proxy" Icon="@DNSLabIcons.NAT">
                     <MudNavLink Icon="@DNSLabIcons.Download" Href="@AllRoutes.SetupAndInstallation">راه‌اندازی و نصب</MudNavLink>
                     <MudNavLink Icon="@DNSLabIcons.Chart" Href="@AllRoutes.ReverseProxyTraffic">ترافیک مصرفی</MudNavLink>
-                    <MudNavLink Icon="@DNSLabIcons.Key" Href="@AllRoutes.AuthToken">توکن احراز هویت شما</MudNavLink>
+                    <MudNavLink Icon="@DNSLabIcons.Key" Href="@AllRoutes.AuthToken">توکن دسترسی</MudNavLink>
                     <MudNavGroup Title="Tunnels" Icon="@DNSLabIcons.Tunnels">
                         <MudNavLink Icon="@DNSLabIcons.Tunnel" Href="@AllRoutes.HttpReverseProxy">HTTP</MudNavLink>
                         <MudNavLink Icon="@DNSLabIcons.Tunnel" Href="@AllRoutes.TcpReverseProxy">TCP</MudNavLink>
                         <MudNavLink Icon="@DNSLabIcons.Tunnel" Href="@AllRoutes.UdpReverseProxy">UDP</MudNavLink>
-                        <MudNavLink Icon="@DNSLabIcons.Tunnel" Href="@AllRoutes.ConfigReverseProxy">Config</MudNavLink>
                     </MudNavGroup>
-                    <MudNavLink Icon="@DNSLabIcons.Startup" Href="@AllRoutes.RunTunnelOnStartUp">اجرا در Startup</MudNavLink>
+                    <MudNavLink Icon="@DNSLabIcons.SettingsEthernet" Href="@AllRoutes.ConfigReverseProxy">Config</MudNavLink>
+                    <MudNavLink Icon="@DNSLabIcons.Startup" Href="@AllRoutes.RunTunnelOnStartUp">اجرای خودکار</MudNavLink>
                     @* <MudNavLink Icon="@DNSLabIcons.ActiveTunnels" Href="@AllRoutes.ActiveTunnels">تونل های فعال</MudNavLink> *@
                 </MudNavGroup>
                 <MudNavGroup Title="کیف پول" Icon="@DNSLabIcons.Wallet">
                     <MudNavLink Href="@AllRoutes.MyWallet">موجودی</MudNavLink>
-                    <MudNavLink Href="@AllRoutes.WalletTransactions">تراکنش ها</MudNavLink>
                     <MudNavLink Href="@AllRoutes.Payments">پرداخت ها</MudNavLink>
+                    <MudNavLink Href="@AllRoutes.WalletTransactions">تراکنش ها</MudNavLink>
                 </MudNavGroup>
                 <MudNavLink Href="@AllRoutes.Monitoring" Icon="@DNSLabIcons.Monitoring">مانیتورینگ</MudNavLink>
                 <MudNavGroup Title="اشتراک" Icon="@DNSLabIcons.Premium">
-                    <MudNavLink Href="@AllRoutes.MySubscriptions">اشتراک‌ها</MudNavLink>
-                    @* <MudNavLink Href="@AllRoutes.Renewal">تمدید اشتراک</MudNavLink> *@
+                    <MudNavLink Href="@AllRoutes.MySubscriptions">اشتراک‌های من</MudNavLink>
+                    <MudNavLink Href="@AllRoutes.Plans">خرید اشتراک</MudNavLink>
                 </MudNavGroup>
             </MudNavMenu>
             <MudSpacer />
         </Authorized>
     </AuthorizeView>
     <MudNavMenu Dense>
-        <MudNavLink Icon="@DNSLabIcons.Subscriptions" Href="@AllRoutes.Plans">تهیه اشتراک</MudNavLink>
+        <AuthorizeView>
+            <NotAuthorized>
+                <MudNavLink Icon="@DNSLabIcons.Premium" Href="@AllRoutes.Plans">تعرفه</MudNavLink>
+            </NotAuthorized>
+        </AuthorizeView>
         <MudNavLink Icon="@DNSLabIcons.Tools" Href="@AllRoutes.AllTools">ابزار ها</MudNavLink>
         <MudNavLink Icon="@DNSLabIcons.Support" Href="@AllRoutes.MyTickets">پشتیبانی</MudNavLink>
-        <MudNavGroup Icon="@DNSLabIcons.Wiki" Title="Wiki">
+        <MudNavGroup Icon="@DNSLabIcons.Wiki" Title="مستندات">
             @if (_WikiMenu is not null)
             {
                 @foreach (var menu in _WikiMenu.SubMenus)

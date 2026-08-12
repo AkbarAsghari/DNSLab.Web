@@ -1,5 +1,6 @@
 ﻿@attribute [Route(AllRoutes.ReverseProxyTraffic)]
 @attribute [Authorize]
+
 <SeoProvider Title="ترافیک مصرفی" />
 
 <MudText Typo="Typo.h1" Align="Align.Center">ترافیک مصرفی</MudText>
@@ -8,7 +9,6 @@
     <MudFlexBreak />
     اولویت مصرف: هدیه ← ماهانه ← پلن ← ترافیک اضافه
 </MudText>
-
 <MudCard Elevation="0">
     <MudCardHeader>
         <CardHeaderContent />
@@ -17,38 +17,95 @@
         </CardHeaderActions>
     </MudCardHeader>
     <MudCardContent>
-        <MudPaper Class="mt-5 pa-10" Elevation="0">
-            <MudText Typo="Typo.caption">مقدار ترافیک مصرف شده تا این لحظه</MudText>
-            <MudFlexBreak />
-            @if (_Traffics != null)
-            {
-                <MudGrid Spacing="3">
-                    @foreach (var item in _Traffics)
-                    {
-                        <MudItem xs="12" sm="6">
-                            <MudStack Row AlignItems="AlignItems.Center" Spacing="0" Justify="Justify.SpaceBetween">
-                                <MudChip T="string" Label="true" Color="Color.Primary" Size="Size.Small">
-                                    @(item.Type)
-                                </MudChip>
-                                <MudChip T="string" Label="true" Color="Color.Surface" Size="Size.Small">
-                                    @(item.FromDate.HasValue ? item.FromDate.Value.ToPersianDate() : "♾️") - @(item.ToDate.HasValue ? item.ToDate.Value.ToPersianDate() : "♾️")
-                                </MudChip>
-                                <MudChip T="string" Label="true" Color="Color.Primary" Size="Size.Small">
-                                    @item.Traffic.ToReadableSize() / @((item.Traffic - item.RemainTraffic).ToReadableSize())
-                                </MudChip>
-                            </MudStack>
-                            <MudProgressLinear Max="@item.Traffic" Value="(item.Traffic - item.RemainTraffic)" Rounded Striped Color="@((item.Traffic - item.RemainTraffic == 0)
-                        ? Color.Success
-                        : ((double)(item.Traffic - item.RemainTraffic) / item.Traffic * 100) < 70
-                            ? Color.Success
-                            : ((double)(item.Traffic - item.RemainTraffic) / item.Traffic * 100) <= 90
-                                ? Color.Warning
-                                : Color.Default)" Size="Size.Large" Class="my-2" />
-                        </MudItem>
-                    }
-                </MudGrid>
-            }
 
-        </MudPaper>
+        @if (_Traffics != null)
+        {
+            <MudGrid Spacing="2">
+                @foreach (var item in _Traffics)
+                {
+                    var used = item.Traffic - item.RemainTraffic;
+                    var percent = item.Traffic > 0
+                    ? (double)used / item.Traffic * 100
+                    : 0;
+
+                    var color = percent >= 90
+                    ? Color.Error
+                    : percent >= 70
+                    ? Color.Warning
+                    : Color.Success;
+
+                    <MudItem xs="12" md="6">
+                        <MudCard Outlined>
+                            <MudCardContent>
+
+                                <MudStack Row
+                                          AlignItems="AlignItems.Center"
+                                          Justify="Justify.SpaceBetween">
+
+                                    <MudText Typo="Typo.h6">
+                                        @item.Type
+                                    </MudText>
+
+                                    <MudChip T="string"
+                                             Size="Size.Small"
+                                             Color="@color"
+                                             Label=true>
+                                        @percent.ToString("0")٪
+                                    </MudChip>
+
+                                </MudStack>
+
+                                <MudStack Row
+                                          AlignItems="AlignItems.End"
+                                          Spacing="1"
+                                          Class="mt-4">
+
+                                    <MudText Typo="Typo.h4">
+                                        @item.RemainTraffic.ToReadableSize()
+                                    </MudText>
+
+                                    <MudText Typo="Typo.body2">
+                                        باقی‌مانده از @item.Traffic.ToReadableSize()
+                                    </MudText>
+
+                                </MudStack>
+
+                                <MudProgressLinear Max="@item.Traffic"
+                                                   Value="@used"
+                                                   Rounded
+                                                   Color="@color"
+                                                   Class="my-3" />
+
+                                <MudStack Row
+                                          Justify="Justify.SpaceBetween">
+
+                                    <MudText Typo="Typo.caption">
+                                        مصرف شده: @used.ToReadableSize()
+                                    </MudText>
+
+                                    <MudText Typo="Typo.caption">
+                                        @(item.FromDate.HasValue? item.FromDate.Value.ToPersianDate() : "♾️")
+                                        -
+                                        @(item.ToDate.HasValue? item.ToDate.Value.ToPersianDate() : "♾️")
+                                    </MudText>
+
+                                </MudStack>
+
+                                @if (item.RemainTraffic <= 0)
+                                {
+                                    <MudAlert Dense
+                                              Severity="Severity.Error"
+                                              Variant="Variant.Text"
+                                              Class="mt-3">
+                                        ترافیک این بخش به پایان رسیده است.
+                                    </MudAlert>
+                                }
+
+                            </MudCardContent>
+                        </MudCard>
+                    </MudItem>
+                }
+            </MudGrid>
+        }
     </MudCardContent>
 </MudCard>

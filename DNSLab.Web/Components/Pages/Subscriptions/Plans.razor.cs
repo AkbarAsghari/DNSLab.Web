@@ -5,7 +5,6 @@ using DNSLab.Web.DTOs.Repositories.Subscription;
 using DNSLab.Web.Helpers;
 using DNSLab.Web.Interfaces.Providers;
 using DNSLab.Web.Interfaces.Repositories;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor;
@@ -20,13 +19,7 @@ partial class Plans
     [Inject] NavigationManager _NavigationManager { get; set; }
     [Inject] IDialogService _DialogService { get; set; }
 
-
     IEnumerable<PlanSectionDTO>? _PlanSections { get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-        _PlanSections = await _SubscriptionRepository.GetPlans();
-    }
 
     PlanDiscountDTO? _SelectedPlanDiscount { get; set; }
 
@@ -36,14 +29,22 @@ partial class Plans
         {
             if (_SelectedPlanDiscount != null)
             {
-                return _PlanSections!.SelectMany(x => x.Plans).First(x => x.Discounts.Any(d => d.Id == _SelectedPlanDiscount.Id));
+                return _PlanSections!
+                    .SelectMany(x => x.Plans)
+                    .First(x => x.Discounts.Any(d => d.Id == _SelectedPlanDiscount.Id));
             }
 
             return null;
         }
     }
 
-    bool _SubscribeDialogVisible { get; set; } = false;
+    bool _SubscribeDialogVisible { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _PlanSections = await _SubscriptionRepository.GetPlans();
+    }
+
     void DiscountOnChange(PlanDiscountDTO discount)
     {
         _SelectedPlanDiscount = discount;
@@ -53,17 +54,27 @@ partial class Plans
     async Task Subscriptionn()
     {
         var authState = await _AuthenticationStateProvider.GetAuthenticationStateAsync();
+
         if (authState.User.Identity != null && authState.User.Identity.IsAuthenticated)
         {
-            var options = new DialogOptions() { CloseButton = true, FullWidth = true, MaxWidth = MaxWidth.ExtraSmall };
-            var parameters = new DialogParameters<InvoiceDialog>() {
-                { x => x.InvoiceType, Enums.InvoiceTypeEnum.Subscription},
-                { x => x.Amount , (_SelectedPlanDiscount!.Duration.DurationInMonth * (_SelectedPlan.BasePrice - (_SelectedPlan.BasePrice * _SelectedPlanDiscount.DiscountRate / 100))) },
-                { x => x.PlanId, _SelectedPlan.Id },
-                { x => x.DiscountId, _SelectedPlanDiscount!.Id },
+            var options = new DialogOptions
+            {
+                CloseButton = true,
+                FullWidth = true,
+                MaxWidth = MaxWidth.ExtraSmall
             };
+
+            var parameters = new DialogParameters<InvoiceDialog>
+            {
+                { x => x.InvoiceType, Enums.InvoiceTypeEnum.Subscription },
+                { x => x.Amount, _SelectedPlanDiscount!.Duration.DurationInMonth * (_SelectedPlan.BasePrice - (_SelectedPlan.BasePrice * _SelectedPlanDiscount.DiscountRate / 100)) },
+                { x => x.PlanId, _SelectedPlan.Id },
+                { x => x.DiscountId, _SelectedPlanDiscount.Id }
+            };
+
             var dialog = await _DialogService.ShowAsync<InvoiceDialog>("صورتحساب", parameters, options);
             var result = await dialog.Result;
+
             if (!result!.Canceled)
             {
                 _NavigationManager.NavigateTo(AllRoutes.Dashboard);

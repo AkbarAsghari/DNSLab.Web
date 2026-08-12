@@ -1,11 +1,13 @@
 ﻿@attribute [Route(AllRoutes.Plans)]
 @using DNSLab.Web.DTOs.Repositories.Subscription
+
 <SeoProvider Title="پلن ها" Meta_Description="پلن های سایت DNSLab" />
 
 <MudText Typo="Typo.h1" Align="Align.Center">تهیه اشتراک</MudText>
 <MudText Class="mt-5 mb-10" Align="Align.Center">
     در این بخش شما با توجه به نیاز خود میتوانید پلن مورد نظر خود را انتخاب نمایید
 </MudText>
+
 <MudCard Elevation="0">
     <MudCardContent>
         @if (_PlanSections != null)
@@ -14,6 +16,7 @@
             {
                 <MudText Typo="Typo.h2" Align="Align.Center" Class="mt-5">@sectionItem.Name</MudText>
                 <MudText Typo="Typo.body2" Align="Align.Center" Class="mb-3">@sectionItem.Description</MudText>
+
                 <MudGrid Spacing="1">
                     @foreach (var plan in sectionItem.Plans)
                     {
@@ -24,45 +27,42 @@
                                         <MudText Typo="Typo.h3">@plan.Name</MudText>
                                     </CardHeaderContent>
                                 </MudCardHeader>
+                                
                                 <MudCardContent>
-                                    <MudStack Spacing="0" AlignItems="AlignItems.Start">
-                                        @foreach (var feature in plan.Features.OrderBy(x => x.Order))
-                                        {
-                                            <MudTooltip Text="@feature.Description" Arrow>
-                                                <MudChip T="string" Size="Size.Small" Variant="Variant.Text" Icon="@(feature.Supported ? Icons.Material.Rounded.CheckBox : Icons.Material.Rounded.Close)" IconColor="@(feature.Supported ? Color.Success : Color.Error)" Color="Color.Default">@feature.Name @(feature.FeatureValue == null ? String.Empty : $" : {feature.FeatureValue} {feature.Unit}")</MudChip>
-                                            </MudTooltip>
-                                        }
+                                    <MudStack Class="mb-2" Row AlignItems="AlignItems.Center">
+                                        <MudText Typo="Typo.h4">@plan.BasePrice.Separate3Digits() ریال</MudText>
+                                        <MudText>/ ماه</MudText>
                                     </MudStack>
-                                    <MudDivider DividerType="DividerType.Middle" Class="mt-5 mb-2" />
-                                    @if (plan.Discounts.Count() > 0)
+                                    @if (plan.Discounts.Any())
                                     {
-                                        @foreach (var discount in plan.Discounts)
-                                        {
-                                            <MudLink Underline="Underline.None" OnClick="()=>DiscountOnChange(discount)">
-                                                <MudPaper Outlined Class="pa-1 my-1">
-                                                    <MudStack AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Row Spacing="0">
-                                                        <MudStack AlignItems="AlignItems.Center" Spacing="1">
-                                                            <MudText>
-                                                                @discount.Duration.DurationInMonth ماهه
-                                                                <text>(@((discount.Duration.DurationInMonth * (plan.BasePrice - (plan.BasePrice * discount.DiscountRate / 100))).Separate3Digits())) ریال</text>
-                                                            </MudText>
-                                                            @if (discount.Duration.DurationInMonth > 1)
-                                                            {
-                                                                <MudText Color="Color.Info" Typo="Typo.body2" Class="mr-2">هر ماه (@((plan.BasePrice - (plan.BasePrice * discount.DiscountRate / 100)).Separate3Digits())) ریال</MudText>
-                                                            }
-                                                        </MudStack>
-                                                        <MudChip T="object" Label="true" Variant="Variant.Text" Icon="@DNSLabIcons.Check" Color="Color.Success">انتخاب</MudChip>
-                                                    </MudStack>
-                                                </MudPaper>
-                                            </MudLink>
-                                        }
+                                        <MudButton Variant="Variant.Filled"
+                                                   Color="Color.Primary"
+                                                   FullWidth
+                                                   OnClick="() => DiscountOnChange(plan.Discounts.First())">
+                                            انتخاب پلن
+                                        </MudButton>
                                     }
                                     else
                                     {
-                                        <MudAlert Dense Severity="Severity.Info" Variant="Variant.Outlined" Class="py-14" ContentAlignment="HorizontalAlignment.Start">
-                                            <MudText Typo="Typo.caption">این پلن بصورت پیش فرض برای همه کاربران فعال میباشد</MudText>
-                                        </MudAlert>
+                                        <MudButton Variant="Variant.Outlined" Color="Color.Info" FullWidth Disabled>
+                                            اشتراک فعلی شما
+                                        </MudButton>
                                     }
+                                    <MudStack Class="mt-2" Spacing="0" AlignItems="AlignItems.Start">
+                                        @foreach (var feature in plan.Features.OrderBy(x => x.Order))
+                                        {
+                                            <MudTooltip Text="@feature.Description" Arrow>
+                                                <MudChip T="string"
+                                                         Size="Size.Small"
+                                                         Variant="Variant.Text"
+                                                         Icon="@(feature.Supported ? Icons.Material.Rounded.CheckBox : Icons.Material.Rounded.Close)"
+                                                         IconColor="@(feature.Supported ? Color.Success : Color.Error)"
+                                                         Color="Color.Default">
+                                                    @feature.Name @(feature.FeatureValue == null ? String.Empty : $" : {feature.FeatureValue} {feature.Unit}")
+                                                </MudChip>
+                                            </MudTooltip>
+                                        }
+                                    </MudStack>
                                 </MudCardContent>
                             </MudCard>
                         </MudItem>
@@ -70,36 +70,103 @@
                 </MudGrid>
             }
 
+            @if (_SelectedPlanDiscount != null)
+            {
+                <MudDialog Options="new DialogOptions { MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, CloseButton = true }"
+                           Visible="_SubscribeDialogVisible"
+                           VisibleChanged="(v) => _SubscribeDialogVisible = v"
+                           ContentClass="pa-1 ma-3">
 
-            <MudDialog Options="new DialogOptions{MaxWidth = MaxWidth.ExtraSmall, FullWidth = true , CloseButton = true}" Visible="_SubscribeDialogVisible" VisibleChanged="(v)=> _SubscribeDialogVisible = v" ContentClass="pa-1 ma-3">
-                <TitleContent>
-                    <MudText>پلن انتخابی : @_SelectedPlan.Name</MudText>
-                </TitleContent>
-                <DialogActions>
-                    <BaseButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Subscriptionn">تایید و پرداخت</BaseButton>
-                </DialogActions>
-                <DialogContent>
-                    <MudText Typo="Typo.body2">
-                        مدت :
-                        @_SelectedPlanDiscount!.Duration.DurationInMonth ماهه
-                        (@((_SelectedPlanDiscount.Duration.DurationInMonth * (_SelectedPlan.BasePrice - (_SelectedPlan.BasePrice * _SelectedPlanDiscount.DiscountRate / 100))).Separate3Digits())) ريال
-                        @if (_SelectedPlanDiscount.Duration.DurationInMonth > 1)
-                        {
-                            <MudText Color="Color.Success" Typo="Typo.body2" Class="mr-2">هر ماه (@((_SelectedPlan.BasePrice - (_SelectedPlan.BasePrice * _SelectedPlanDiscount.DiscountRate / 100)).Separate3Digits())) ريال</MudText>
-                        }
-                    </MudText>
-                    <MudDivider />
-                    <MudText Typo="Typo.body2">توضیحات</MudText>
-                    <MudStack Spacing="0" AlignItems="AlignItems.Start">
-                        @foreach (var feature in _SelectedPlan.Features)
-                        {
-                            <MudTooltip Text="@feature.Description">
-                                <MudChip T="string" Size="Size.Small" Variant="Variant.Text" Icon="@(feature.Supported ? Icons.Material.Rounded.CheckBox : Icons.Material.Rounded.Close)" IconColor="@(feature.Supported ? Color.Success : Color.Error)" Color="Color.Default">@feature.Name @(feature.FeatureValue == null ? String.Empty : $" : {feature.FeatureValue}")</MudChip>
-                            </MudTooltip>
-                        }
-                    </MudStack>
-                </DialogContent>
-            </MudDialog>
+                    <TitleContent>
+                        <MudText>پلن انتخابی : @_SelectedPlan.Name</MudText>
+                    </TitleContent>
+
+                    <DialogContent>
+                        <MudText Typo="Typo.body2" Class="mb-3">
+                            مدت اشتراک خود را انتخاب کنید
+                        </MudText>
+
+                        <MudStack Spacing="1">
+                            @foreach (var discount in _SelectedPlan.Discounts.OrderBy(x => x.Duration.DurationInMonth))
+                            {
+                                var price = discount.Duration.DurationInMonth * (_SelectedPlan.BasePrice - (_SelectedPlan.BasePrice * discount.DiscountRate / 100));
+                                var monthlyPrice = _SelectedPlan.BasePrice - (_SelectedPlan.BasePrice * discount.DiscountRate / 100);
+
+                                <MudLink Underline="Underline.None" OnClick="() => DiscountOnChange(discount)">
+                                    <MudPaper Outlined Class="pa-3 my-1">
+                                        <MudStack Row
+                                                  AlignItems="AlignItems.Center"
+                                                  Justify="Justify.SpaceBetween"
+                                                  Spacing="1">
+
+                                            <MudStack Row Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
+                                                <MudIcon Icon="@(discount.Id == _SelectedPlanDiscount.Id ? @Icons.Material.Filled.RadioButtonChecked : @Icons.Material.Filled.RadioButtonUnchecked)"
+                                                         Color="@(discount.Id == _SelectedPlanDiscount.Id ? Color.Primary: Color.Default)"
+                                                         Size="Size.Small" />
+                                                <MudStack Spacing="0">
+
+                                                    <MudText>
+                                                        @discount.Duration.DurationInMonth ماهه
+                                                    </MudText>
+
+                                                    @if (discount.Duration.DurationInMonth > 1)
+                                                    {
+                                                        <MudText Color="Color.Info" Typo="Typo.body2">
+                                                            هر ماه (@monthlyPrice.Separate3Digits()) ریال
+                                                        </MudText>
+                                                    }
+
+                                                    @if (discount.DiscountRate > 0)
+                                                    {
+                                                        <MudText Color="Color.Success" Typo="Typo.caption">
+                                                            @discount.DiscountRate٪ تخفیف
+                                                        </MudText>
+                                                    }
+                                                </MudStack>
+
+                                            </MudStack>
+
+                                            <MudStack Row AlignItems="AlignItems.Center" Spacing="1">
+                                                <MudText Class="font-weight-bold">
+                                                    @price.Separate3Digits() ریال
+                                                </MudText>
+                                            </MudStack>
+                                        </MudStack>
+                                    </MudPaper>
+                                </MudLink>
+                            }
+                        </MudStack>
+
+                        <MudDivider Class="my-4" />
+
+                        <MudText Typo="Typo.body2">توضیحات</MudText>
+
+                        <MudStack Spacing="0" AlignItems="AlignItems.Start">
+                            @foreach (var feature in _SelectedPlan.Features.OrderBy(x => x.Order))
+                            {
+                                <MudTooltip Text="@feature.Description">
+                                    <MudChip T="string"
+                                             Size="Size.Small"
+                                             Variant="Variant.Text"
+                                             Icon="@(feature.Supported ? Icons.Material.Rounded.CheckBox : Icons.Material.Rounded.Close)"
+                                             IconColor="@(feature.Supported ? Color.Success : Color.Error)"
+                                             Color="Color.Default">
+                                        @feature.Name @(feature.FeatureValue == null ? String.Empty : $" : {feature.FeatureValue} {feature.Unit}")
+                                    </MudChip>
+                                </MudTooltip>
+                            }
+                        </MudStack>
+                    </DialogContent>
+
+                    <DialogActions>
+                        <BaseButton Color="Color.Primary"
+                                    Variant="Variant.Filled"
+                                    OnClick="Subscriptionn">
+                            تایید و پرداخت
+                        </BaseButton>
+                    </DialogActions>
+                </MudDialog>
+            }
         }
     </MudCardContent>
 </MudCard>

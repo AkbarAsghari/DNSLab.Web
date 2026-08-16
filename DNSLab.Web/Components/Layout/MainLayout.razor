@@ -9,7 +9,7 @@
     <MudSnackbarProvider />
     <MudLayout>
         <CascadingAuthenticationState>
-            <AppBar MenuOnClick="(()=>_NavMenu.DrawerToggle())" DarkModeChanged="DarkModeOnChange" />
+            <AppBar MenuOnClick="(() => _NavMenu.DrawerToggle())" DarkModeChanged="DarkModeOnChange" />
             <NavMenu @ref="_NavMenu" />
             <MudMainContent>
                 <MudContainer MaxWidth="MaxWidth.Large" Class="py-5">
@@ -71,126 +71,130 @@
 
         string[] boldFontFamily = { "vazir-bold" };
         _theme = new()
+        {
+            Typography = new Typography()
             {
-                Typography = new Typography()
+                Default = new DefaultTypography()
                 {
-                    Default = new DefaultTypography()
-                    {
-                        FontFamily = ["vazir-regular"]
-                    },
-                    H1 = new H1Typography
-                    {
-                        FontFamily = boldFontFamily,
-                        FontSize = "calc(1.375rem + 1.5vw)"
-                    },
-                    H2 = new H2Typography
-                    {
-                        FontFamily = boldFontFamily,
-                        FontSize = "calc(1.325rem + .9vw)"
-                    },
-                    H3 = new H3Typography
-                    {
-                        FontFamily = boldFontFamily,
-                        FontSize = "calc(1.3rem + .6vw)"
-                    },
-                    H4 = new H4Typography
-                    {
-                        FontFamily = boldFontFamily,
-                        FontSize = "calc(1.275rem + .3vw)"
-                    },
-                    H5 = new H5Typography
-                    {
-                        FontFamily = boldFontFamily,
-                        FontSize = "1.25rem"
-                    },
-                    H6 = new H6Typography
-                    {
-                        FontFamily = boldFontFamily,
-                        FontSize = "1rem"
-                    },
-                    Body1 = new Body1Typography
-                    {
-                        FontFamily = boldFontFamily,
-                        FontSize = ".813rem"
-                    },
+                    FontFamily = ["vazir-regular"]
                 },
-                PaletteLight = _lightPalette,
-                PaletteDark = _darkPalette,
-                LayoutProperties = new LayoutProperties()
-            };
+                H1 = new H1Typography
+                {
+                    FontFamily = boldFontFamily,
+                    FontSize = "calc(1.375rem + 1.5vw)"
+                },
+                H2 = new H2Typography
+                {
+                    FontFamily = boldFontFamily,
+                    FontSize = "calc(1.325rem + .9vw)"
+                },
+                H3 = new H3Typography
+                {
+                    FontFamily = boldFontFamily,
+                    FontSize = "calc(1.3rem + .6vw)"
+                },
+                H4 = new H4Typography
+                {
+                    FontFamily = boldFontFamily,
+                    FontSize = "calc(1.275rem + .3vw)"
+                },
+                H5 = new H5Typography
+                {
+                    FontFamily = boldFontFamily,
+                    FontSize = "1.25rem"
+                },
+                H6 = new H6Typography
+                {
+                    FontFamily = boldFontFamily,
+                    FontSize = "1rem"
+                },
+                Body1 = new Body1Typography
+                {
+                    FontFamily = boldFontFamily,
+                    FontSize = ".813rem"
+                },
+            },
+            PaletteLight = _lightPalette,
+            PaletteDark = _darkPalette,
+            LayoutProperties = new LayoutProperties()
+        };
     }
 
     private readonly PaletteLight _lightPalette = new()
-        {
-            Black = "#1d1e22",
-            Background = "#f9f7f3",
-            Surface = "#ffffff",
-            AppbarBackground = "#f9f7f3",
-            AppbarText = "#717171",
-            DrawerBackground = "#f9f7f3",
-            DrawerText = "#717171",
-            GrayLight = "#e8e8e8",
-            GrayLighter = "#f9f9f9",
+    {
+        Black = "#1d1e22",
+        Background = "#f9f7f3",
+        Surface = "#ffffff",
+        AppbarBackground = "#f9f7f3",
+        AppbarText = "#717171",
+        DrawerBackground = "#f9f7f3",
+        DrawerText = "#717171",
+        GrayLight = "#e8e8e8",
+        GrayLighter = "#f9f9f9",
 
-            Primary = "#1d1e22",
-            PrimaryLighten = "#1d1e22",
-            PrimaryDarken = "#1d1e22",
+        Primary = "#1d1e22",
+        PrimaryLighten = "#1d1e22",
+        PrimaryDarken = "#1d1e22",
 
-            Secondary = "#ff8e5e",
+        Secondary = "#64748b",
+        SecondaryLighten = "#94a3b8",
+        SecondaryDarken = "#475569",
 
-            Info = "#14b8a6",
-            InfoLighten = "#14b8a6",
-            InfoDarken = "#14b8a6",
+        Info = "#14b8a6",
+        InfoLighten = "#14b8a6",
+        InfoDarken = "#14b8a6",
 
-            Warning = "#f97316",
-            WarningLighten = "#f97316",
-            WarningDarken = "#f97316",
+        Warning = "#f97316",
+        WarningLighten = "#f97316",
+        WarningDarken = "#f97316",
 
-            Error = "#ef4444",
-            ErrorDarken = "#ef4444",
-            ErrorLighten = "#ef4444",
+        Error = "#ef4444",
+        ErrorDarken = "#ef4444",
+        ErrorLighten = "#ef4444",
 
 
-            Success = "#22C55E",
-            SuccessDarken = "#22C55E",
-            SuccessLighten = "#22C55E",
-        };
+        Success = "#22C55E",
+        SuccessDarken = "#22C55E",
+        SuccessLighten = "#22C55E",
+    };
 
     private readonly PaletteDark _darkPalette = new()
-        {
-            Black = "#d1d5db",
-            Background = "#0a0f14",
-            Surface = "#1c1f26",
-            AppbarBackground = "#0a0f14",
-            AppbarText = "#d1d5db",
-            DrawerBackground = "#0a0f14",
-            DrawerText = "#d1d5db",
-            GrayLight = "#9ca3af",
-            GrayLighter = "#e5e7eb",
+    {
+        Black = "#d1d5db",
+        Background = "#0a0f14",
+        Surface = "#1c1f26",
+        AppbarBackground = "#0a0f14",
+        AppbarText = "#d1d5db",
+        DrawerBackground = "#0a0f14",
+        DrawerText = "#d1d5db",
+        GrayLight = "#9ca3af",
+        GrayLighter = "#e5e7eb",
 
-            Primary = "#0891b2",
-            PrimaryLighten = "#0891b2",
-            PrimaryDarken = "#0891b2",
+        Primary = "#0891b2",
+        PrimaryLighten = "#0891b2",
+        PrimaryDarken = "#0891b2",
 
-            Secondary = "#a855f7",
+        Secondary = "#94a3b8",
+        SecondaryLighten = "#cbd5e1",
+        SecondaryDarken = "#64748b",
 
-            Info = "#14b8a6",
-            InfoLighten = "#14b8a6",
-            InfoDarken = "#14b8a6",
+        Info = "#14b8a6",
+        InfoLighten = "#14b8a6",
+        InfoDarken = "#14b8a6",
 
-            Warning = "#f97316",
-            WarningLighten = "#f97316",
-            WarningDarken = "#f97316",
+        Warning = "#f97316",
+        WarningLighten = "#f97316",
+        WarningDarken = "#f97316",
 
-            Error = "#ef4444",
-            ErrorDarken = "#ef4444",
-            ErrorLighten = "#ef4444",
+        Error = "#ef4444",
+        ErrorDarken = "#ef4444",
+        ErrorLighten = "#ef4444",
 
 
-            Success = "#84cc16",
-            SuccessDarken = "#84cc16",
-            SuccessLighten = "#84cc16",
-        };
+        Success = "#84cc16",
+        SuccessDarken = "#84cc16",
+        SuccessLighten = "#84cc16",
+    };
 
 
 }

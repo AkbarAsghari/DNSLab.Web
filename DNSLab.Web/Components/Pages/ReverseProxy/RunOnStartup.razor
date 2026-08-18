@@ -12,22 +12,66 @@
     <MudCardContent>
         <MudPaper Class="mt-5 pa-10" Elevation="0">
             <MudText Typo="Typo.h4" Class="mb-4">
-                1. آماده‌سازی DNSLab
+                1. آماده‌سازی DNSLab CLI
             </MudText>
             <MudText Class="my-2">
-                ابتدا فایل
+                ابتدا نسخه مناسب DNSLab CLI را متناسب با معماری سیستم خود دانلود کنید:
+            </MudText>
+            <MudStack Row Class="mb-3">
+                <BaseButton Size="Size.Small"
+                            EndIcon="@DNSLabIcons.Download"
+                            Color="Color.Primary"
+                            Variant="Variant.Filled"
+                            DropShadow="false"
+                            Href="https://cdn.dnslab.link/dnslab-windows-amd64.exe">
+                    دانلود نسخه Windows x64
+                </BaseButton>
+                <BaseButton Size="Size.Small"
+                            EndIcon="@DNSLabIcons.Download"
+                            Color="Color.Primary"
+                            Variant="Variant.Filled"
+                            DropShadow="false"
+                            Href="https://cdn.dnslab.link/dnslab-windows-arm64.exe">
+                    دانلود نسخه Windows ARM64
+                </BaseButton>
+            </MudStack>
+            <MudText Class="my-2">
+                سپس فایل دانلودشده را به
                 <MudChip T="string" Label="true" Color="Color.Primary" Variant="Variant.Text" Size="Size.Small">dnslab.exe</MudChip>
-                را دانلود کرده و در یک مسیر ثابت مانند مسیر زیر قرار دهید.
+                تغییر نام داده و در یک مسیر ثابت مانند مسیر زیر قرار دهید:
             </MudText>
             <CodeSnippet Language="text" Code="C:\DNSLab\dnslab.exe" />
             <MudText Class="mt-3">
                 در صورت استفاده از فایل Config، فایل
                 <MudChip T="string" Label="true" Color="Color.Primary" Variant="Variant.Text" Size="Size.Small">config.yaml</MudChip>
-                را نیز در یک مسیر ثابت قرار دهید.
+                را نیز در یک مسیر ثابت مانند مسیر زیر قرار دهید:
             </MudText>
-
+            <CodeSnippet Language="text" Code="C:\DNSLab\config.yaml" />
             <MudText Typo="Typo.h4" Class="mt-6 mb-4">
-                2. باز کردن Task Scheduler
+                2. ثبت توکن DNSLab CLI
+            </MudText>
+            <MudText Class="my-2">
+                قبل از ایجاد Task، یک بار فایل
+                <MudChip T="string" Label="true" Color="Color.Primary" Variant="Variant.Text" Size="Size.Small">dnslab.exe</MudChip>
+                را اجرا کنید.
+            </MudText>
+            <MudText Class="my-2">
+                سپس دستور ثبت توکن را وارد کنید تا DNSLab CLI به حساب کاربری شما متصل شود.
+            </MudText>
+            <CodeSnippet Language="bash"
+                         Code="@($"token set {_Token}")" />
+
+            <MudAlert Severity="Severity.Success"
+                      ContentAlignment="HorizontalAlignment.Start"
+                      Class="mt-4">
+                این عملیات فقط یک بار انجام می‌شود و توکن در تنظیمات CLI ذخیره خواهد شد.
+            </MudAlert>
+
+            <MudText Class="mt-3">
+                پس از ثبت موفق توکن، می‌توانید مراحل بعدی را برای اجرای خودکار DNSLab در Startup ویندوز انجام دهید.
+            </MudText>
+            <MudText Typo="Typo.h4" Class="mt-6 mb-4">
+                3. باز کردن Task Scheduler
             </MudText>
             <MudText Class="my-2">
                 کلیدهای Win + R را فشار دهید، عبارت زیر را وارد کرده و Enter بزنید:
@@ -35,7 +79,7 @@
             <CodeSnippet Language="text" Code="taskschd.msc" />
 
             <MudText Typo="Typo.h4" Class="mt-6 mb-4">
-                3. ساخت Task جدید
+                4. ساخت Task جدید
             </MudText>
             <MudText Class="my-2">
                 در Task Scheduler از منوی
@@ -51,7 +95,7 @@
             </MudText>
 
             <MudText Typo="Typo.h4" Class="mt-6 mb-4">
-                4. تنظیم اجرای خودکار
+                5. تنظیم اجرای خودکار
             </MudText>
             <MudText Class="my-2">
                 وارد تب
@@ -65,7 +109,7 @@
             </MudText>
 
             <MudText Typo="Typo.h4" Class="mt-6 mb-4">
-                5. تنظیم اجرای DNSLab
+                6. تنظیم اجرای DNSLab
             </MudText>
             <MudText Class="my-2">
                 وارد تب
@@ -160,7 +204,7 @@
             </MudPaper>
 
             <MudText Typo="Typo.h4" Class="mt-6 mb-4">
-                6. تنظیم نحوه اجرای Task
+                7. تنظیم نحوه اجرای Task
             </MudText>
             <MudText Class="my-2">
                 در تب
@@ -178,7 +222,7 @@
             </MudText>
 
             <MudText Typo="Typo.h4" Class="mt-6 mb-4">
-                7. ذخیره و تست Task
+                8. ذخیره و تست Task
             </MudText>
             <MudText Class="my-2">
                 پس از تکمیل تنظیمات، روی OK کلیک کنید تا Task ذخیره شود.

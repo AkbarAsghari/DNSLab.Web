@@ -68,7 +68,7 @@
                                 }
                             </CellTemplate>
                         </PropertyColumn>
-                        <PropertyColumn Property="x=>x.PreviousData" Title="قبل" CellClass="dnslab-ltr" Sortable="false">
+                        <PropertyColumn Property="x => x.PreviousData" Title="قبل" CellClass="dnslab-ltr dnslab-nano" Sortable="false">
                             <CellTemplate>
                                 @if (context.Item.PreviousData is not null)
                                 {
@@ -103,7 +103,7 @@
                                 }
                             </CellTemplate>
                         </PropertyColumn>
-                        <PropertyColumn Property="x=>x.CurrentData" Title="بعد" CellClass="dnslab-ltr" Sortable="false">
+                        <PropertyColumn Property="x => x.CurrentData" Title="بعد" CellClass="dnslab-ltr dnslab-nano" Sortable="false">
                             <CellTemplate>
                                 @if (context.Item.CurrentData is not null)
                                 {

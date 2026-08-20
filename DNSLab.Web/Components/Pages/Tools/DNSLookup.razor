@@ -13,7 +13,7 @@
     <MudCardContent>
         <MudGrid>
             <MudItem sm="6" xs="12">
-                <MudTextField T="string" Label="آدرس هاست" Class="dnslab-ltr" Placeholder="dnslab.link" Variant="Variant.Outlined" @bind-Value="query" />
+                <MudTextField T="string" Label="آدرس هاست" Class="dnslab-ltr dnslab-nano" Placeholder="dnslab.link" Variant="Variant.Outlined" @bind-Value="query" />
             </MudItem>
             <MudItem lg="2" sm="3" xs="12">
                 <MudSelect T="QueryTypeEnum" Label="نوع رکورد" Variant="Variant.Outlined" @bind-Value="_QueryType">
@@ -24,7 +24,7 @@
                 </MudSelect>
             </MudItem>
             <MudItem lg="4" sm="3" xs="12">
-                <MudTextField T="string" Label="نیم سرور" Class="dnslab-ltr" @bind-Value="_NameServer" Variant="Variant.Outlined" />
+                <MudTextField T="string" Label="نیم سرور" Class="dnslab-ltr dnslab-nano" @bind-Value="_NameServer" Variant="Variant.Outlined" />
             </MudItem>
         </MudGrid>
 

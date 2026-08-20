@@ -3,8 +3,8 @@
     <DialogContent>
         <MudStack>
             <MudStack Row AlignItems="AlignItems.Center" Spacing="0">
-                <MudTextField T="string" Class="dnslab-ltr" Variant="Variant.Outlined" ReadOnly Label="دامنه" Text="@($".{Zone.Name}")" />
-                <MudTextField T="string" @bind-Value="Record.Name" Variant="Variant.Outlined" Placeholder="@("@")" Class="dnslab-ltr" FullWidth Label="نام" />
+                <MudTextField T="string" Class="dnslab-ltr dnslab-nano" Variant="Variant.Outlined" ReadOnly Label="دامنه" Text="@($".{Zone.Name}")" />
+                <MudTextField T="string" @bind-Value="Record.Name" Variant="Variant.Outlined" Placeholder="@("@")" Class="dnslab-ltr dnslab-nano" FullWidth Label="نام" />
             </MudStack>
             <MudSelect T="RecordTypeEnum" @bind-Value="Record.Type" Variant="Variant.Outlined" Label="نوع" Disabled="Record.Id != Guid.Empty">
                 @foreach (RecordTypeEnum item in (IsDDNS ? DNSSettings.SupportedRecordForDDNS : DNSSettings.SupportedRecordForDomain))
@@ -18,19 +18,19 @@
             @switch (Record.Type)
             {
                 case RecordTypeEnum.A:
-                    <MudTextField T="string" @bind-Value="_ARecord.IPv4Address" Variant="Variant.Outlined" Placeholder="@_HttpContextAccessor.HttpContext?.Connection?.RemoteIpAddress!.ToString()" Class="dnslab-ltr" Label="IPv4" />
+                    <MudTextField T="string" @bind-Value="_ARecord.IPv4Address" Variant="Variant.Outlined" Placeholder="@_HttpContextAccessor.HttpContext?.Connection?.RemoteIpAddress!.ToString()" Class="dnslab-ltr dnslab-nano" Label="IPv4" />
                     break;
                 case RecordTypeEnum.AAAA:
-                    <MudTextField T="string" @bind-Value="_AAARecord.IPv6Address" Variant="Variant.Outlined" Placeholder="2001:0000:130F:0000:0000:09C0:876A:130B" Class="dnslab-ltr" Label="IPv6" />
+                    <MudTextField T="string" @bind-Value="_AAARecord.IPv6Address" Variant="Variant.Outlined" Placeholder="2001:0000:130F:0000:0000:09C0:876A:130B" Class="dnslab-ltr dnslab-nano" Label="IPv6" />
                     break;
                 case RecordTypeEnum.TXT:
-                    <MudTextField T="string" @bind-Value="_TXTRecord.TextData" Variant="Variant.Outlined" Lines="3" MaxLines="5" Placeholder="Text Data ..." Class="dnslab-ltr" Label="Text Data" />
+                    <MudTextField T="string" @bind-Value="_TXTRecord.TextData" Variant="Variant.Outlined" Lines="3" MaxLines="5" Placeholder="Text Data ..." Class="dnslab-ltr dnslab-nano" Label="Text Data" />
                     break;
                 case RecordTypeEnum.CNAME:
-                    <MudTextField T="string" @bind-Value="_CNAMERecord.CName" Variant="Variant.Outlined" Placeholder="api.dnslab.link" Class="dnslab-ltr" Label="CName" />
+                    <MudTextField T="string" @bind-Value="_CNAMERecord.CName" Variant="Variant.Outlined" Placeholder="api.dnslab.link" Class="dnslab-ltr dnslab-nano" Label="CName" />
                     break;
                 case RecordTypeEnum.MX:
-                    <MudTextField T="string" @bind-Value="_MXRecord.Exchange" Variant="Variant.Outlined" Placeholder="api.dnslab.link" Class="dnslab-ltr" Label="Exchange" />
+                    <MudTextField T="string" @bind-Value="_MXRecord.Exchange" Variant="Variant.Outlined" Placeholder="api.dnslab.link" Class="dnslab-ltr dnslab-nano" Label="Exchange" />
                     <MudNumericField T="UInt16" @bind-Value="_MXRecord.Preference" Variant="Variant.Outlined" Min="UInt16.MinValue" Max="UInt16.MaxValue" Placeholder="1" Label="Preference" />
                     break;
                 default:

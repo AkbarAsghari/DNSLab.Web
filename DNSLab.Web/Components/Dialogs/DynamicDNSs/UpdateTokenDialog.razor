@@ -17,7 +17,7 @@
                 </MudAlert>
                 @foreach (var zone in _AllRecords.Where(x => x.Item2.Count() > 0))
                 {
-                    <MudPaper Class="mb-1 pa-2 dnslab-ltr" Elevation="0" Outlined>
+                    <MudPaper Class="mb-1 pa-2 dnslab-ltr dnslab-nano" Elevation="0" Outlined>
                         <MudText Typo="Typo.h6">@zone.Item1.Name</MudText>
                         @foreach (var record in zone.Item2)
                         {

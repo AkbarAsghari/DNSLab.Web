@@ -24,7 +24,7 @@
                 <MudTextField T="string" Label="عنوان" Variant="Variant.Outlined" @bind-Value="_Page.Title" />
             </MudItem>
             <MudItem xs="12" md="4">
-                <MudTextField T="string" Label="URL" Variant="Variant.Outlined" Class="dnslab-ltr" @bind-Value="_Page.URL" />
+                <MudTextField T="string" Label="URL" Variant="Variant.Outlined" Class="dnslab-ltr dnslab-nano" @bind-Value="_Page.URL" />
             </MudItem>
             <MudItem xs="12" md="4">
                 <MudSelect T="PageTypeDTO" @bind-Value="_Page.Type" Variant="Variant.Outlined" Label="نوع" Disabled="_Page.Id != Guid.Empty">

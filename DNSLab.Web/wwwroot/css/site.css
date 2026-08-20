@@ -15,12 +15,24 @@
     font-weight: 400
 }
 
+@font-face {
+    font-family: consolas;
+    src: url(../fonts/consolas.woff)
+}
+
 .baackdrop-bluered {
     backdrop-filter: blur(2px) !important
 }
 
 .mud-input {
     background-color: var(--mud-palette-background) !important
+}
+
+.dnslab-nano input,
+.dnslab-nano textarea,
+.dnslab-nano .mud-typography,
+.dnslab-nano .mud-checkbox {
+    font-family: consolas !important;
 }
 
 .dnslab-ltr input,

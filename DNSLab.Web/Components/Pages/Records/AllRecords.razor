@@ -49,7 +49,7 @@
                             <MudAlert Severity="Severity.Error" NoIcon Dense Variant="Variant.Text">
                                 @foreach (var item in _RequiredToUpdateNameServers)
                                 {
-                                    <MudText Class="dnslab-ltr" Typo="Typo.body2">@item</MudText>
+                                    <MudText Class="dnslab-ltr dnslab-nano" Typo="Typo.body2">@item</MudText>
                                 }
                             </MudAlert>
                         </MudItem>
@@ -64,7 +64,7 @@
                     }
                     <MudItem xs="12" sm="5">
                         <MudAlert Severity="Severity.Success" NoIcon Dense Variant="Variant.Text">
-                            <MudText Class="dnslab-ltr" Typo="Typo.body2">jupiter.ns.dnslab.link</MudText>
+                            <MudText Class="dnslab-ltr dnslab-nano" Typo="Typo.body2">jupiter.ns.dnslab.link</MudText>
                         </MudAlert>
                     </MudItem>
                 </MudGrid>
@@ -84,7 +84,7 @@
                     </CellTemplate>
                 </PropertyColumn>
                 <PropertyColumn Property="x=>x.TTL" Title="TTL(s)" />
-                <PropertyColumn Property="x=>x.RData" Title="مقدار" CellClass="dnslab-ltr" Sortable="false">
+                <PropertyColumn Property="x => x.RData" Title="مقدار" CellClass="dnslab-ltr dnslab-nano" Sortable="false">
                     <CellTemplate>
                         <MudText Typo="Typo.body2">
                             @switch (context.Item.Type)

@@ -10,7 +10,7 @@
 
             <MudPaper Outlined Class="my-3 pa-3">
                 <MudStack AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Row>
-                    <MudTextField T="string" Label="کد تخفیف" Margin="Margin.Dense" @bind-Text="_CouponCode" Variant="Variant.Outlined" Class="mt-2 dnslab-ltr"></MudTextField>
+                    <MudTextField T="string" Label="کد تخفیف" Margin="Margin.Dense" @bind-Text="_CouponCode" Variant="Variant.Outlined" Class="mt-2 dnslab-ltr dnslab-nano"></MudTextField>
                     <BaseButton Variant="Variant.Filled" Color="Color.Default" OnClick="ProcessCouponCode">اعمال تخفیف</BaseButton>
                 </MudStack>
                 @if (_CouponDiscountAmount > 0)

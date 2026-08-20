@@ -13,7 +13,7 @@
                     @if (String.IsNullOrEmpty(_Token))
                     {
                         <MudText Typo="Typo.caption">شماره موبایل خود را وارد کنید</MudText>
-                        <MudTextField T="string" Placeholder="شماره موبایل" Variant="Variant.Outlined" Class="my-2 dnslab-ltr" @bind-Value="_Mobile"></MudTextField>
+                        <MudTextField T="string" Placeholder="شماره موبایل" Variant="Variant.Outlined" Class="my-2 dnslab-ltr dnslab-nano" @bind-Value="_Mobile"></MudTextField>
                         <BaseButton Color="Color.Primary" Class="mt-2" ButtonType="ButtonType.Submit" OnClick="RegisterUser" Variant="Variant.Filled" FullWidth>ارسال کد</BaseButton>
                     }
                     else
@@ -21,7 +21,7 @@
                         <MudText Typo="Typo.caption">
                             کد تایید ارسال شده به شماره @_Mobile را وارد کنید.
                         </MudText>
-                        <MudTextField T="string" Placeholder="***********" Variant="Variant.Outlined" Class="my-2 dnslab-ltr" @bind-Value="_Otp"></MudTextField>
+                        <MudTextField T="string" Placeholder="***********" Variant="Variant.Outlined" Class="my-2 dnslab-ltr dnslab-nano" @bind-Value="_Otp"></MudTextField>
                         <MudStack Row Spacing="1" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
                             <MudButton Size="Size.Small" EndIcon="@DNSLabIcons.Edit" OnClick="ChangeMobile">ویرایش شماره موبایل</MudButton>
                             <Timer ResendOtpCallBack="ResendOtp" />

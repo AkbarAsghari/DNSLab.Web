@@ -11,6 +11,7 @@ partial class InvoiceDialog
     [Inject] public IWalletRepository _WalletRepository { get; set; }
     [Inject] public ISubscriptionRepository _SubscriptionRepository { get; set; }
     [Inject] public IReverseProxyTrafficRepository _ReverseProxyTrafficRepository { get; set; }
+    [Inject] public ICouponRepository _CouponRepository { get; set; }
     [Inject] public ISnackbar _Snackbar { get; set; }
     [Inject] public NavigationManager _NavigationManager { get; set; }
 
@@ -48,6 +49,20 @@ partial class InvoiceDialog
 
     }
 
+    string _CouponCode { get; set; } = String.Empty;
+    long _CouponDiscountAmount { get; set; } = 0;
+    async Task ProcessCouponCode()
+    {
+        var existCoupon = await _CouponRepository.Validate(_CouponCode, Amount);
+        if (existCoupon != null)
+        {
+            _CouponDiscountAmount = existCoupon.DiscountAmount;
+        }
+        else
+        {
+            _CouponDiscountAmount = 0;
+        }
+    }
 
     async Task Purchass()
     {
@@ -58,6 +73,7 @@ partial class InvoiceDialog
             case InvoiceTypeEnum.Subscription:
                 purchaseResponse = await _SubscriptionRepository.PurchaseSubscribe(new PurchaseSubscriptionDTO
                 {
+                    CouponCode = _CouponCode,
                     PlanId = PlanId!.Value,
                     DiscountId = DiscountId!.Value,
                     UseWallet = _UseWallet,
@@ -72,6 +88,7 @@ partial class InvoiceDialog
             case InvoiceTypeEnum.AdditionalTraffic:
                 purchaseResponse = await _ReverseProxyTrafficRepository.PurchaseAdditionalTraffic(new PurchaseAdditionalTrafficDTO
                 {
+                    CouponCode = _CouponCode,
                     Traffic = Traffic!.Value,
                     UseWallet = _UseWallet,
                 });

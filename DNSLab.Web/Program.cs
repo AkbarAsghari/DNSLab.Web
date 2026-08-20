@@ -35,6 +35,7 @@ builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
 builder.Services.AddScoped<IToolRepository, ToolRepository>();
 builder.Services.AddScoped<IReverseProxyRepository, ReverseProxyRepository>();
 builder.Services.AddScoped<IReverseProxyTrafficRepository, ReverseProxyTrafficRepository>();
+builder.Services.AddScoped<ICouponRepository, CouponRepository>();
 
 
 builder.Services.AddHttpContextAccessor();
@@ -87,9 +88,9 @@ builder.Services.AddOpenTelemetry()
     .ConfigureResource(r => r.AddService("DNSLab-Web"))
     .WithMetrics(metrics =>
     {
-        metrics.AddAspNetCoreInstrumentation(); 
-        metrics.AddHttpClientInstrumentation(); 
-        metrics.AddPrometheusExporter();        
+        metrics.AddAspNetCoreInstrumentation();
+        metrics.AddHttpClientInstrumentation();
+        metrics.AddPrometheusExporter();
     });
 
 var app = builder.Build();

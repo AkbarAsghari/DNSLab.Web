@@ -9,6 +9,7 @@ namespace DNSLab.Web.DTOs.Repositories.Invoice
     public class PurchaseDTO
     {
         public bool UseWallet { get; set; }
+        public string CouponCode { get; set; }
     }
     public class PurchaseSubscriptionDTO : PurchaseDTO
     {

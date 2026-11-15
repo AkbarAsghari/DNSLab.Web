@@ -51,4 +51,9 @@
   <ItemGroup>
     <UpToDateCheckInput Remove="Components\Pages\DynamicDNSs\MikroTikSettings.razor" />
   </ItemGroup>
+
+
+  <ItemGroup>
+    <Folder Include="API\Authentication\" />
+  </ItemGroup>
 </Project>

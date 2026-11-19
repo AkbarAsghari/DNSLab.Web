@@ -15,12 +15,10 @@ namespace DNSLab.Web.Providers
             new AuthenticationState(new ClaimsPrincipal());
 
         private readonly IHttpServiceProvider _ServiceProvider;
-        private readonly IAccountRepository _AccountRepository;
         private readonly ITokenProvider _TokenProvider;
-        public JWTAuthenticationStateProvider(IAccountRepository accountRepository, ITokenProvider tokenProvider, IHttpServiceProvider serviceProvider)
+        public JWTAuthenticationStateProvider(ITokenProvider tokenProvider, IHttpServiceProvider serviceProvider)
         {
             _ServiceProvider = serviceProvider;
-            _AccountRepository = accountRepository;
             _TokenProvider = tokenProvider;
         }
 

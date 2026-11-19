@@ -1,4 +1,5 @@
-﻿using DNSLab.Web.Components.Dialogs;
+﻿using DNSLab.Web.API.Profile;
+using DNSLab.Web.Components.Dialogs;
 using DNSLab.Web.Interfaces.Providers;
 using DNSLab.Web.Interfaces.Repositories;
 using Microsoft.AspNetCore.Components;
@@ -11,7 +12,7 @@ partial class SetupAndInstallation
 {
     [Inject] AuthenticationStateProvider _AuthenticationStateProvider { get; set; }
     [Inject] IReverseProxyRepository _ReverseProxyRepository { get; set; }
-    [Inject] IAccountRepository _AccountRepository { get; set; }
+    [Inject] IProfileApiClient ProfileApiClient { get; set; }
 
     public enum OS
     {
@@ -35,7 +36,11 @@ partial class SetupAndInstallation
         if (authState.User.Identity != null && authState.User.Identity.IsAuthenticated)
         {
             _Token = await _ReverseProxyRepository.GetClientToken() ?? String.Empty;
-            _IsMobileApproved = await _AccountRepository.IsMobileApproved();
+            var response = await ProfileApiClient.IsMobileApprovedAsync();
+            if (response.IsSuccess)
+            {
+                _IsMobileApproved = true;
+            }
         }
         else
         {

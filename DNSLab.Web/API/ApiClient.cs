@@ -10,18 +10,6 @@ internal sealed class ApiClient(
     HttpClient httpClient,
     ITokenProvider accessTokenProvider) : IApiClient
 {
-    public Task<Result<T>> GetAsync<T>(
-        string endpoint,
-        ApiRequestOptions? options = null,
-        CancellationToken cancellationToken = default)
-    {
-        return SendAsync<T>(
-            HttpMethod.Get,
-            endpoint,
-            options,
-            cancellationToken);
-    }
-
     public Task<Result<TResponse>> PostAsync<TRequest, TResponse>(
         string endpoint,
         TRequest request,
@@ -119,7 +107,7 @@ internal sealed class ApiClient(
         return value;
     }
 
-    private async Task<Result> SendWithoutValueAsync<T>(
+    private async Task<Result> SendWithoutValueAsync(
        HttpMethod method,
        string endpoint,
        ApiRequestOptions? options,
@@ -205,9 +193,13 @@ internal sealed class ApiClient(
             response.ReasonPhrase ?? "An unexpected API error occurred.");
     }
 
-    public Task<Result> PostAsync<TRequest>(string endpoint, TRequest request, ApiRequestOptions? options = null, CancellationToken cancellationToken = default)
+    public Task<Result> PostAsync<TRequest>(
+        string endpoint,
+        TRequest request,
+        ApiRequestOptions? options = null,
+        CancellationToken cancellationToken = default)
     {
-        return SendWithoutValueAsync<TRequest>(
+        return SendWithoutValueAsync(
             HttpMethod.Post,
             endpoint,
             options,
@@ -215,13 +207,69 @@ internal sealed class ApiClient(
             request);
     }
 
-    public Task<Result> PutAsync<TRequest>(string endpoint, TRequest request, ApiRequestOptions? options = null, CancellationToken cancellationToken = default)
+    public Task<Result> PutAsync<TRequest>(
+        string endpoint,
+        TRequest request,
+        ApiRequestOptions? options = null,
+        CancellationToken cancellationToken = default)
     {
-        return SendWithoutValueAsync<TRequest>(
+        return SendWithoutValueAsync(
             HttpMethod.Put,
             endpoint,
             options,
             cancellationToken,
             request);
+    }
+
+    public Task<Result<TResponse>> GetAsync<TRequest, TResponse>(
+    string endpoint,
+    TRequest? request,
+    ApiRequestOptions? options = null,
+    CancellationToken cancellationToken = default)
+    {
+        return SendAsync<TResponse>(
+            HttpMethod.Get,
+            endpoint,
+            options,
+            cancellationToken,
+            request);
+    }
+
+    public Task<Result> GetAsync<TRequest>(
+        string endpoint,
+        TRequest? request,
+        ApiRequestOptions? options = null,
+        CancellationToken cancellationToken = default)
+    {
+        return SendWithoutValueAsync(
+            HttpMethod.Get,
+            endpoint,
+            options,
+            cancellationToken,
+            request);
+    }
+
+    public Task<Result<TResponse>> GetAsync<TResponse>(
+        string endpoint,
+        ApiRequestOptions? options = null,
+        CancellationToken cancellationToken = default)
+    {
+        return SendAsync<TResponse>(
+            HttpMethod.Get,
+            endpoint,
+            options,
+            cancellationToken);
+    }
+
+    public Task<Result> GetAsync(
+        string endpoint,
+        ApiRequestOptions? options = null,
+        CancellationToken cancellationToken = default)
+    {
+        return SendWithoutValueAsync(
+             HttpMethod.Get,
+             endpoint,
+             options,
+             cancellationToken);
     }
 }

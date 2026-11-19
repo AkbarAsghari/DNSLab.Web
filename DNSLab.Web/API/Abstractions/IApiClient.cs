@@ -4,10 +4,28 @@ namespace DNSLab.Web.API.Abstractions;
 
 public interface IApiClient
 {
-    Task<Result<T>> GetAsync<T>(
+    Task<Result<TResponse>> GetAsync<TRequest, TResponse>(
+       string endpoint,
+       TRequest? request = default,
+       ApiRequestOptions? options = null,
+       CancellationToken cancellationToken = default);
+
+    Task<Result<TResponse>> GetAsync<TResponse>(
         string endpoint,
         ApiRequestOptions? options = null,
         CancellationToken cancellationToken = default);
+
+    Task<Result> GetAsync<TRequest>(
+        string endpoint,
+        TRequest? request = default,
+        ApiRequestOptions? options = null,
+        CancellationToken cancellationToken = default);
+
+    Task<Result> GetAsync(
+        string endpoint,
+        ApiRequestOptions? options = null,
+        CancellationToken cancellationToken = default);
+
 
     Task<Result<TResponse>> PostAsync<TRequest, TResponse>(
         string endpoint,

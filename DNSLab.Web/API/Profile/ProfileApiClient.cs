@@ -32,6 +32,14 @@ public class ProfileApiClient(IApiClient apiClient) : IProfileApiClient
             cancellationToken: cancellationToken);
     }
 
+    public Task<Result> IsMobileApprovedAsync(CancellationToken cancellationToken = default)
+    {
+        return apiClient.GetAsync(
+            $"{_Prefix}GetProfile",
+            new ApiRequestOptions { RequiresAuthentication = true },
+            cancellationToken: cancellationToken);
+    }
+
     public Task<Result> UpdateEmailAsync(UpdateEmailRequest request, CancellationToken cancellationToken = default)
     {
         return apiClient.PutAsync(

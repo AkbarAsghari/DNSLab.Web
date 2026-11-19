@@ -5,15 +5,11 @@
 <MudText Typo="Typo.h3" Class="mb-3">لیست تمام کاربران</MudText>
 
 
-@if (_AllUsers == null)
+@if (Profiles != null)
 {
-    
-}
-else
-{
-    <MudDataGrid Items="@_AllUsers">
+    <MudDataGrid Items="@Profiles">
         <Columns>
-            <PropertyColumn Property="x => x.ID" Title="ID" />
+            <PropertyColumn Property="x => x.Id" Title="Id" />
             <PropertyColumn Property="x => x.FirstName" />
             <PropertyColumn Property="x => x.LastName" />
             <PropertyColumn Property="x => x.Username" />

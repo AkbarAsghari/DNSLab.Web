@@ -13,6 +13,7 @@ public interface IProfileApiClient
 
     Task<Result<UserProfileResponse>> GetProfileAsync(CancellationToken cancellationToken = default);
     Task<Result<List<UserProfileResponse>>> GetAllProfilesAsync(CancellationToken cancellationToken = default);
+    Task<Result> IsMobileApprovedAsync(CancellationToken cancellationToken = default);
 
     Task<Result> DeactivateAsync(CancellationToken cancellationToken = default);
 }

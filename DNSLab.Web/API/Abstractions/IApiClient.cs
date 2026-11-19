@@ -15,7 +15,19 @@ public interface IApiClient
         ApiRequestOptions? options = null,
         CancellationToken cancellationToken = default);
 
+    Task<Result> PostAsync<TRequest>(
+        string endpoint,
+        TRequest request,
+        ApiRequestOptions? options = null,
+        CancellationToken cancellationToken = default);
+
     Task<Result<TResponse>> PutAsync<TRequest, TResponse>(
+        string endpoint,
+        TRequest request,
+        ApiRequestOptions? options = null,
+        CancellationToken cancellationToken = default);
+
+    Task<Result> PutAsync<TRequest>(
         string endpoint,
         TRequest request,
         ApiRequestOptions? options = null,

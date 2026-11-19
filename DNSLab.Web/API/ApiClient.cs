@@ -156,4 +156,42 @@ internal sealed class ApiClient(
             $"HTTP_{(int)response.StatusCode}",
             response.ReasonPhrase ?? "An unexpected API error occurred.");
     }
+
+    public async Task<Result> PostAsync<TRequest>(string endpoint, TRequest request, ApiRequestOptions? options = null, CancellationToken cancellationToken = default)
+    {
+        using var req = await CreateRequestAsync(
+              HttpMethod.Post,
+              endpoint,
+              options,
+              cancellationToken);
+
+        using var response = await httpClient.SendAsync(
+            req,
+            cancellationToken);
+
+        if (response.IsSuccessStatusCode)
+            return Result.Success();
+
+        return Result.Failure(
+            await CreateErrorAsync(response, cancellationToken));
+    }
+
+    public async Task<Result> PutAsync<TRequest>(string endpoint, TRequest request, ApiRequestOptions? options = null, CancellationToken cancellationToken = default)
+    {
+        using var req = await CreateRequestAsync(
+            HttpMethod.Put,
+            endpoint,
+            options,
+            cancellationToken);
+
+        using var response = await httpClient.SendAsync(
+            req,
+            cancellationToken);
+
+        if (response.IsSuccessStatusCode)
+            return Result.Success();
+
+        return Result.Failure(
+            await CreateErrorAsync(response, cancellationToken));
+    }
 }

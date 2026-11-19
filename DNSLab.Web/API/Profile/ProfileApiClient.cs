@@ -6,47 +6,74 @@ namespace DNSLab.Web.API.Profile;
 
 public class ProfileApiClient(IApiClient apiClient) : IProfileApiClient
 {
+    const string _Prefix = "api/profile/";
+
     public Task<Result> DeactivateAsync(CancellationToken cancellationToken = default)
     {
         return apiClient.DeleteAsync(
-           "api/profile/deactivate",
-           cancellationToken: cancellationToken);
+            $"{_Prefix}Deactivate",
+            new ApiRequestOptions { RequiresAuthentication = true },
+            cancellationToken: cancellationToken);
     }
 
     public Task<Result<List<UserProfileResponse>>> GetAllProfilesAsync(CancellationToken cancellationToken = default)
     {
         return apiClient.GetAsync<List<UserProfileResponse>>(
-           "api/profile/getAllProfiles",
-           cancellationToken: cancellationToken);
+            $"{_Prefix}GetAllProfiles",
+            new ApiRequestOptions { RequiresAuthentication = true },
+            cancellationToken: cancellationToken);
     }
 
     public Task<Result<UserProfileResponse>> GetProfileAsync(CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        return apiClient.GetAsync<UserProfileResponse>(
+            $"{_Prefix}GetProfile",
+            new ApiRequestOptions { RequiresAuthentication = true },
+            cancellationToken: cancellationToken);
     }
 
     public Task<Result> UpdateEmailAsync(UpdateEmailRequest request, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        return apiClient.PutAsync(
+            $"{_Prefix}UpdateEmail",
+            request,
+            new ApiRequestOptions { RequiresAuthentication = true },
+            cancellationToken: cancellationToken);
     }
 
     public Task<Result<string>> UpdateMobileAsync(UpdateMobileRequest request, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        return apiClient.PutAsync<UpdateMobileRequest ,string>(
+            $"{_Prefix}UpdateMobile",
+            request,
+            new ApiRequestOptions { RequiresAuthentication = true },
+            cancellationToken: cancellationToken);
     }
 
     public Task<Result> UpdatePasswordAsync(UpdatePasswordRequest request, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        return apiClient.PutAsync(
+            $"{_Prefix}UpdatePassword",
+            request,
+            new ApiRequestOptions { RequiresAuthentication = true },
+            cancellationToken: cancellationToken);
     }
 
     public Task<Result> UpdateProfileAsync(UpdateProfileRequest request, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        return apiClient.PutAsync(
+            $"{_Prefix}UpdateProfile",
+            request,
+            new ApiRequestOptions { RequiresAuthentication = true },
+            cancellationToken: cancellationToken);
     }
 
     public Task<Result> UpdateUsernameAsync(UpdateUsernameRequest request, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        return apiClient.PutAsync(
+            $"{_Prefix}UpdateUsername",
+            request,
+            new ApiRequestOptions { RequiresAuthentication = true },
+            cancellationToken: cancellationToken);
     }
 }

@@ -17,4 +17,8 @@ public interface IAuthenticationApiClient
     Task<Result<AuthenticateResponse>> ConfirmOtpAuthenticationAsync(
         ConfirmOtpRequest request,
         CancellationToken cancellationToken = default);
+
+    Task<Result<string>> ResendOtpAsync(
+       ResendOtpRequest request,
+        CancellationToken cancellationToken = default);
 }

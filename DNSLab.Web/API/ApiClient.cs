@@ -1,6 +1,7 @@
 ﻿using DNSLab.Web.API.Abstractions;
 using DNSLab.Web.API.Common.Result;
 using DNSLab.Web.Interfaces.Providers;
+using Microsoft.AspNetCore.Http.HttpResults;
 using System.Net;
 
 namespace DNSLab.Web.API;
@@ -105,7 +106,7 @@ internal sealed class ApiClient(
                 "The API returned an empty response."));
         }
 
-        var value = await response.Content.ReadFromJsonAsync<T>(
+        var value = await response.Content.ReadFromJsonAsync<Result<T>>(
             cancellationToken: cancellationToken);
 
         if (value is null)
@@ -115,7 +116,7 @@ internal sealed class ApiClient(
                 "The API returned an empty response."));
         }
 
-        return Result<T>.Success(value);
+        return value;
     }
 
     private async Task<HttpRequestMessage> CreateRequestAsync(

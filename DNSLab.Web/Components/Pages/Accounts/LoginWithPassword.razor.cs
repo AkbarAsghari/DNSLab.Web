@@ -3,15 +3,17 @@ using Microsoft.AspNetCore.Components.Forms;
 using DNSLab.Web.Interfaces.Providers;
 using DNSLab.Web.Interfaces.Repositories;
 using DNSLab.Web.Helpers;
+using DNSLab.Web.API.Authentication;
+using DNSLab.Web.API.Authentication.DTOs;
 
 namespace DNSLab.Web.Components.Pages.Accounts;
 
 partial class LoginWithPassword
 {
-    [Inject] IAccountRepository _AccountRepository { get; set; }
-    [Inject] IAuthenticationProvider _AuthenticationProvider { get; set; }
-    [Inject] ISnackbar _Snackbar { get; set; }
-    [Inject] NavigationManager _NavigationManager { get; set; }
+    [Inject] IAuthenticationApiClient authenticationApiClient { get; set; }
+    [Inject] IAuthenticationProvider authenticationProvider { get; set; }
+    [Inject] ISnackbar snackbar { get; set; }
+    [Inject] NavigationManager navigationManager { get; set; }
 
     [Parameter]
     [SupplyParameterFromQuery]
@@ -20,26 +22,33 @@ partial class LoginWithPassword
     protected override void OnInitialized()
     {
         if (!String.IsNullOrEmpty(RedirectTo) && !RedirectTo.ToLower().EndsWith(AllRoutes.LoginWithPassword) && !RedirectTo.ToLower().EndsWith(AllRoutes.Login))
-            _Snackbar.Add("برای ادامه ابتدا باید وارد شوید", Severity.Info);
+            snackbar.Add("برای ادامه ابتدا باید وارد شوید", Severity.Info);
     }
 
     AuthenticateDTO _AuthenticateDTO = new();
 
     public async Task Authenticate()
     {
-        var response = await _AccountRepository.AuthenticateAsync(_AuthenticateDTO);
+        var response = await authenticationApiClient.AuthenticateAsync(
+            new AuthenticateRequest(
+                _AuthenticateDTO.MobileOrEmailOrUsername,
+                _AuthenticateDTO.Password));
 
-        if (response != null)
+        if (response.IsSuccess)
         {
-            await _AuthenticationProvider.Login(response);
+            await authenticationProvider.Login(response.Value!);
             if (String.IsNullOrEmpty(RedirectTo) || RedirectTo.ToLower().EndsWith(AllRoutes.LoginWithPassword) || RedirectTo.ToLower().EndsWith(AllRoutes.Login))
             {
-                _NavigationManager.NavigateTo(AllRoutes.Dashboard);
+                navigationManager.NavigateTo(AllRoutes.Dashboard);
             }
             else
             {
-                _NavigationManager.NavigateTo(RedirectTo);
+                navigationManager.NavigateTo(RedirectTo);
             }
+        }
+        else
+        {
+            snackbar.Add(response.Error!.Message, Severity.Warning);
         }
     }
 }

@@ -2,15 +2,17 @@
 using DNSLab.Web.Interfaces.Providers;
 using DNSLab.Web.Interfaces.Repositories;
 using DNSLab.Web.Helpers;
+using DNSLab.Web.API.Authentication;
+using DNSLab.Web.API.Authentication.DTOs;
 
 namespace DNSLab.Web.Components.Pages.Accounts;
 
 partial class RegisterOrLogin
 {
-    [Inject] IAccountRepository _AccountRepository { get; set; }
-    [Inject] IAuthenticationProvider _AuthenticationProvider { get; set; }
-    [Inject] ISnackbar _Snackbar { get; set; }
-    [Inject] NavigationManager _NavigationManager { get; set; }
+    [Inject] IAuthenticationApiClient authenticationApiClient { get; set; }
+    [Inject] IAuthenticationProvider authenticationProvider { get; set; }
+    [Inject] ISnackbar snackbar { get; set; }
+    [Inject] NavigationManager navigationManager { get; set; }
 
     [Parameter]
     [SupplyParameterFromQuery]
@@ -23,44 +25,60 @@ partial class RegisterOrLogin
     protected override void OnInitialized()
     {
         if (!String.IsNullOrEmpty(RedirectTo) && !RedirectTo.ToLower().EndsWith(AllRoutes.LoginWithPassword) && !RedirectTo.ToLower().EndsWith(AllRoutes.Login))
-            _Snackbar.Add("برای ادامه ابتدا باید وارد شوید", Severity.Info);
+            snackbar.Add("برای ادامه ابتدا باید وارد شوید", Severity.Info);
     }
 
     public async Task RegisterUser()
     {
-        var response = await _AccountRepository.RegisterOrAuthenticationAsync(_Mobile);
+        var response = await authenticationApiClient.StartOtpAuthenticationAsync(
+            new StartOtpAuthenticationRequest(_Mobile));
 
-        if (response != null)
+        if (response.IsSuccess)
         {
-            _Token = response;
+            _Token = response.Value!;
+        }
+        else
+        {
+            snackbar.Add(response.Error!.Message);
         }
     }
 
     public async Task ConfirmOtp()
     {
-        var response = await _AccountRepository.RegisterOrAuthenticationConfirmAsync(_Token, _Otp);
+        var response = await authenticationApiClient.ConfirmOtpAuthenticationAsync(
+             new ConfirmOtpRequest(_Token, _Otp));
 
-        if (response != null)
+        if (response.IsSuccess)
         {
-            await _AuthenticationProvider.Login(response);
+            await authenticationProvider.Login(response.Value!);
             if (String.IsNullOrEmpty(RedirectTo) || RedirectTo.ToLower().EndsWith(AllRoutes.LoginWithPassword) || RedirectTo.ToLower().EndsWith(AllRoutes.Login))
             {
-                _NavigationManager.NavigateTo(AllRoutes.Dashboard);
+                navigationManager.NavigateTo(AllRoutes.Dashboard);
             }
             else
             {
-                _NavigationManager.NavigateTo(RedirectTo);
+                navigationManager.NavigateTo(RedirectTo);
             }
+        }
+        else
+        {
+            snackbar.Add(response.Error!.Message);
         }
     }
 
     public async Task ResendOtp()
     {
-        var token = await _AccountRepository.ResendOtp(_Token);
-        if (token is not null)
+        var response = await authenticationApiClient.ResendOtpAsync(
+             new ResendOtpRequest(_Token));
+
+        if (response.IsSuccess)
         {
-            _Token = token;
+            _Token = response.Value!;
             _Otp = String.Empty;
+        }
+        else
+        {
+            snackbar.Add(response.Error!.Message);
         }
     }
 

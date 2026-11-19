@@ -1,4 +1,8 @@
 using ApexCharts;
+using DNSLab.Web.API;
+using DNSLab.Web.API.Abstractions;
+using DNSLab.Web.API.Authentication;
+using DNSLab.Web.API.Profile;
 using DNSLab.Web.Components;
 using DNSLab.Web.Exceptions;
 using DNSLab.Web.Interfaces.Providers;
@@ -9,6 +13,7 @@ using DNSLab.Web.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using MudBlazor.Services;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
@@ -36,6 +41,22 @@ builder.Services.AddScoped<IToolRepository, ToolRepository>();
 builder.Services.AddScoped<IReverseProxyRepository, ReverseProxyRepository>();
 builder.Services.AddScoped<IReverseProxyTrafficRepository, ReverseProxyTrafficRepository>();
 builder.Services.AddScoped<ICouponRepository, CouponRepository>();
+
+////////////////API////////////////
+builder.Services.Configure<ApiClientOptions>(
+    builder.Configuration.GetSection(ApiClientOptions.SectionName));
+
+builder.Services.AddHttpClient<IApiClient, ApiClient>((sp, client) =>
+{
+    var options = sp.GetRequiredService<
+        IOptions<ApiClientOptions>>().Value;
+
+    client.BaseAddress = new Uri(options.BaseAddress);
+    client.Timeout = TimeSpan.FromSeconds(options.Timeout);
+});
+
+builder.Services.AddScoped<IAuthenticationApiClient, AuthenticationApiClient>();
+builder.Services.AddScoped<IProfileApiClient, ProfileApiClient>();
 
 
 builder.Services.AddHttpContextAccessor();

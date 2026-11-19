@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using DNSLab.Web.Interfaces.Providers;
+using DNSLab.Web.API.Authentication.DTOs;
 
 namespace DNSLab.Web.Providers
 {
@@ -33,7 +34,7 @@ namespace DNSLab.Web.Providers
             }
         }
 
-        public async Task SetTokenAsync(AuthUserDTO model)
+        public async Task SetTokenAsync(AuthenticateResponse model)
         {
             await _LocalStorage.SetAsync(TokenKey, model);
         }

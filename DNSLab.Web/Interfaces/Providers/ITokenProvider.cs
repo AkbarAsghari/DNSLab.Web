@@ -1,9 +1,11 @@
-﻿namespace DNSLab.Web.Interfaces.Providers
+﻿using DNSLab.Web.API.Authentication.DTOs;
+
+namespace DNSLab.Web.Interfaces.Providers
 {
     public interface ITokenProvider
     {
         Task<string> GetTokenAsync();
-        Task SetTokenAsync(AuthUserDTO model);
+        Task SetTokenAsync(AuthenticateResponse model);
         Task DeleteTokenAsync();
     }
 }

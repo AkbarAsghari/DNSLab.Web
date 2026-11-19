@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Text.Json;
 using DNSLab.Web.Interfaces.Providers;
 using DNSLab.Web.Interfaces.Repositories;
+using DNSLab.Web.API.Authentication.DTOs;
 
 namespace DNSLab.Web.Providers
 {
@@ -104,7 +105,7 @@ namespace DNSLab.Web.Providers
             return Convert.FromBase64String(converted);
         }
 
-        public async Task Login(AuthUserDTO model)
+        public async Task Login(AuthenticateResponse model)
         {
             try
             {

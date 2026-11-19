@@ -1,4 +1,6 @@
-﻿namespace DNSLab.Web.API.Common.Result;
+﻿using System.Text.Json.Serialization;
+
+namespace DNSLab.Web.API.Common.Result;
 
 public class Result
 {
@@ -6,7 +8,10 @@ public class Result
 
     public Error? Error { get; }
 
-    private Result(bool isSuccess, Error? error)
+    [JsonConstructor]
+    public Result(
+        bool isSuccess,
+        Error? error)
     {
         IsSuccess = isSuccess;
         Error = error;

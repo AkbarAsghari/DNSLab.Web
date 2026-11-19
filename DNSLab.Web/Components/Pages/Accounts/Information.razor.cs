@@ -1,43 +1,67 @@
 ﻿using Microsoft.AspNetCore.Components;
 using DNSLab.Web.Interfaces.Repositories;
+using DNSLab.Web.API.Profile;
+using DNSLab.Web.API.Profile.DTOs;
+using DNSLab.Web.API.Authentication;
+using DNSLab.Web.API.Authentication.DTOs;
 
 namespace DNSLab.Web.Components.Pages.Accounts;
 
 partial class Information
 {
-    [Inject] IAccountRepository _AccountRepository { get; set; }
-    [Inject] ISnackbar _Snackbar { get; set; }
+    [Inject] IProfileApiClient profileApiClient { get; set; }
+    [Inject] IAuthenticationApiClient authenticationApiClient { get; set; }
+    [Inject] ISnackbar snackbar { get; set; }
 
-    UserDTO? _CurrentUser;
+    UserProfileResponse? profile;
+    string? _FirstName;
+    string? _LastName;
+    string? _Company;
+
     protected override async Task OnInitializedAsync()
     {
-        _CurrentUser = await _AccountRepository.GetCurrentUserAsync();
+        var response = await profileApiClient.GetProfileAsync();
+
+        if (response.IsSuccess)
+        {
+            profile = response.Value!;
+            _FirstName = profile.FirstName;
+            _LastName = profile.LastName;
+            _Company = profile.Company;
+        }
     }
 
     async Task SaveInformation()
     {
-        if (_CurrentUser != null)
+        if (profile != null)
         {
-            await _AccountRepository.UpdateAsync(new UpdateUserPersonalInfoDTO
+            var response = await profileApiClient.UpdateProfileAsync(
+                new UpdateProfileRequest(
+                    _FirstName ?? String.Empty,
+                    _LastName ?? String.Empty,
+                    _Company ?? String.Empty));
+
+            if (response.IsSuccess)
             {
-                Company = _CurrentUser.Company,
-                FirstName = _CurrentUser.FirstName,
-                LastName = _CurrentUser.LastName,
-            });
-            _Snackbar.Add("تغییرات با موفقیت اعمال شد", Severity.Success);
+                snackbar.Add("تغییرات با موفقیت اعمال شد", Severity.Success);
+            }
+            else
+            {
+                snackbar.Add(response.Error!.Message, Severity.Warning);
+            }
         }
     }
 
     bool _IsConfirmEmailLinkResend = false;
     async Task ResendConfirmEmailLink()
     {
-        _IsConfirmEmailLinkResend = await _AccountRepository.ResendConfirmEmailTokenAsync();
+        //_IsConfirmEmailLinkResend = await profileApiClient.emai.ResendConfirmEmailTokenAsync();
     }
 
     bool _EditMobileDialogVisible = false;
     void EditMobile()
     {
-        _NewMobile = _CurrentUser!.Mobile;
+        _NewMobile = profile!.Mobile;
         _EditMobileDialogVisible = true;
     }
 
@@ -50,46 +74,54 @@ partial class Information
         await _EditMobileForm.Validate();
         if (_EditMobileForm.IsValid)
         {
-            var token = await _AccountRepository.ChangeMobileAsync(_NewMobile);
-
-            if (token is not null)
+            var response = await profileApiClient.UpdateMobileAsync(new UpdateMobileRequest(_NewMobile));
+            if (response.IsSuccess)
             {
-                if (token == String.Empty)
+                if (String.IsNullOrEmpty(response.Value))
                 {
-                    _CurrentUser!.Mobile = _NewMobile;
+                    await OnInitializedAsync();
                     _NewMobile = String.Empty;
                     _EditMobileDialogVisible = false;
                 }
                 else
                 {
-                    _OtpToken = token;
+                    _OtpToken = response.Value;
                 }
             }
-
         }
     }
 
     async Task ResendOtp()
     {
-        var token = await _AccountRepository.ResendOtp(_OtpToken);
-        if (token is not null)
+        var resendOtpResponse = await authenticationApiClient.ResendOtpAsync(
+            new ResendOtpRequest(_OtpToken));
+
+        if (resendOtpResponse.IsSuccess)
         {
-            _OtpToken = token;
+            _OtpToken = resendOtpResponse.Value!;
+        }
+        else
+        {
+            snackbar.Add(resendOtpResponse.Error!.Message, Severity.Warning);
         }
     }
 
     string _Otp;
     async Task ConfirmOtp()
     {
-        if (await _AccountRepository.ConfirmOtpAsync(_OtpToken, _Otp))
+        var confirmOtpAuthenticationResponse = await authenticationApiClient.ConfirmOtpAuthenticationAsync(
+            new ConfirmOtpRequest(_OtpToken, _Otp));
+
+        if (confirmOtpAuthenticationResponse.IsSuccess)
         {
-            _CurrentUser!.Mobile = _NewMobile;
+            await OnInitializedAsync();
+
             _NewMobile = String.Empty;
             _EditMobileDialogVisible = false;
             _OtpToken = String.Empty;
             _Otp = String.Empty;
             _EditMobileDialogVisible = false;
-            _Snackbar.Add("شماره همراه شما ثبت شد", Severity.Success);
+            snackbar.Add("شماره همراه شما ثبت شد", Severity.Success);
             await OnInitializedAsync();
         }
     }
@@ -108,11 +140,18 @@ partial class Information
         await _EditPasswordForm.Validate();
         if (_EditPasswordForm.IsValid)
         {
-            if (await _AccountRepository.ChangePasswordAsync(_ChangePasswordDTO))
+            var changePasswordResponse = await profileApiClient.UpdatePasswordAsync(
+                new UpdatePasswordRequest(_ChangePasswordDTO.CurrentPassword, _ChangePasswordDTO.NewPassword));
+
+            if (changePasswordResponse.IsSuccess)
             {
                 _ChangePasswordDTO = new();
                 _EditPasswordDialogVisible = false;
-                _Snackbar.Add("رمز عبور شما تغییر یافت", Severity.Success);
+                snackbar.Add("رمز عبور شما تغییر یافت", Severity.Success);
+            }
+            else
+            {
+                snackbar.Add(changePasswordResponse.Error!.Message, Severity.Warning);
             }
         }
     }
@@ -120,7 +159,7 @@ partial class Information
     bool _EditEmailDialogVisible = false;
     void EditEmail()
     {
-        _NewEmailAddress = _CurrentUser!.Email;
+        _NewEmailAddress = profile!.Email;
         _EditEmailDialogVisible = true;
         _IsConfirmEmailLinkResend = true;
     }
@@ -131,19 +170,25 @@ partial class Information
         await _EditEmailForm.Validate();
         if (_EditEmailForm.IsValid)
         {
-            if (_NewEmailAddress.Equals(_CurrentUser!.Email))
+            if (_NewEmailAddress.Equals(profile!.Email))
             {
                 _NewEmailAddress = String.Empty;
                 _EditEmailDialogVisible = false;
                 return;
             }
 
-            if (await _AccountRepository.ChangeEmailAsync(_NewEmailAddress))
+            var updateEmailResponse = await profileApiClient.UpdateEmailAsync(
+                new UpdateEmailRequest(_NewEmailAddress));
+
+            if (updateEmailResponse.IsSuccess)
             {
-                _CurrentUser!.Email = _NewEmailAddress;
                 _NewEmailAddress = String.Empty;
                 _EditEmailDialogVisible = false;
                 await OnInitializedAsync();
+            }
+            else
+            {
+                snackbar.Add(updateEmailResponse.Error!.Message, Severity.Warning);
             }
         }
     }
@@ -151,24 +196,31 @@ partial class Information
     bool _EditUsernameDialogVisible = false;
     void EditUsername()
     {
-        _NewUsername = _CurrentUser!.Username;
+        _NewUsername = profile!.Username;
         _EditUsernameDialogVisible = true;
     }
     string? _NewUsername;
     async Task SaveNewUsername()
     {
-        if (_NewUsername!.Equals(_CurrentUser!.Username))
+        if (_NewUsername!.Equals(profile!.Username))
         {
             _NewUsername = String.Empty;
             _EditUsernameDialogVisible = false;
             return;
         }
 
-        if (await _AccountRepository.UpdateUsernameAsync(_NewUsername))
+        var updateUsernameResponse = await profileApiClient.UpdateUsernameAsync(
+            new UpdateUsernameRequest(_NewUsername));
+
+        if (updateUsernameResponse.IsSuccess)
         {
-            _CurrentUser!.Username = _NewUsername;
             _NewUsername = String.Empty;
             _EditUsernameDialogVisible = false;
+            await OnInitializedAsync();
+        }
+        else
+        {
+            snackbar.Add(updateUsernameResponse.Error!.Message, Severity.Warning);
         }
     }
 }

@@ -119,6 +119,53 @@ internal sealed class ApiClient(
         return value;
     }
 
+    private async Task<Result> SendWithoutValueAsync<T>(
+       HttpMethod method,
+       string endpoint,
+       ApiRequestOptions? options,
+       CancellationToken cancellationToken,
+       object? body = null)
+    {
+        using var request = await CreateRequestAsync(
+            method,
+            endpoint,
+            options,
+            cancellationToken);
+
+        if (body is not null)
+            request.Content = JsonContent.Create(body);
+
+        using var response = await httpClient.SendAsync(
+            request,
+            cancellationToken);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            return Result.Failure(
+                await CreateErrorAsync(response, cancellationToken));
+        }
+
+        if (response.StatusCode is HttpStatusCode.NoContent
+            or HttpStatusCode.ResetContent)
+        {
+            return Result.Failure(new Error(
+                "EMPTY_RESPONSE",
+                "The API returned an empty response."));
+        }
+
+        var value = await response.Content.ReadFromJsonAsync<Result>(
+            cancellationToken: cancellationToken);
+
+        if (value is null)
+        {
+            return Result.Failure(new Error(
+                "EMPTY_RESPONSE",
+                "The API returned an empty response."));
+        }
+
+        return value;
+    }
+
     private async Task<HttpRequestMessage> CreateRequestAsync(
         HttpMethod method,
         string endpoint,
@@ -158,41 +205,23 @@ internal sealed class ApiClient(
             response.ReasonPhrase ?? "An unexpected API error occurred.");
     }
 
-    public async Task<Result> PostAsync<TRequest>(string endpoint, TRequest request, ApiRequestOptions? options = null, CancellationToken cancellationToken = default)
+    public Task<Result> PostAsync<TRequest>(string endpoint, TRequest request, ApiRequestOptions? options = null, CancellationToken cancellationToken = default)
     {
-        using var req = await CreateRequestAsync(
-              HttpMethod.Post,
-              endpoint,
-              options,
-              cancellationToken);
-
-        using var response = await httpClient.SendAsync(
-            req,
-            cancellationToken);
-
-        if (response.IsSuccessStatusCode)
-            return Result.Success();
-
-        return Result.Failure(
-            await CreateErrorAsync(response, cancellationToken));
+        return SendWithoutValueAsync<TRequest>(
+            HttpMethod.Post,
+            endpoint,
+            options,
+            cancellationToken,
+            request);
     }
 
-    public async Task<Result> PutAsync<TRequest>(string endpoint, TRequest request, ApiRequestOptions? options = null, CancellationToken cancellationToken = default)
+    public Task<Result> PutAsync<TRequest>(string endpoint, TRequest request, ApiRequestOptions? options = null, CancellationToken cancellationToken = default)
     {
-        using var req = await CreateRequestAsync(
+        return SendWithoutValueAsync<TRequest>(
             HttpMethod.Put,
             endpoint,
             options,
-            cancellationToken);
-
-        using var response = await httpClient.SendAsync(
-            req,
-            cancellationToken);
-
-        if (response.IsSuccessStatusCode)
-            return Result.Success();
-
-        return Result.Failure(
-            await CreateErrorAsync(response, cancellationToken));
+            cancellationToken,
+            request);
     }
 }

@@ -5,19 +5,19 @@
 <MudText Typo="Typo.h1" Align="Align.Center">حساب کاربری</MudText>
 <MudText Class="mt-5 mb-10" Align="Align.Center">در این صفحه میتوانید اطلاعات کاربری خود را ویرایش نمایید</MudText>
 
-@if (_CurrentUser != null)
+@if (profile != null)
 {
     <MudCard Elevation="0">
         <MudCardContent>
             <MudGrid>
                 <MudItem xs="12" md="6" lg="4">
-                    <MudTextField T="string" Variant="Variant.Outlined" @bind-Value="_CurrentUser.FirstName" Label="نام" />
+                    <MudTextField T="string" Variant="Variant.Outlined" @bind-Value="_FirstName" Label="نام" />
                 </MudItem>
                 <MudItem xs="12" md="6" lg="4">
-                    <MudTextField T="string" Variant="Variant.Outlined" @bind-Value="_CurrentUser.LastName" Label="نام خانوادگی" />
+                    <MudTextField T="string" Variant="Variant.Outlined" @bind-Value="_LastName" Label="نام خانوادگی" />
                 </MudItem>
                 <MudItem xs="12" md="6" lg="4">
-                    <MudTextField T="string" Variant="Variant.Outlined" @bind-Value="_CurrentUser.Company" Label="نام سازمان" />
+                    <MudTextField T="string" Variant="Variant.Outlined" @bind-Value="_Company" Label="نام سازمان" />
                 </MudItem>
             </MudGrid>
         </MudCardContent>
@@ -30,8 +30,8 @@
         <MudCardContent>
             <MudGrid>
                 <MudItem xs="12" md="6" lg="4">
-                    <MudTextField T="string" Variant="Variant.Outlined" @bind-Value="_CurrentUser.Mobile" Label="شماره همراه" ReadOnly AdornmentIcon="@DNSLabIcons.Edit" OnAdornmentClick="EditMobile" Adornment="@(_CurrentUser.IsMobileApproved ? Adornment.None : Adornment.End)" />
-                    @if (_CurrentUser.IsMobileApproved)
+                    <MudTextField T="string" Variant="Variant.Outlined" Text="@profile.Mobile" Label="شماره همراه" ReadOnly AdornmentIcon="@DNSLabIcons.Edit" OnAdornmentClick="EditMobile" Adornment="@(profile.IsMobileApproved ? Adornment.None : Adornment.End)" />
+                    @if (profile.IsMobileApproved)
                     {
                         <MudText Typo="Typo.body2">شماره همراه تایید شده است.</MudText>
                     }
@@ -44,8 +44,8 @@
                     }
                 </MudItem>
                 <MudItem xs="12" md="6" lg="4">
-                    <MudTextField T="string" Variant="Variant.Outlined" @bind-Value="_CurrentUser.Email" Label="آدرس ایمیل" ReadOnly AdornmentIcon="@DNSLabIcons.Edit" OnAdornmentClick="EditEmail" Adornment="@(_CurrentUser.IsEmailApproved ? Adornment.None : Adornment.End)" />
-                    @if (_CurrentUser.IsEmailApproved)
+                    <MudTextField T="string" Variant="Variant.Outlined" Text="@profile.Email" Label="آدرس ایمیل" ReadOnly AdornmentIcon="@DNSLabIcons.Edit" OnAdornmentClick="EditEmail" Adornment="@(profile.IsEmailApproved ? Adornment.None : Adornment.End)" />
+                    @if (profile.IsEmailApproved)
                     {
                         <MudText Typo="Typo.body2">آدرس ایمیل تایید شده است.</MudText>
                     }
@@ -66,7 +66,7 @@
                     }
                 </MudItem>
                 <MudItem xs="12" md="6" lg="4">
-                    <MudTextField T="string" Variant="Variant.Outlined" @bind-Value="_CurrentUser.Username" Label="نام کاربری" ReadOnly AdornmentIcon="@DNSLabIcons.Edit" OnAdornmentClick="EditUsername" Adornment="Adornment.End" />
+                    <MudTextField T="string" Variant="Variant.Outlined" Text="@profile.Username" Label="نام کاربری" ReadOnly AdornmentIcon="@DNSLabIcons.Edit" OnAdornmentClick="EditUsername" Adornment="Adornment.End" />
                 </MudItem>
                 <MudItem xs="12" md="6" lg="4">
                     <MudTextField T="string" Variant="Variant.Outlined" Text="**********" Label="رمز عبور" ReadOnly AdornmentIcon="@DNSLabIcons.Edit" OnAdornmentClick="EditPassword" Adornment="Adornment.End" />

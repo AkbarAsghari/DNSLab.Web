@@ -39,7 +39,7 @@ partial class RegisterOrLogin
         }
         else
         {
-            snackbar.Add(response.Error!.Message);
+            snackbar.Add(response.Error!.Message, Severity.Warning);
         }
     }
 
@@ -62,7 +62,7 @@ partial class RegisterOrLogin
         }
         else
         {
-            snackbar.Add(response.Error!.Message);
+            snackbar.Add(response.Error!.Message, Severity.Warning);
         }
     }
 
@@ -78,7 +78,7 @@ partial class RegisterOrLogin
         }
         else
         {
-            snackbar.Add(response.Error!.Message);
+            snackbar.Add(response.Error!.Message, Severity.Warning);
         }
     }
 

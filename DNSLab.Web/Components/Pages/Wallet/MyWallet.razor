@@ -1,7 +1,9 @@
 ﻿@using ApexCharts
-@using DNSLab.Web.DTOs.Repositories.Wallet
+@using DNSLab.Web.API.Wallet.DTOs
+@using DNSLab.Web.API.Wallet.Enums
 @attribute [Route(AllRoutes.MyWallet)]
 @attribute [Authorize]
+
 <SeoProvider Title="کیف پول" />
 
 <MudText Typo="Typo.h1" Align="MudBlazor.Align.Center">کیف پول</MudText>
@@ -17,41 +19,41 @@
     <MudCardContent>
         <MudGrid>
             <MudItem xs="12" md="6">
-                <MudStack Row AlignItems="AlignItems.Center">
-                    @if (_Wallet != null)
-                    {
+                @if (_Wallet is not null)
+                {
+                    <MudStack Row AlignItems="AlignItems.Center">
                         <MudText Typo="Typo.h3">@_Wallet.Balance.Separate3Digits()</MudText>
-                        <MudText Typo="Typo.body2">ريال</MudText>
-                    }
-                </MudStack>
+                        <MudText Typo="Typo.body2">ریال</MudText>
+                    </MudStack>
+                }
             </MudItem>
             <MudFlexBreak />
-            <MudItem xs="12" md="5">    
-                <ApexChart TItem="Tuple<DateTime,int>" Options="_Last30DaysTransactionsChartDataChartDataOptions">
-                    @if (_Last30DaysTransactionsChartDataChartData != null)
-                    {
-                        <ApexPointSeries TItem="Tuple<DateTime,int>"
+            <MudItem xs="12" md="5">
+                @if (_Last30DaysTransactionsChartDataChartData is { Count: > 0 })
+                {
+                    <ApexChart TItem="WalletTransactionChartPoint" Options="_last30DaysTransactionsChartOptions">
+                        <ApexPointSeries TItem="WalletTransactionChartPoint"
                                          Items="_Last30DaysTransactionsChartDataChartData"
-                                         SeriesType="@SeriesType.Area"
+                                         SeriesType="SeriesType.Area"
                                          Name="مقدار"
-                                         XValue="@(e => e.Item1.ToPersianDate())"
-                                         YValue="@(e => e.Item2)"
-                                         OrderBy="e=>e.X" />
-                    }
-                </ApexChart>
+                                         XValue="e => e.Date.ToPersianDate()"
+                                         YValue="e => e.Amount"
+                                         OrderBy="e => e.X" />
+                    </ApexChart>
+                }
             </MudItem>
             <MudItem xs="12" md="7">
-                @if (_WalletTransactions != null)
+                @if (_WalletTransactions is not null)
                 {
-                    <MudDataGrid T="WalletTransactionDTO" Items="_WalletTransactions.Results" Loading="_IsLoading" Dense Hover Elevation="0">
+                    <MudDataGrid T="WalletTransactionResponse" Items="_WalletTransactions.Items" Dense Hover Elevation="0">
                         <NoRecordsContent>
                             <NoRecordFound />
                         </NoRecordsContent>
                         <Columns>
-                            <PropertyColumn Property="x=>x.TransactionType" Title="نوع" />
-                            <TemplateColumn Title="مبغ (ريال)">
+                            <PropertyColumn Property="x => x.TransactionType.GetDisplayName()" Title="نوع" />
+                            <TemplateColumn Title="مبلغ (ریال)">
                                 <CellTemplate>
-                                    <MudAlert Severity="@(@context.Item.Incremental ? Severity.Success : Severity.Error)" NoIcon Dense ContentAlignment="HorizontalAlignment.Center">
+                                    <MudAlert Severity="@(context.Item.TransactionType == WalletTransactionType.Withdrawal ? Severity.Success : Severity.Error)" NoIcon Dense ContentAlignment="HorizontalAlignment.Center">
                                         <MudText>@context.Item.Amount.Separate3Digits()</MudText>
                                     </MudAlert>
                                 </CellTemplate>
@@ -61,6 +63,5 @@
                 }
             </MudItem>
         </MudGrid>
-
     </MudCardContent>
 </MudCard>

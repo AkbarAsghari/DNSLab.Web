@@ -1,4 +1,7 @@
 ﻿using ApexCharts;
+using DNSLab.Web.API.Common.Pagination;
+using DNSLab.Web.API.Wallet;
+using DNSLab.Web.API.Wallet.DTOs;
 using DNSLab.Web.Components.Dialogs.Wallet;
 using DNSLab.Web.DTOs.Repositories.Shared;
 using DNSLab.Web.DTOs.Repositories.Wallet;
@@ -9,23 +12,34 @@ namespace DNSLab.Web.Components.Pages.Wallet;
 
 partial class MyWallet
 {
-    [Inject] IWalletRepository _WalletRepository { get; set; }
+    [Inject] IWalletApiClient WalletApiClient { get; set; }
     [Inject] IDialogService _DialogService { get; set; }
 
-    WalletDTO? _Wallet { get; set; }
-    PagedResult<WalletTransactionDTO>? _WalletTransactions { get; set; }
+    WalletResponse? _Wallet { get; set; }
+    PaginationResponse<WalletTransactionResponse>? _WalletTransactions { get; set; }
 
-    IEnumerable<Tuple<DateTime, int>>? _Last30DaysTransactionsChartDataChartData;
-
-    bool _IsLoading = false;
+    List<WalletTransactionChartPoint> _Last30DaysTransactionsChartDataChartData { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
-        _IsLoading = true;
-        _Wallet = await _WalletRepository.GetWallet();
-        _WalletTransactions = await _WalletRepository.GetWalletTransactions(1, 5);
-        _Last30DaysTransactionsChartDataChartData = await _WalletRepository.GetLast30DaysTransactionsChartData();
-        _IsLoading = false;
+        var walletResponse = await WalletApiClient.GetWalletAsync();
+        if (walletResponse.IsSuccess)
+        {
+            _Wallet = walletResponse.Value!;
+        }
+
+        var walletTransactionsResponse = await WalletApiClient.GetWalletTransactionsAsync(
+            new PaginationRequest(Page: 1, PageSize: 5));
+        if (walletTransactionsResponse.IsSuccess)
+        {
+            _WalletTransactions = walletTransactionsResponse.Value!;
+        }
+
+        var last30DaysTransactionsChartDataResponse = await WalletApiClient.GetLast30DaysTransactionsChartDataAsync();
+        if (last30DaysTransactionsChartDataResponse.IsSuccess)
+        {
+            _Last30DaysTransactionsChartDataChartData = last30DaysTransactionsChartDataResponse.Value!;
+        }
     }
 
     async Task IncreaseBalance()
@@ -40,14 +54,18 @@ partial class MyWallet
         }
     }
 
-    ApexChartOptions<Tuple<DateTime, int>> _Last30DaysTransactionsChartDataChartDataOptions = new ApexChartOptions<Tuple<DateTime, int>>
+    private readonly ApexChartOptions<WalletTransactionChartPoint> _last30DaysTransactionsChartOptions = new()
     {
-        Fill = new Fill { Opacity = 0 },
-        Theme = new Theme { Mode = Mode.Dark, },
-        Colors = new List<string> { "var(--mud-palette-primary)" },
-        Xaxis = new XAxis { AxisBorder = new AxisBorder { Show = false, }, Labels = new XAxisLabels { Show = false }, AxisTicks = new AxisTicks { Show = false } },
-        Yaxis = new List<YAxis> { new YAxis { Show = false } },
-        Grid = new Grid { Show = false },
-        Chart = new Chart { Background = "transparent", Toolbar = new Toolbar { Tools = new ApexCharts.Tools { Zoomin = false, Zoomout = false, Download = false, Reset = false, Pan = false, Zoom = false } } },
+        Chart = new() { Background = "transparent", Toolbar = new() { Show = false }, Animations = new() { Enabled = true, Speed = 500 } },
+        Theme = new() { Mode = Mode.Dark },
+        Colors = new() { "var(--mud-palette-primary)" },
+        Fill = new() { Opacity = 0.15 },
+        Stroke = new() { Curve = Curve.Smooth, Width = 2 },
+        Grid = new() { Show = false },
+        Xaxis = new() { Labels = new() { Show = false }, AxisBorder = new() { Show = false }, AxisTicks = new() { Show = false } },
+        Yaxis = new() { new() { Show = false } },
+        DataLabels = new() { Enabled = false },
+        Legend = new() { Show = false },
+        Tooltip = new() { Enabled = true, Theme = Mode.Dark }
     };
 }

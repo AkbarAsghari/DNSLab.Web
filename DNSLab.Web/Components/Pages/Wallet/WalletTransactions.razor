@@ -1,4 +1,5 @@
-﻿@using DNSLab.Web.DTOs.Repositories.Wallet
+﻿@using DNSLab.Web.API.Wallet.DTOs
+@using DNSLab.Web.DTOs.Repositories.Wallet
 @attribute [Route(AllRoutes.WalletTransactions)]
 @attribute [Authorize]
 <SeoProvider Title="تراکنش ها" />
@@ -10,7 +11,7 @@
     <MudCardContent>
         @if (_AllTransactions != null)
         {
-            <MudDataGrid T="WalletTransactionDTO" Items="_AllTransactions.Results" Dense Hover Elevation="0" FixedHeader SortMode="SortMode.None" Striped Loading="_Loading">
+            <MudDataGrid T="WalletTransactionResponse" Items="_AllTransactions.Items" Dense Hover Elevation="0" FixedHeader SortMode="SortMode.None" Striped Loading="_Loading">
                 <NoRecordsContent>
                     <NoRecordFound />
                 </NoRecordsContent>
@@ -30,7 +31,7 @@
                 </Columns>
             </MudDataGrid>
 
-            <MudPagination Rectangular="true" Variant="Variant.Filled" DropShadow="false" Count="_AllTransactions.PageCount" Class="mt-2" SelectedChanged="PageChanged" />
+            <MudPagination Rectangular="true" Variant="Variant.Filled" DropShadow="false" Count="_AllTransactions.TotalPages" Class="mt-2" SelectedChanged="PageChanged" />
         }
     </MudCardContent>
 </MudCard>

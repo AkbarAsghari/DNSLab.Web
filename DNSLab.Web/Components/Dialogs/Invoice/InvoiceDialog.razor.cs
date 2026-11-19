@@ -1,4 +1,8 @@
-﻿using DNSLab.Web.DTOs.Repositories.Invoice;
+﻿using DNSLab.Web.API.Billing.DTOs;
+using DNSLab.Web.API.Common.Result;
+using DNSLab.Web.API.Wallet;
+using DNSLab.Web.API.Wallet.DTOs;
+using DNSLab.Web.DTOs.Repositories.Invoice;
 using DNSLab.Web.DTOs.Repositories.Wallet;
 using DNSLab.Web.Enums;
 using DNSLab.Web.Interfaces.Repositories;
@@ -8,7 +12,7 @@ namespace DNSLab.Web.Components.Dialogs.Invoice;
 
 partial class InvoiceDialog
 {
-    [Inject] public IWalletRepository _WalletRepository { get; set; }
+    [Inject] public IWalletApiClient WalletApiClient { get; set; }
     [Inject] public ISubscriptionRepository _SubscriptionRepository { get; set; }
     [Inject] public IReverseProxyTrafficRepository _ReverseProxyTrafficRepository { get; set; }
     [Inject] public ICouponRepository _CouponRepository { get; set; }
@@ -30,7 +34,7 @@ partial class InvoiceDialog
 
     bool _UseWallet { get; set; } = false;
 
-    WalletDTO _MyWallet { get; set; }
+    WalletResponse _MyWallet { get; set; }
     protected override async Task OnInitializedAsync()
     {
         if (InvoiceType == InvoiceTypeEnum.Topup)
@@ -39,11 +43,11 @@ partial class InvoiceDialog
         }
         else
         {
-            var wallet = await _WalletRepository.GetWallet();
+            var response = await WalletApiClient.GetWalletAsync();
 
-            if (wallet != null)
+            if (response.IsSuccess)
             {
-                _MyWallet = wallet;
+                _MyWallet = response.Value!;
             }
         }
 
@@ -66,12 +70,12 @@ partial class InvoiceDialog
 
     async Task Purchass()
     {
-        InvoiceResponseDTO? purchaseResponse = null;
+        Result<InvoiceCreationResponse>? response = null;
 
         switch (InvoiceType)
         {
             case InvoiceTypeEnum.Subscription:
-                purchaseResponse = await _SubscriptionRepository.PurchaseSubscribe(new PurchaseSubscriptionDTO
+                InvoiceResponseDTO d = await _SubscriptionRepository.PurchaseSubscribe(new PurchaseSubscriptionDTO
                 {
                     CouponCode = _CouponCode,
                     PlanId = PlanId!.Value,
@@ -80,13 +84,10 @@ partial class InvoiceDialog
                 });
                 break;
             case InvoiceTypeEnum.Topup:
-                purchaseResponse = await _WalletRepository.Topup(new PurchaseTopupDTO
-                {
-                    Amount = TopupAmount!.Value,
-                });
+                response = await WalletApiClient.TopupAsync(new PurchaseTopupRequest(TopupAmount!.Value));
                 break;
             case InvoiceTypeEnum.AdditionalTraffic:
-                purchaseResponse = await _ReverseProxyTrafficRepository.PurchaseAdditionalTraffic(new PurchaseAdditionalTrafficDTO
+                InvoiceResponseDTO dd = await _ReverseProxyTrafficRepository.PurchaseAdditionalTraffic(new PurchaseAdditionalTrafficDTO
                 {
                     CouponCode = _CouponCode,
                     Traffic = Traffic!.Value,
@@ -95,16 +96,16 @@ partial class InvoiceDialog
                 break;
         }
 
-        if (purchaseResponse != null)
+        if (response is not null && response.IsSuccess)
         {
-            if (purchaseResponse.IsComplete)
+            if (response.Value!.IsComplete)
             {
                 _Snackbar.Add("پرداخت با موفقیت انجام شد", Severity.Success);
                 _MudDialog.Close();
             }
             else
             {
-                _NavigationManager.NavigateTo(purchaseResponse.PaymentUrl!, true);
+                _NavigationManager.NavigateTo(response.Value!.PaymentUrl!, true);
             }
         }
     }

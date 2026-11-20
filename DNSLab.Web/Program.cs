@@ -4,6 +4,7 @@ using DNSLab.Web.API.Abstractions;
 using DNSLab.Web.API.Authentication;
 using DNSLab.Web.API.Page;
 using DNSLab.Web.API.Profile;
+using DNSLab.Web.API.Ticket;
 using DNSLab.Web.API.Wallet;
 using DNSLab.Web.Components;
 using DNSLab.Web.Exceptions;
@@ -58,7 +59,7 @@ builder.Services.AddScoped<IAuthenticationApiClient, AuthenticationApiClient>();
 builder.Services.AddScoped<IProfileApiClient, ProfileApiClient>();
 builder.Services.AddScoped<IWalletApiClient, WalletApiClient>();
 builder.Services.AddScoped<IPageApiClient, PageApiClient>();
-
+builder.Services.AddScoped<ITicketApiClient, TicketApiClient>();
 
 builder.Services.AddHttpContextAccessor();
 

@@ -1,4 +1,5 @@
-﻿@using DNSLab.Web.DTOs.Repositories.Page
+﻿@using DNSLab.Web.API.Page.Enums
+@using DNSLab.Web.DTOs.Repositories.Page
 @attribute [Route(AllRoutes.Page + "/{PageId:guid}")]
 @attribute [Route(AllRoutes.Page)]
 @attribute [Authorize]
@@ -13,7 +14,7 @@
         </CardHeaderContent>
         <CardHeaderActions>
             <MudStack Row>
-                <MudSwitch T="bool" Label="انتشار" Color="Color.Primary" @bind-Value="_Page.IsPublished" />
+                <MudSwitch T="bool" Label="انتشار" Color="Color.Primary" @bind-Value="_IsPublished" />
                 <BaseButton Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" EndIcon="@Icons.Material.Rounded.Save" OnClick="Submit">ذخیره اطلاعات</BaseButton>
             </MudStack>
         </CardHeaderActions>
@@ -21,27 +22,27 @@
     <MudCardContent>
         <MudGrid Spacing="1">
             <MudItem xs="12" md="4">
-                <MudTextField T="string" Label="عنوان" Variant="Variant.Outlined" @bind-Value="_Page.Title" />
+                <MudTextField T="string" Label="عنوان" Variant="Variant.Outlined" @bind-Value="_Title" />
             </MudItem>
             <MudItem xs="12" md="4">
-                <MudTextField T="string" Label="URL" Variant="Variant.Outlined" Class="dnslab-ltr dnslab-nano" @bind-Value="_Page.URL" />
+                <MudTextField T="string" Label="URL" Variant="Variant.Outlined" Class="dnslab-ltr dnslab-nano" @bind-Value="_Url" />
             </MudItem>
             <MudItem xs="12" md="4">
-                <MudSelect T="PageTypeDTO" @bind-Value="_Page.Type" Variant="Variant.Outlined" Label="نوع" Disabled="_Page.Id != Guid.Empty">
+                <MudSelect T="PageType" @bind-Value="_Type" Variant="Variant.Outlined" Label="نوع" Disabled="_Id != Guid.Empty">
                     @if (_Types != null)
                     {
                         @foreach (var item in _Types)
                         {
-                            <MudSelectItem T="PageTypeDTO" Value="item">@item.Name</MudSelectItem>
+                            <MudSelectItem T="PageType" Value="item">@item.GetDisplayName()</MudSelectItem>
                         }
                     }
                 </MudSelect>
             </MudItem>
             <MudItem xs="12">
-                <MudTextField T="string" Label="توضیحات" Lines="5" Variant="Variant.Outlined" @bind-Value="_Page.Description" />
+                <MudTextField T="string" Label="توضیحات" Lines="5" Variant="Variant.Outlined" @bind-Value="_Description" />
             </MudItem>
             <MudItem xs="12">
-                <MudTextField T="string" Label="متن (MD)" Variant="Variant.Outlined" Lines="12" @bind-Value="@_Page.Body" />
+                <MudTextField T="string" Label="متن (MD)" Variant="Variant.Outlined" Lines="12" @bind-Value="_Body" />
             </MudItem>
         </MudGrid>
     </MudCardContent>

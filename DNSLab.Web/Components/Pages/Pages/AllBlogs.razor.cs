@@ -1,4 +1,7 @@
 ﻿using DNSLab.Shared.Enums;
+using DNSLab.Web.API.Page;
+using DNSLab.Web.API.Page.DTOs;
+using DNSLab.Web.API.Page.Enums;
 using DNSLab.Web.DTOs.Repositories.Page;
 using DNSLab.Web.Interfaces.Repositories;
 using Microsoft.AspNetCore.Components;
@@ -7,12 +10,17 @@ namespace DNSLab.Web.Components.Pages.Pages;
 
 partial class AllBlogs
 {
-    [Inject] IPageRepository _PageRepository { get; set; }
+    [Inject] IPageApiClient PageApiClient { get; set; }
 
-    IEnumerable<PageInfoDTO>? _Pages { get; set; }
+    List<PageInfoResponse> _Pages { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
-        _Pages = await _PageRepository.GetPagesByType(PageTypeEnum.Blog);
+        var response = await PageApiClient.GetPagesByTypeAsync(PageType.Blog);
+
+        if (response.IsSuccess)
+        {
+            _Pages = response.Value!;
+        }
     }
 }

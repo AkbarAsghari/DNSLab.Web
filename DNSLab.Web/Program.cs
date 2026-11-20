@@ -2,6 +2,7 @@ using ApexCharts;
 using DNSLab.Web.API;
 using DNSLab.Web.API.Abstractions;
 using DNSLab.Web.API.Authentication;
+using DNSLab.Web.API.Page;
 using DNSLab.Web.API.Profile;
 using DNSLab.Web.API.Wallet;
 using DNSLab.Web.Components;
@@ -32,7 +33,6 @@ builder.Services.AddScoped<IDNSClientRepository, DNSClientRepository>();
 builder.Services.AddScoped<IDDNSRepository, DDNSRepository>();
 builder.Services.AddScoped<IStaticRepository, StaticRepository>();
 builder.Services.AddScoped<ITicketRepository, TicketRepository>();
-builder.Services.AddScoped<IPageRepository, PageRepository>();
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<IDNSLogRepository, DNSLogRepository>();
 builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
@@ -57,6 +57,7 @@ builder.Services.AddHttpClient<IApiClient, ApiClient>((sp, client) =>
 builder.Services.AddScoped<IAuthenticationApiClient, AuthenticationApiClient>();
 builder.Services.AddScoped<IProfileApiClient, ProfileApiClient>();
 builder.Services.AddScoped<IWalletApiClient, WalletApiClient>();
+builder.Services.AddScoped<IPageApiClient, PageApiClient>();
 
 
 builder.Services.AddHttpContextAccessor();

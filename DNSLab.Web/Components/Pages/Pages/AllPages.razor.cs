@@ -1,40 +1,45 @@
-﻿using DNSLab.Web.Components.Dialogs;
+﻿using DNSLab.Web.API.Page;
+using DNSLab.Web.API.Page.DTOs;
+using DNSLab.Web.Components.Dialogs;
 using DNSLab.Web.DTOs.Repositories.Page;
 using DNSLab.Web.DTOs.Repositories.Ticket;
 using DNSLab.Web.Interfaces.Repositories;
 using DNSLab.Web.Repositories;
 using Microsoft.AspNetCore.Components;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DNSLab.Web.Components.Pages.Pages;
 
 partial class AllPages
 {
-    [Inject] IPageRepository _PageRepository { get; set; }
+    [Inject] IPageApiClient PageApiClient { get; set; }
     [Inject] IDialogService _DialogService { get; set; }
+    [Inject] public ISnackbar Snackbar { get; set; }
 
-    MudDataGrid<PageInfoDTO> _Grid;
-    private async Task<GridData<PageInfoDTO>> ServerReload(GridState<PageInfoDTO> state)
+    MudDataGrid<PageInfoResponse> _Grid;
+    private async Task<GridData<PageInfoResponse>> ServerReload(GridState<PageInfoResponse> state)
     {
-        IEnumerable<PageInfoDTO>? data = await _PageRepository.GetAllPages();
+        var response = await PageApiClient.GetAllPagesAsync();
 
-
-        if (data is null)
+        if (response.IsSuccess)
         {
-            return new GridData<PageInfoDTO>();
+            var totalItems = response.Value!.Count();
+
+            var pagedData = response.Value!.OrderByDescending(x => x.UpdateDate ?? x.CreateDate).Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
+
+            return new GridData<PageInfoResponse>
+            {
+                TotalItems = totalItems,
+                Items = pagedData
+            };
         }
-
-        var totalItems = data.Count();
-
-        var pagedData = data.OrderByDescending(x => x.UpdateDate ?? x.CreateDate).Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
-
-        return new GridData<PageInfoDTO>
+        else
         {
-            TotalItems = totalItems,
-            Items = pagedData
-        };
+            return new();
+        }
     }
 
-    async Task DeletePage(PageInfoDTO page)
+    async Task DeletePage(PageInfoResponse page)
     {
         var parameters = new DialogParameters<BaseDialog>
             {
@@ -49,9 +54,15 @@ partial class AllPages
         var result = await dialog.Result;
         if (!result!.Canceled)
         {
-            if (await _PageRepository.DeletePage(page.Id))
+            var response = await PageApiClient.DeletePageAsync(
+                new PageIdRequest(page.Id));
+            if (response.IsSuccess)
             {
                 await _Grid.ReloadServerData();
+            }
+            else
+            {
+                Snackbar.Add(response.Error!.Message, Severity.Warning);
             }
         }
     }

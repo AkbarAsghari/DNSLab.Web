@@ -1,4 +1,4 @@
-using DNSLab.Domain.Content.Enums;
+using DNSLab.Web.API.Page.Enums;
 
 namespace DNSLab.Web.API.Page.DTOs;
 
@@ -11,6 +11,7 @@ public sealed record PageResponse(
     string Body,
     bool IsPublished,
     DateTime? PublishDate,
+    DateTime? UpdateDate,
     int VisitCount,
     PageType Type,
     DateTime CreateDate);

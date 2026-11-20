@@ -1,4 +1,8 @@
-﻿using DNSLab.Web.DTOs.Repositories.Page;
+﻿using ApexCharts;
+using DNSLab.Web.API.Page;
+using DNSLab.Web.API.Page.DTOs;
+using DNSLab.Web.API.Page.Enums;
+using DNSLab.Web.DTOs.Repositories.Page;
 using DNSLab.Web.Interfaces.Repositories;
 using Microsoft.AspNetCore.Components;
 using System;
@@ -7,37 +11,92 @@ namespace DNSLab.Web.Components.Pages.Pages;
 
 partial class Page
 {
-    [Inject] IPageRepository _PageRepository { get; set; }
+    [Inject] IPageApiClient PageApiClient { get; set; }
+    [Inject] public ISnackbar Snackbar { get; set; }
 
     [Parameter] public Guid PageId { get; set; } = Guid.Empty;
 
-    PageDTO _Page = new();
-
-    IEnumerable<PageTypeDTO>? _Types { get; set; } = null;
+    List<PageType> _Types = new();
 
     protected override async Task OnInitializedAsync()
     {
-        _Types = await _PageRepository.GetPageTypes();
+        var response = await PageApiClient.GetPageTypesAsync();
+
+        if (response.IsSuccess)
+        {
+            _Types = response.Value!;
+        }
 
         if (PageId != Guid.Empty)
         {
-            var existPage = await _PageRepository.GetPage(PageId);
-            if (existPage != null)
+            var pageResponse = await PageApiClient.GetPageAsync(
+                new PageIdRequest(PageId));
+
+            if (pageResponse.IsSuccess)
             {
-                _Page = existPage;
+                var page = pageResponse.Value!;
+
+                _Id = page.Id;
+                _Url = page.URL;
+                _Title = page.Title;
+                _Description = page.Description;
+                _Body = page.Body;
+                _IsPublished = page.IsPublished;
+                _Type = page.Type;
+            }
+            else
+            {
+                Snackbar.Add(pageResponse.Error!.Message, Severity.Warning);
             }
         }
     }
+
+    Guid _Id;
+    string _Url;
+    string _Title;
+    string _Description;
+    string _Body;
+    bool _IsPublished;
+    PageType _Type;
 
     public async Task Submit()
     {
         if (PageId == Guid.Empty)
         {
-            await _PageRepository.CreatePage(_Page);
+            var response = await PageApiClient.CreatePageAsync(
+                new CreatePageRequest(
+                    _Url,
+                    _Title,
+                    _Description,
+                    _Body,
+                    _IsPublished,
+                    _Type));
+
+            if (response.IsSuccess)
+            {
+                _Id = response.Value;
+            }
+            else
+            {
+                Snackbar.Add(response.Error!.Message, Severity.Warning);
+            }
         }
         else
         {
-            await _PageRepository.UpdatePage(_Page);
+            var response = await PageApiClient.UpdatePageAsync(
+                new UpdatePageRequest(
+                    _Id,
+                    _Url,
+                    _Title,
+                    _Description,
+                    _Body,
+                    _IsPublished,
+                    _Type));
+
+            if (!response.IsSuccess)
+            {
+                Snackbar.Add(response.Error!.Message, Severity.Warning);
+            }
         }
     }
 }

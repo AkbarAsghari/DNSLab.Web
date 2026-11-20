@@ -6,46 +6,39 @@
 
 <MudCard Elevation="0">
     <MudCardContent>
-        @if (_Pages != null)
-        {
-            <MudGrid Spacing="1">
-                @foreach (var item in _Pages.OrderByDescending(x => x.PublishDate))
-                {
-                    <MudItem xs="12">
-                        <MudLink Href="@($"{item.Type.Url}/{@item.URL}")" Underline="Underline.None">
-                            <MudCard Outlined>
-                                <MudCardHeader>
-                                    <CardHeaderAvatar>
-                                        <MudButton Size="Size.Large" DropShadow="false" Color="Color.Primary" Variant="Variant.Filled">@item.Title.Substring(0, 1)</MudButton>
-                                    </CardHeaderAvatar>
-                                    <CardHeaderContent>
-                                        <MudText>@item.Title</MudText>
-                                    </CardHeaderContent>
-                                    <CardHeaderActions>
-                                        <MudStack Spacing="0">
-                                            <MudStack Row Spacing="1">
-                                                <MudIcon Icon="@Icons.Material.Rounded.AccountBox" Size="Size.Small" />
-                                                <MudText Typo="Typo.body2">@item.User.FullName</MudText>
-                                            </MudStack>
-                                            <MudStack Row Spacing="1">
-                                                <MudIcon Icon="@Icons.Material.Rounded.CalendarMonth" Size="Size.Small" />
-                                                <MudText Typo="Typo.body2">@item.CreateDate.ToLocalTime().ToPersianDateTime()</MudText>
-                                            </MudStack>
-                                            <MudStack Row Spacing="1">
-                                                <MudIcon Icon="@Icons.Material.Rounded.Visibility" Size="Size.Small" />
-                                                <MudText Typo="Typo.body2">@item.VisitCount</MudText>
-                                            </MudStack>
+        <MudGrid Spacing="1">
+            @foreach (var item in _Pages.OrderByDescending(x => x.PublishDate))
+            {
+                <MudItem xs="12">
+                    <MudLink Href="@($"{item.Type.ToString()}/{@item.URL}")" Underline="Underline.None">
+                        <MudCard Outlined>
+                            <MudCardHeader>
+                                <CardHeaderAvatar>
+                                    <MudButton Size="Size.Large" DropShadow="false" Color="Color.Primary" Variant="Variant.Filled">@item.Title.Substring(0, 1)</MudButton>
+                                </CardHeaderAvatar>
+                                <CardHeaderContent>
+                                    <MudText>@item.Title</MudText>
+                                </CardHeaderContent>
+                                <CardHeaderActions>
+                                    <MudStack Spacing="0">
+                                        <MudStack Row Spacing="1">
+                                            <MudIcon Icon="@Icons.Material.Rounded.CalendarMonth" Size="Size.Small" />
+                                            <MudText Typo="Typo.body2">@item.CreateDate.ToLocalTime().ToPersianDateTime()</MudText>
                                         </MudStack>
-                                    </CardHeaderActions>
-                                </MudCardHeader>
-                                <MudCardContent>
-                                    <MudText Typo="Typo.body2">@item.Description</MudText>
-                                </MudCardContent>
-                            </MudCard>
-                        </MudLink>
-                    </MudItem>
-                }
-            </MudGrid>
-        }
+                                        <MudStack Row Spacing="1">
+                                            <MudIcon Icon="@Icons.Material.Rounded.Visibility" Size="Size.Small" />
+                                            <MudText Typo="Typo.body2">@item.VisitCount</MudText>
+                                        </MudStack>
+                                    </MudStack>
+                                </CardHeaderActions>
+                            </MudCardHeader>
+                            <MudCardContent>
+                                <MudText Typo="Typo.body2">@item.Description</MudText>
+                            </MudCardContent>
+                        </MudCard>
+                    </MudLink>
+                </MudItem>
+            }
+        </MudGrid>
     </MudCardContent>
 </MudCard>

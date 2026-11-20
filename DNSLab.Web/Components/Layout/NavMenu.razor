@@ -1,7 +1,9 @@
-﻿@using DNSLab.Web.DTOs.Repositories.Page
-@using DNSLab.Web.Interfaces.Repositories
+﻿@using DNSLab.Web.API.Page
+@using DNSLab.Web.API.Page.DTOs
+@using DNSLab.Web.API.Page.Enums
+@using DNSLab.Web.DTOs.Repositories.Page
 @inject IHttpContextAccessor httpContextAccessor;
-@inject IPageRepository _PageRepository;
+@inject IPageApiClient PageApiClient;
 
 <MudDrawer @bind-Open="_drawerOpen" Overlay="true" Elevation="0" ClipMode="DrawerClipMode.Always">
     <MudPaper Class="mb-2 pa-3" Elevation="0">
@@ -102,17 +104,19 @@
         StateHasChanged();
     }
 
-    IEnumerable<PageInfoDTO>? _WikiPages { get; set; } = Enumerable.Empty<PageInfoDTO>();
+    List<PageInfoResponse> _WikiPages { get; set; } = new();
 
     WikiMenuItem? _WikiMenu { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        _WikiPages = await _PageRepository.GetPagesByType(Shared.Enums.PageTypeEnum.Wiki);
+        var response = await PageApiClient.GetPagesByTypeAsync(PageType.Wiki);
 
-        if (_WikiPages is not null && _WikiPages.Any())
+        if (response.IsSuccess)
         {
             var root = new WikiMenuItem { Title = "Wiki", URL = "/" };
+
+            _WikiPages = response.Value!;
 
             foreach (var page in _WikiPages)
             {
@@ -138,10 +142,10 @@
         if (child == null)
         {
             child = new WikiMenuItem
-                {
-                    Title = _WikiPages.FirstOrDefault(x => x.URL.Trim('/') == path.Trim('/'))?.Title ?? String.Empty, // leaf gets page title
-                    URL = path
-                };
+            {
+                Title = _WikiPages.FirstOrDefault(x => x.URL.Trim('/') == path.Trim('/'))?.Title ?? String.Empty, // leaf gets page title
+                URL = path
+            };
             parent.SubMenus.Add(child);
         }
 

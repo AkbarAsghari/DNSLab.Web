@@ -1,4 +1,5 @@
-﻿@using DNSLab.Web.DTOs.Repositories.Page
+﻿@using DNSLab.Web.API.Page.DTOs
+@using DNSLab.Web.DTOs.Repositories.Page
 @attribute [Route(AllRoutes.AllPages)]
 @attribute [Authorize]
 <SeoProvider Title="مطالب سایت" />
@@ -14,12 +15,12 @@
         </CardHeaderActions>
     </MudCardHeader>
     <MudCardContent>
-        <MudDataGrid T="PageInfoDTO" ServerData="ServerReload" ExpandSingleRow Dense Hover Elevation="0" Filterable="false" SortMode="SortMode.None">
+        <MudDataGrid T="PageInfoResponse" ServerData="ServerReload" ExpandSingleRow Dense Hover Elevation="0" Filterable="false" SortMode="SortMode.None">
             <NoRecordsContent>
                 <NoRecordFound />
             </NoRecordsContent>
             <Columns>
-                <PropertyColumn Property="x=>x.Type.Name" Title="نوع" StickyRight />
+                <PropertyColumn Property="x=>x.Type.GetDisplayName()" Title="نوع" StickyRight />
                 <PropertyColumn Property="x=>x.Title" Title="عنوان" StickyRight />
                 <PropertyColumn Property="x=>x.VisitCount.ToString()" Title="تعداد بازدید" />
                 <PropertyColumn Property="x=>x.URL" Title="URL" />
@@ -51,7 +52,7 @@
                             <BaseIconButton Href="@(AllRoutes.Page+"/"+context.Item.Id)" DropShadow="false" Size="Size.Small" Variant="Variant.Filled" Icon="@DNSLabIcons.Edit" />
                             @if (context.Item.IsPublished)
                             {
-                                <BaseIconButton Href="@($"{context.Item.Type.Url}/{context.Item.URL}")" DropShadow="false" Size="Size.Small" Variant="Variant.Filled" Icon="@Icons.Material.Rounded.OpenInBrowser" />
+                                <BaseIconButton Href="@($"{context.Item.Type.ToString()}/{context.Item.URL}")" DropShadow="false" Size="Size.Small" Variant="Variant.Filled" Icon="@Icons.Material.Rounded.OpenInBrowser" />
                             }
                             <BaseIconButton OnClick="()=> DeletePage(context.Item)" Color="Color.Error" Size="Size.Small" Variant="Variant.Filled" Icon="@DNSLabIcons.Delete" />
                         </MudStack>
@@ -59,7 +60,7 @@
                 </TemplateColumn>
             </Columns>
             <PagerContent>
-                <MudDataGridPager T="PageInfoDTO" RowsPerPageString="تعداد ردیف در هر صفحه" InfoFormat="{first_item}-{last_item} از {all_items}" />
+                <MudDataGridPager T="PageInfoResponse" RowsPerPageString="تعداد ردیف در هر صفحه" InfoFormat="{first_item}-{last_item} از {all_items}" />
             </PagerContent>
         </MudDataGrid>
     </MudCardContent>

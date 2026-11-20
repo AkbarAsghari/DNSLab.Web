@@ -1,4 +1,4 @@
-using DNSLab.Domain.Content.Enums;
+using DNSLab.Web.API.Page.Enums;
 
 namespace DNSLab.Web.API.Page.DTOs;
 

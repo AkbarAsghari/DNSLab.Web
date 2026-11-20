@@ -10,13 +10,6 @@
     <MudStack>
         <MudGrid Justify="Justify.FlexStart" Spacing="1">
             <MudItem xs="12" lg="3">
-                <MudStack Row AlignItems="AlignItems.Center">
-                    <MudText Typo="Typo.caption">نویسنده : </MudText>
-                    @((MarkupString)ProfileImageCreator.GenerateSVG(_Page.User!.Id, 25))
-                    <MudText Typo="Typo.caption"> @_Page.User?.FullName</MudText>
-                </MudStack>
-            </MudItem>
-            <MudItem xs="12" lg="3">
                 <MudText Typo="Typo.caption">تاریخ انتشار : @_Page.PublishDate?.ToLocalTime().ToPersianDateTime()</MudText>
             </MudItem>
             <MudItem xs="12" lg="3">

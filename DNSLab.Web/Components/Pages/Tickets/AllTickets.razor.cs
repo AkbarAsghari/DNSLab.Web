@@ -1,45 +1,47 @@
-﻿using DNSLab.Web.Components.Dialogs.Record;
-using DNSLab.Web.Components.Dialogs.Ticket;
-using DNSLab.Web.DTOs.Repositories.Record;
+﻿
+using DNSLab.Web.API.Ticket;
+using DNSLab.Web.API.Ticket.DTOs;
+using DNSLab.Web.API.Ticket.Enums;
 using DNSLab.Web.DTOs.Repositories.Ticket;
-using DNSLab.Web.DTOs.Repositories.Zone;
 using DNSLab.Web.Enums;
-using DNSLab.Web.Interfaces.Repositories;
-using DNSLab.Web.Repositories;
 using Microsoft.AspNetCore.Components;
+using MudBlazor;
 
 namespace DNSLab.Web.Components.Pages.Tickets;
 
 partial class AllTickets
 {
-    [Inject] ITicketRepository _TicketRepository { get; set; }
+    [Inject] ITicketApiClient TicketApiClient { get; set; } = default!;
 
-    private async Task<GridData<TicketDTO>> ServerReload(GridState<TicketDTO> state)
+    private MudDataGrid<TicketResponse> _dataGrid = default!;
+
+    private async Task<GridData<TicketResponse>> ServerReload(GridState<TicketResponse> state)
     {
-        IEnumerable<TicketDTO> ? data = await _TicketRepository.GetAllTickets();
+        var response = await TicketApiClient.GetAllTicketsAsync();
 
+        if (!response.IsSuccess || response.Value is null)
+            return new GridData<TicketResponse>();
 
-        if (data is null)
+        var data = response.Value
+            .OrderByDescending(x => x.UpdateDate ?? x.CreateDate)
+            .ToList();
+
+        return new GridData<TicketResponse>
         {
-            return new GridData<TicketDTO>();
-        }
-
-        var totalItems = data.Count();
-
-        var pagedData = data.OrderByDescending(x => x.UpdateDate ?? x.CreateDate).Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
-
-        return new GridData<TicketDTO>
-        {
-            TotalItems = totalItems,
-            Items = pagedData
+            TotalItems = data.Count,
+            Items = data
+                .Skip(state.Page * state.PageSize)
+                .Take(state.PageSize)
+                .ToArray()
         };
     }
 
-    async Task OnStatusChanged(TicketDTO ticket, TicketStatusEnum status)
+    private async Task OnStatusChanged(Guid ticketId, TicketStatus status)
     {
-        if (await _TicketRepository.ChangeTicketStatus(ticket.Id, status)) 
-        {
-            ticket.Status!.Id = (int)status;
-        }
+        var response = await TicketApiClient.ChangeTicketStatusAsync(
+            new ChangeTicketStatusRequest(ticketId, status));
+
+        if (response.IsSuccess)
+            await _dataGrid.ReloadServerData();
     }
 }

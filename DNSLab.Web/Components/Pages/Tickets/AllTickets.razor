@@ -1,44 +1,79 @@
-﻿@using DNSLab.Web.DTOs.Repositories.Ticket
+﻿@using DNSLab.Web.API.Ticket.DTOs
+@using DNSLab.Web.API.Ticket.Enums
+@using DNSLab.Web.DTOs.Repositories.Ticket
 @using DNSLab.Web.Enums
+
 @attribute [Route(AllRoutes.AllTickets)]
 @attribute [Authorize(Roles = AuthorizeRoles.Admin)]
+
 <SeoProvider Title="تیکت ها" />
 
-<MudText Typo="Typo.h1" Align="Align.Center" Class="mb-10">تیکت‌ها</MudText>
+<MudText Typo="Typo.h1" Align="Align.Center" Class="mb-10">
+    تیکت‌ها
+</MudText>
 
 <MudCard Elevation="0">
     <MudCardContent>
-        <MudDataGrid T="TicketDTO" ServerData="ServerReload" ExpandSingleRow Dense Hover Elevation="0" Filterable="false" SortMode="SortMode.None">
+        <MudDataGrid @ref="_dataGrid"
+                     T="TicketResponse"
+                     ServerData="ServerReload"
+                     ExpandSingleRow
+                     Dense
+                     Hover
+                     Elevation="0"
+                     Filterable="false"
+                     SortMode="SortMode.None">
+
             <NoRecordsContent>
                 <NoRecordFound />
             </NoRecordsContent>
+
             <Columns>
-                <PropertyColumn Property="x=>x.Title" Title="عنوان" />
-                <PropertyColumn Property="x=>x.Status" Title="وضعیت" SortBy="x=>x.Status!.Id">
+                <PropertyColumn Property="x => x.Title" Title="عنوان" />
+
+                <PropertyColumn Property="x => x.Status" Title="وضعیت" SortBy="x => x.Status">
                     <CellTemplate>
-                        <MudSelect T="TicketStatusEnum" Variant="Variant.Text" Value="(TicketStatusEnum)context.Item.Status!.Id" Margin="Margin.Dense" ValueChanged="x=> OnStatusChanged(context.Item , x)">
-                            @foreach (TicketStatusEnum item in Enum.GetValues(typeof(TicketStatusEnum)))
+                        <MudSelect T="TicketStatus"
+                                   Variant="Variant.Text"
+                                   Value="@((TicketStatus)context.Item.Status)"
+                                   Margin="Margin.Dense"
+                                   ValueChanged="@(x => OnStatusChanged(context.Item.Id, x))">
+
+                            @foreach (TicketStatus item in Enum.GetValues<TicketStatus>())
                             {
-                                <MudSelectItem T="TicketStatusEnum" Value="item">@item</MudSelectItem>
+                                <MudSelectItem T="TicketStatus" Value="@item">
+                                    @item.GetDisplayName()
+                                </MudSelectItem>
                             }
                         </MudSelect>
                     </CellTemplate>
                 </PropertyColumn>
-                <PropertyColumn Property="x=>x.CreateDate" Title="تاریخ ثبت">
+
+                <PropertyColumn Property="x => x.CreateDate" Title="تاریخ ثبت">
                     <CellTemplate>
-                        <MudText>@context.Item.CreateDate.ToLocalTime().ToPersianDateTime()</MudText>
+                        <MudText>
+                            @context.Item.CreateDate.ToLocalTime().ToPersianDateTime()
+                        </MudText>
                     </CellTemplate>
                 </PropertyColumn>
+
                 <TemplateColumn>
                     <CellTemplate>
                         <MudStack Row Justify="Justify.FlexEnd" Spacing="1">
-                            <BaseIconButton Href="@(AllRoutes.TicketMessages+"/"+context.Item.Id)" Color="Color.Primary" Size="Size.Small" Variant="Variant.Filled" Icon="@Icons.Material.Rounded.OpenInFull" />
+                            <BaseIconButton Href="@(AllRoutes.TicketMessages + "/" + context.Item.Id)"
+                                            Color="Color.Primary"
+                                            Size="Size.Small"
+                                            Variant="Variant.Filled"
+                                            Icon="@Icons.Material.Rounded.OpenInFull" />
                         </MudStack>
                     </CellTemplate>
                 </TemplateColumn>
             </Columns>
+
             <PagerContent>
-                <MudDataGridPager T="TicketDTO" RowsPerPageString="تعداد ردیف در هر صفحه" InfoFormat="{first_item}-{last_item} از {all_items}" />
+                <MudDataGridPager T="TicketResponse"
+                                  RowsPerPageString="تعداد ردیف در هر صفحه"
+                                  InfoFormat="{first_item}-{last_item} از {all_items}" />
             </PagerContent>
         </MudDataGrid>
     </MudCardContent>

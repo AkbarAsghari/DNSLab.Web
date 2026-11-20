@@ -22,11 +22,11 @@
                 <MudCard Elevation="0">
                     <MudCardHeader Class="pb-0">
                         <CardHeaderAvatar>
-                            @((MarkupString)ProfileImageCreator.GenerateSVG(item.User!.Id, 40))
+                            @((MarkupString)ProfileImageCreator.GenerateSVG(item.UserId, 40))
                         </CardHeaderAvatar>
                         <CardHeaderContent>
                             <MudStack Row Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
-                                <MudText Class="mb-2">@item.User!.FullName</MudText>
+                                @* <MudText Class="mb-2">@item.!.FullName</MudText> *@
                                 <MudText Typo="Typo.body2">تاریخ ثبت : @item.CreateDate.ToLocalTime().ToPersianDateTime()</MudText>
                             </MudStack>
                         </CardHeaderContent>
@@ -37,7 +37,7 @@
                 </MudCard>
             }
 
-            <MudTextField T="string" Lines="3" Label="متن پیام" Class="mt-2" Variant="Variant.Outlined" @bind-Value="_TicketMessage.Message" />
+            <MudTextField T="string" Lines="3" Label="متن پیام" Class="mt-2" Variant="Variant.Outlined" @bind-Value="_Message" />
         </MudCardContent>
         <MudCardActions>
             <BaseButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SendMessage">ارسال پیام</BaseButton>

@@ -1,4 +1,6 @@
-﻿using DNSLab.Web.DTOs.Repositories.Ticket;
+﻿using DNSLab.Web.API.Ticket;
+using DNSLab.Web.API.Ticket.DTOs;
+using DNSLab.Web.DTOs.Repositories.Ticket;
 using DNSLab.Web.Interfaces.Repositories;
 using Microsoft.AspNetCore.Components;
 
@@ -8,23 +10,17 @@ partial class AddTicket
 {
     [CascadingParameter] IMudDialogInstance _MudDialog { get; set; }
 
-    [Inject] ITicketRepository _TicketRepository { get; set; }
+    [Inject] ITicketApiClient TicketApiClient { get; set; }
 
-    TicketDTO _NewTicket = new();
-
+    string _Title = string.Empty;
     string _Message = string.Empty;
 
     async Task Submit()
     {
-        _NewTicket.Messages = new List<TicketMessageDTO>()
-        {
-            new()
-            {
-                Message = _Message,
-            }
-        };
-        
-        if (await _TicketRepository.AddTicket(_NewTicket))
+        var response = await TicketApiClient.AddTicketAsync(
+            new AddTicketRequest(_Title, _Message));
+
+        if (response.IsSuccess)
         {
             _MudDialog.Close(DialogResult.Ok(true));
         }

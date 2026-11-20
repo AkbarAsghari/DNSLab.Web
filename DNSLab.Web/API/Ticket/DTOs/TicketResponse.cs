@@ -8,4 +8,5 @@ public sealed record TicketResponse(
     string Title,
     TicketStatus Status,
     DateTime CreateDate,
+    DateTime? UpdateDate,
     List<TicketMessageResponse> Messages);

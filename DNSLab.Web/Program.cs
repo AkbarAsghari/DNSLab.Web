@@ -33,7 +33,6 @@ builder.Services.AddScoped<IRecordRepository, RecordRepository>();
 builder.Services.AddScoped<IDNSClientRepository, DNSClientRepository>();
 builder.Services.AddScoped<IDDNSRepository, DDNSRepository>();
 builder.Services.AddScoped<IStaticRepository, StaticRepository>();
-builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<IDNSLogRepository, DNSLogRepository>();
 builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();

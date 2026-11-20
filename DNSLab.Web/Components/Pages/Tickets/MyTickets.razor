@@ -1,4 +1,6 @@
-﻿@using DNSLab.Web.DTOs.Repositories.Ticket
+﻿@using DNSLab.Web.API.Ticket.DTOs
+@using DNSLab.Web.API.Ticket.Enums
+@using DNSLab.Web.DTOs.Repositories.Ticket
 @using DNSLab.Web.Enums
 @attribute [Route(AllRoutes.MyTickets)]
 @attribute [Authorize]
@@ -17,20 +19,20 @@
         </CardHeaderActions>
     </MudCardHeader>
     <MudCardContent>
-        <MudDataGrid T="TicketDTO" Items="_Tickets?.OrderByDescending(x=>x.CreateDate)" Dense Hover Elevation="0" Loading="_IsLoading">
+        <MudDataGrid T="TicketResponse" Items="_Tickets?.OrderByDescending(x => x.CreateDate)" Dense Hover Elevation="0" Loading="_IsLoading">
             <NoRecordsContent>
                 <NoRecordFound />
             </NoRecordsContent>
             <Columns>
-                <PropertyColumn Property="x=>x.Title" Title="عنوان" />
-                <PropertyColumn Property="x=>x.Status" Title="وضعیت">
+                <PropertyColumn Property="x => x.Title" Title="عنوان" />
+                <PropertyColumn Property="x => x.Status" Title="وضعیت">
                     <CellTemplate>
-                        <MudAlert Severity="@(context.Item.Status!.Id == (int)TicketStatusEnum.New ?  Severity.Info : context.Item.Status!.Id == (int)TicketStatusEnum.Checking ? Severity.Warning : Severity.Success)" Variant="Variant.Filled" NoIcon Dense ContentAlignment="HorizontalAlignment.Center">
-                            <MudText Typo="Typo.body2">@context.Item.Status!.Name</MudText>
+                        <MudAlert Severity="@(context.Item.Status == TicketStatus.Unreviewed ? Severity.Info : context.Item.Status == TicketStatus.InProgress ? Severity.Warning : Severity.Success)" Variant="Variant.Filled" NoIcon Dense ContentAlignment="HorizontalAlignment.Center">
+                            <MudText Typo="Typo.body2">@context.Item.Status.GetDisplayName()</MudText>
                         </MudAlert>
                     </CellTemplate>
                 </PropertyColumn>
-                <PropertyColumn Property="x=>x.CreateDate" Title="تاریخ ثبت">
+                <PropertyColumn Property="x => x.CreateDate" Title="تاریخ ثبت">
                     <CellTemplate>
                         <MudText>@context.Item.CreateDate.ToLocalTime().ToPersianDateTime()</MudText>
                     </CellTemplate>
@@ -38,8 +40,8 @@
                 <TemplateColumn>
                     <CellTemplate>
                         <MudStack Row Justify="Justify.FlexEnd" Spacing="1">
-                            <BaseIconButton Href="@(AllRoutes.TicketMessages+"/"+context.Item.Id)" Color="Color.Primary" Size="Size.Small" Variant="Variant.Filled" Icon="@Icons.Material.Rounded.OpenInFull" />
-                            <BaseIconButton OnClick="()=>Delete(context.Item)" Color="Color.Error" Size="Size.Small" Variant="Variant.Filled" Icon="@DNSLabIcons.Delete" />
+                            <BaseIconButton Href="@(AllRoutes.TicketMessages + "/" + context.Item.Id)" Color="Color.Primary" Size="Size.Small" Variant="Variant.Filled" Icon="@Icons.Material.Rounded.OpenInFull" />
+                            <BaseIconButton OnClick="() => Delete(context.Item)" Color="Color.Error" Size="Size.Small" Variant="Variant.Filled" Icon="@DNSLabIcons.Delete" />
                         </MudStack>
                     </CellTemplate>
                 </TemplateColumn>

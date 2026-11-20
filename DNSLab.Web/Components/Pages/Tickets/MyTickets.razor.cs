@@ -1,4 +1,6 @@
-﻿using DNSLab.Web.Components.Dialogs;
+﻿using DNSLab.Web.API.Ticket;
+using DNSLab.Web.API.Ticket.DTOs;
+using DNSLab.Web.Components.Dialogs;
 using DNSLab.Web.Components.Dialogs.Record;
 using DNSLab.Web.Components.Dialogs.Ticket;
 using DNSLab.Web.DTOs.Repositories.Record;
@@ -11,10 +13,11 @@ namespace DNSLab.Web.Components.Pages.Tickets;
 
 partial class MyTickets
 {
-    [Inject] ITicketRepository _TicketRepository { get; set; }
+    [Inject] ITicketApiClient TicketApiClient { get; set; }
     [Inject] IDialogService _DialogService { get; set; }
+    [Inject] ISnackbar Snackbar { get; set; }
 
-    IEnumerable<TicketDTO>? _Tickets { get; set; }
+    List<TicketResponse>? _Tickets { get; set; }
 
     bool _IsLoading = true;
 
@@ -24,7 +27,12 @@ partial class MyTickets
         {
             _IsLoading = true;
 
-            _Tickets = await _TicketRepository.GetMyTickets();
+            var response = await TicketApiClient.GetMyTicketsAsync();
+
+            if (response.IsSuccess)
+            {
+                _Tickets = response.Value!;
+            }
 
             _IsLoading = false;
             await InvokeAsync(() => StateHasChanged());
@@ -43,7 +51,7 @@ partial class MyTickets
         }
     }
 
-    async Task Delete(TicketDTO ticket)
+    async Task Delete(TicketResponse ticket)
     {
         var parameters = new DialogParameters<BaseDialog>
             {
@@ -58,9 +66,14 @@ partial class MyTickets
         var result = await dialog.Result;
         if (!result!.Canceled)
         {
-            if (await _TicketRepository.DeleteTicket(ticket.Id))
+            var response = await TicketApiClient.DeleteTicketAsync(new TicketIdRequest(ticket.Id));
+            if (response.IsSuccess)
             {
                 await OnAfterRenderAsync(true);
+            }
+            else
+            {
+                Snackbar.Add(response.Error!.Message, Severity.Warning);
             }
         }
     }

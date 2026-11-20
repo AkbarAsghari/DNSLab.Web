@@ -75,6 +75,7 @@ partial class Page
             if (response.IsSuccess)
             {
                 _Id = response.Value;
+                Snackbar.Add("صفحه جدید با موفقیت ایجاد شد", Severity.Success);
             }
             else
             {
@@ -93,7 +94,11 @@ partial class Page
                     _IsPublished,
                     _Type));
 
-            if (!response.IsSuccess)
+            if (response.IsSuccess)
+            {
+                Snackbar.Add("صفحه با موفقیت ویرایش شد", Severity.Success);
+            }
+            else
             {
                 Snackbar.Add(response.Error!.Message, Severity.Warning);
             }

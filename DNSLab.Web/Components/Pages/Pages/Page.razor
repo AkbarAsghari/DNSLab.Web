@@ -28,7 +28,7 @@
                 <MudTextField T="string" Label="URL" Variant="Variant.Outlined" Class="dnslab-ltr dnslab-nano" @bind-Value="_Url" />
             </MudItem>
             <MudItem xs="12" md="4">
-                <MudSelect T="PageType" @bind-Value="_Type" Variant="Variant.Outlined" Label="نوع" Disabled="_Id != Guid.Empty">
+                <MudSelect T="PageType" @bind-Value="_Type" Variant="Variant.Outlined" Label="نوع" Text="@_Type.GetDisplayName()" Disabled="_Id != Guid.Empty">
                     @if (_Types != null)
                     {
                         @foreach (var item in _Types)

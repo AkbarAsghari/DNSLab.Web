@@ -62,7 +62,7 @@ public class PageApiClient(IApiClient apiClient) : IPageApiClient
     public Task<Result<List<PageInfoResponse>>> GetPagesByTypeAsync(PageType type, CancellationToken cancellationToken = default)
     {
         return apiClient.GetAsync<PageType, List<PageInfoResponse>>(
-            $"{_Prefix}GetPageByUrl?type={(int)type}",
+            $"{_Prefix}GetPagesByType?type={(int)type}",
             cancellationToken: cancellationToken);
     }
 
@@ -76,8 +76,8 @@ public class PageApiClient(IApiClient apiClient) : IPageApiClient
 
     public Task<Result> UpdatePageAsync(UpdatePageRequest request, CancellationToken cancellationToken = default)
     {
-        return apiClient.PutAsync<UpdatePageRequest>(
-            $"{_Prefix}GetPageTypes",
+        return apiClient.PutAsync(
+            $"{_Prefix}UpdatePage",
             request,
             new ApiRequestOptions { RequiresAuthentication = true },
             cancellationToken: cancellationToken);

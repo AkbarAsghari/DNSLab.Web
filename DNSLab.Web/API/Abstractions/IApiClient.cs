@@ -51,6 +51,11 @@ public interface IApiClient
         ApiRequestOptions? options = null,
         CancellationToken cancellationToken = default);
 
+    Task<Result> DeleteAsync<TRequest>(
+        string endpoint,
+        TRequest? request = default,
+        ApiRequestOptions? options = null,
+        CancellationToken cancellationToken = default);
     Task<Result> DeleteAsync(
         string endpoint,
         ApiRequestOptions? options = null,

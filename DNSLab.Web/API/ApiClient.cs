@@ -38,26 +38,30 @@ internal sealed class ApiClient(
             request);
     }
 
-    public async Task<Result> DeleteAsync(
+    public Task<Result> DeleteAsync(
         string endpoint,
         ApiRequestOptions? options = null,
         CancellationToken cancellationToken = default)
     {
-        using var request = await CreateRequestAsync(
-            HttpMethod.Delete,
-            endpoint,
-            options,
-            cancellationToken);
+        return SendWithoutValueAsync(
+             HttpMethod.Delete,
+             endpoint,
+             options,
+             cancellationToken);
+    }
 
-        using var response = await httpClient.SendAsync(
-            request,
-            cancellationToken);
-
-        if (response.IsSuccessStatusCode)
-            return Result.Success();
-
-        return Result.Failure(
-            await CreateErrorAsync(response, cancellationToken));
+    public Task<Result> DeleteAsync<TRequest>(
+       string endpoint,
+       TRequest? request = default,
+       ApiRequestOptions? options = null,
+       CancellationToken cancellationToken = default)
+    {
+        return SendWithoutValueAsync(
+             HttpMethod.Delete,
+             endpoint,
+             options,
+             cancellationToken,
+             request);
     }
 
     private async Task<Result<T>> SendAsync<T>(

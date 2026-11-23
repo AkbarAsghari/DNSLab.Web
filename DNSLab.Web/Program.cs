@@ -2,6 +2,7 @@ using ApexCharts;
 using DNSLab.Web.API;
 using DNSLab.Web.API.Abstractions;
 using DNSLab.Web.API.Authentication;
+using DNSLab.Web.API.Coupon;
 using DNSLab.Web.API.Page;
 using DNSLab.Web.API.Profile;
 using DNSLab.Web.API.Ticket;
@@ -59,6 +60,7 @@ builder.Services.AddScoped<IProfileApiClient, ProfileApiClient>();
 builder.Services.AddScoped<IWalletApiClient, WalletApiClient>();
 builder.Services.AddScoped<IPageApiClient, PageApiClient>();
 builder.Services.AddScoped<ITicketApiClient, TicketApiClient>();
+builder.Services.AddScoped<ICouponApiClient, CouponApiClient>();
 
 builder.Services.AddHttpContextAccessor();
 

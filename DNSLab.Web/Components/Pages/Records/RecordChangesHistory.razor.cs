@@ -1,4 +1,7 @@
-﻿using DNSLab.Web.DTOs.Repositories.Record;
+﻿using DNSLab.Web.API.Subscription;
+using DNSLab.Web.API.Subscription.DTOs;
+using DNSLab.Web.API.Subscription.Enums;
+using DNSLab.Web.DTOs.Repositories.Record;
 using DNSLab.Web.DTOs.Repositories.Zone;
 using DNSLab.Web.Interfaces.Repositories;
 using DNSLab.Web.Repositories;
@@ -9,7 +12,7 @@ namespace DNSLab.Web.Components.Pages.Records;
 partial class RecordChangesHistory
 {
     [Inject] IRecordRepository _RecordRepository { get; set; }
-    [Inject] ISubscriptionRepository _SubscriptionRepository { get; set; }
+    [Inject] ISubscriptionApiClient SubscriptionApiClient { get; set; }
 
     [SupplyParameterFromQuery] public Guid? RecordId { get; set; } = null;
 
@@ -20,7 +23,10 @@ partial class RecordChangesHistory
     {
         if (firstRender)
         {
-            _IsSubscribeThisFeature = await _SubscriptionRepository.CheckSbscriptionFeature(Enums.FeatureEnum.RecordChangesHistory);
+            var response = await SubscriptionApiClient.CheckSubscriptionFeatureAsync(
+                new FeatureRequest(FeatureEnum.RecordChangesHistory));
+
+            _IsSubscribeThisFeature = response.IsSuccess;
             await InvokeAsync(StateHasChanged);
         }
     }
@@ -35,7 +41,10 @@ partial class RecordChangesHistory
         }
         else
         {
-            _IsSubscribeThisFeature = await _SubscriptionRepository.CheckSbscriptionFeature(Enums.FeatureEnum.RecordChangesHistory);
+            var response = await SubscriptionApiClient.CheckSubscriptionFeatureAsync(
+                new FeatureRequest(FeatureEnum.RecordChangesHistory));
+
+            _IsSubscribeThisFeature = response.IsSuccess;
 
             if (_IsSubscribeThisFeature is not null && _IsSubscribeThisFeature == true)
             {

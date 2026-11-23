@@ -1,4 +1,5 @@
 ﻿
+using DNSLab.Web.API.Subscription;
 using DNSLab.Web.Components.Dialogs;
 using DNSLab.Web.Components.Dialogs.Zone;
 using DNSLab.Web.DTOs.Repositories.Record;
@@ -15,9 +16,9 @@ namespace DNSLab.Web.Components.Pages.Zone
     {
         [Inject] IZoneRepository _ZoneRepository { get; set; }
         [Inject] IDialogService _DialogService { get; set; }
-        [Inject] ISubscriptionRepository _SubscriptionRepository { get; set; }
+        [Inject] ISubscriptionApiClient SubscriptionApiClient { get; set; }
 
-        MudDataGrid<ZoneDTO> _Grid {  get; set; }
+        MudDataGrid<ZoneDTO> _Grid { get; set; }
 
         private async Task<GridData<ZoneDTO>> ServerReload(GridState<ZoneDTO> state)
         {

@@ -2,4 +2,4 @@
 
 public record UserBasicResponse(
     Guid Id,
-    string FullNme);
+    string FullName);

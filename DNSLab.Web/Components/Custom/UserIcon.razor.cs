@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using DNSLab.Web.API.Profile.DTOs;
+using Microsoft.AspNetCore.Components;
 
 namespace DNSLab.Web.Components.Custom;
 
 partial class UserIcon
 {
-    [Parameter] public UserInfoDTO UserInfo { get; set; }
+    [Parameter] public UserBasicResponse UserInfo { get; set; }
     [Parameter] public int Size { get; set; } = 25;
 }

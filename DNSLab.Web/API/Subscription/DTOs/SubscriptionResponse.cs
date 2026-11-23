@@ -1,6 +1,4 @@
-﻿using DNSLab.Domain.Identity.Entities;
-using DNSLab.Domain.Plan.Entities;
-using DNSLab.Domain.Subscription.Enums;
+﻿using DNSLab.Web.API.Subscription.Enums;
 
 namespace DNSLab.Web.API.Subscription.DTOs;
 
@@ -9,4 +7,7 @@ public record SubscriptionResponse(
     DateTime EndDate,
     long TotalPrice,
     SubscriptionStatus Status,
+    DateTime CreateDate,
+    SectionResponse Section,
+    PlanResponse Plan,
     DurationResponse Duration);

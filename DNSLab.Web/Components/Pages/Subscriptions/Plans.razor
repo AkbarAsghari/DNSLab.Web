@@ -49,16 +49,16 @@
                                         </MudButton>
                                     }
                                     <MudStack Class="mt-2" Spacing="0" AlignItems="AlignItems.Start">
-                                        @foreach (var feature in plan.Features.OrderBy(x => x.Order))
+                                        @foreach (var feature in plan.Features.OrderBy(x => x.Feature.Order))
                                         {
-                                            <MudTooltip Text="@feature.Description" Arrow>
+                                            <MudTooltip Text="@feature.Feature.Description" Arrow>
                                                 <MudChip T="string"
                                                          Size="Size.Small"
                                                          Variant="Variant.Text"
                                                          Icon="@(feature.Supported ? Icons.Material.Rounded.CheckBox : Icons.Material.Rounded.Close)"
                                                          IconColor="@(feature.Supported ? Color.Success : Color.Error)"
                                                          Color="Color.Default">
-                                                    @feature.Name @(feature.FeatureValue == null ? String.Empty : $" : {feature.FeatureValue} {feature.Unit}")
+                                                    @feature.Feature.Name @(feature.FeatureValue == null ? String.Empty : $" : {feature.FeatureValue} {feature.Feature.Unit.GetDisplayName()}")
                                                 </MudChip>
                                             </MudTooltip>
                                         }
@@ -142,16 +142,16 @@
                         <MudText Typo="Typo.body2">توضیحات</MudText>
 
                         <MudStack Spacing="0" AlignItems="AlignItems.Start">
-                            @foreach (var feature in _SelectedPlan.Features.OrderBy(x => x.Order))
+                            @foreach (var feature in _SelectedPlan.Features.OrderBy(x => x.Feature.Order))
                             {
-                                <MudTooltip Text="@feature.Description">
+                                <MudTooltip Text="@feature.Feature.Description">
                                     <MudChip T="string"
                                              Size="Size.Small"
                                              Variant="Variant.Text"
                                              Icon="@(feature.Supported ? Icons.Material.Rounded.CheckBox : Icons.Material.Rounded.Close)"
                                              IconColor="@(feature.Supported ? Color.Success : Color.Error)"
                                              Color="Color.Default">
-                                        @feature.Name @(feature.FeatureValue == null ? String.Empty : $" : {feature.FeatureValue} {feature.Unit}")
+                                        @feature.Feature.Name @(feature.FeatureValue == null ? String.Empty : $" : {feature.FeatureValue} {feature.Feature.Unit.GetDisplayName()}")
                                     </MudChip>
                                 </MudTooltip>
                             }

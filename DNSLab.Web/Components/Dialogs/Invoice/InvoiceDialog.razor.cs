@@ -2,6 +2,7 @@
 using DNSLab.Web.API.Billing.DTOs;
 using DNSLab.Web.API.Common.Result;
 using DNSLab.Web.API.Coupon;
+using DNSLab.Web.API.Subscription;
 using DNSLab.Web.API.Wallet;
 using DNSLab.Web.API.Wallet.DTOs;
 using DNSLab.Web.DTOs.Repositories.Invoice;
@@ -15,7 +16,7 @@ namespace DNSLab.Web.Components.Dialogs.Invoice;
 partial class InvoiceDialog
 {
     [Inject] public IWalletApiClient WalletApiClient { get; set; }
-    [Inject] public ISubscriptionRepository _SubscriptionRepository { get; set; }
+    [Inject] public ISubscriptionApiClient SubscriptionApiClient { get; set; }
     [Inject] public IReverseProxyTrafficRepository _ReverseProxyTrafficRepository { get; set; }
     [Inject] public ICouponApiClient CouponApiClient { get; set; }
     [Inject] public ISnackbar Snackbar { get; set; }
@@ -80,13 +81,8 @@ partial class InvoiceDialog
         switch (InvoiceType)
         {
             case InvoiceTypeEnum.Subscription:
-                InvoiceResponseDTO d = await _SubscriptionRepository.PurchaseSubscribe(new PurchaseSubscriptionDTO
-                {
-                    CouponCode = _CouponCode,
-                    PlanId = PlanId!.Value,
-                    DiscountId = DiscountId!.Value,
-                    UseWallet = _UseWallet,
-                });
+                response = await SubscriptionApiClient.PurchaseSubscribeAsync(
+                    new PurchaseSubscriptionRequest(PlanId!.Value, DiscountId.Value, _UseWallet, _CouponCode));
                 break;
             case InvoiceTypeEnum.Topup:
                 response = await WalletApiClient.TopupAsync(new PurchaseTopupRequest(TopupAmount!.Value));

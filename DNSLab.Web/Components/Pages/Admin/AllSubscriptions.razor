@@ -1,5 +1,5 @@
-﻿@using DNSLab.Web.DTOs.Repositories.Subscription
-@using DNSLab.Web.Utilities
+﻿@using DNSLab.Web.API.Subscription.DTOs
+@using DNSLab.Web.DTOs.Repositories.Subscription
 @attribute [Route(AllRoutes.AllSubscriptions)]
 @attribute [Authorize(Roles = AuthorizeRoles.Admin)]
 <SeoProvider Title="اشتراک ها" />
@@ -9,7 +9,7 @@
 
 <MudCard Elevation="0">
     <MudCardContent>
-        <MudDataGrid T="SubscriptionDTO" @ref="_Grid" ServerData="ServerReload" ExpandSingleRow Dense Hover Elevation="0" Filterable="false">
+        <MudDataGrid T="AllSubscriptionResponse" @ref="_Grid" ServerData="ServerReload" ExpandSingleRow Dense Hover Elevation="0" Filterable="false">
             <NoRecordsContent>
                 <MudAlert Severity="Severity.Warning" Dense ContentAlignment="HorizontalAlignment.Center" NoIcon>
                     <MudText Typo="Typo.body2">هیچ تراکنشی یافت نشد</MudText>

@@ -8,7 +8,7 @@ public interface ISubscriptionApiClient
 {
     Task<Result<List<SectionResponse>>> GetPlansAsync(CancellationToken cancellationToken = default);
     Task<Result<List<SubscriptionResponse>>> GetSubscribesAsync(CancellationToken cancellationToken = default);
-    Task<Result<List<SubscriptionResponse>>> GetAllSubscribesAsync(CancellationToken cancellationToken = default);
-    Task<Result> CheckSbscriptionFeatureAsync(FeatureRequest request, CancellationToken cancellationToken = default);
+    Task<Result<List<AllSubscriptionResponse>>> GetAllSubscribesAsync(CancellationToken cancellationToken = default);
+    Task<Result> CheckSubscriptionFeatureAsync(FeatureRequest request, CancellationToken cancellationToken = default);
     Task<Result<InvoiceCreationResponse>> PurchaseSubscribeAsync(PurchaseSubscriptionRequest request, CancellationToken cancellationToken = default);
 }

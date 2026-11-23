@@ -9,18 +9,18 @@ public class SubscriptionApiClient(IApiClient apiClient) : ISubscriptionApiClien
 {
     const string _Prefix = "api/subscription/";
 
-    public Task<Result> CheckSbscriptionFeatureAsync(FeatureRequest request, CancellationToken cancellationToken = default)
+    public Task<Result> CheckSubscriptionFeatureAsync(FeatureRequest request, CancellationToken cancellationToken = default)
     {
         return apiClient.GetAsync(
-            $"{_Prefix}CheckSbscription",
+            $"{_Prefix}CheckSubscriptionFeature",
             request,
             new ApiRequestOptions { RequiresAuthentication = true },
             cancellationToken);
     }
 
-    public Task<Result<List<SubscriptionResponse>>> GetAllSubscribesAsync(CancellationToken cancellationToken = default)
+    public Task<Result<List<AllSubscriptionResponse>>> GetAllSubscribesAsync(CancellationToken cancellationToken = default)
     {
-        return apiClient.GetAsync<List<SubscriptionResponse>>(
+        return apiClient.GetAsync<List<AllSubscriptionResponse>>(
             $"{_Prefix}GetAllSubscribes",
             new ApiRequestOptions { RequiresAuthentication = true },
             cancellationToken);

@@ -1,4 +1,7 @@
-﻿using DNSLab.Web.DTOs.Repositories.Record;
+﻿using DNSLab.Web.API.Subscription;
+using DNSLab.Web.API.Subscription.DTOs;
+using DNSLab.Web.API.Subscription.Enums;
+using DNSLab.Web.DTOs.Repositories.Record;
 using DNSLab.Web.DTOs.Repositories.Zone;
 using DNSLab.Web.Interfaces.Repositories;
 using Microsoft.AspNetCore.Components;
@@ -12,7 +15,7 @@ partial class RecordDialog
     [Inject] IRecordRepository _RecordRepository { get; set; }
     [Inject] IDDNSRepository _DDNSRepository { get; set; }
     [Inject] IHttpContextAccessor _HttpContextAccessor { get; set; }
-    [Inject] ISubscriptionRepository _SubscriptionRepository { get; set; }
+    [Inject] ISubscriptionApiClient SubscriptionApiClient { get; set; }
 
     [Parameter] public ZoneDTO Zone { get; set; }
     [Parameter] public BaseRecordDTO Record { get; set; } = new() { Name = String.Empty, Type = Enums.RecordTypeEnum.A, TTL = 3600 };
@@ -27,7 +30,10 @@ partial class RecordDialog
     bool _IsAbleToChangeTTL = false;
     protected override async Task OnInitializedAsync()
     {
-        _IsAbleToChangeTTL = await _SubscriptionRepository.CheckSbscriptionFeature(Enums.FeatureEnum.AbleToChangeTTL);
+        var response = await SubscriptionApiClient.CheckSubscriptionFeatureAsync(
+            new FeatureRequest(FeatureEnum.AbleToChangeTTL));
+
+        _IsAbleToChangeTTL = response.IsSuccess;
     }
     protected override void OnInitialized()
     {

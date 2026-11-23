@@ -1,4 +1,4 @@
-﻿using DNSLab.Domain.Plan.Enums;
+﻿using DNSLab.Web.API.Subscription.Enums;
 
 namespace DNSLab.Web.API.Subscription.DTOs;
 

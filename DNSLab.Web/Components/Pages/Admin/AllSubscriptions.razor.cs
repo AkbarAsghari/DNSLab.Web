@@ -1,4 +1,6 @@
-﻿using DNSLab.Web.DTOs.Repositories.Subscription;
+﻿using DNSLab.Web.API.Subscription;
+using DNSLab.Web.API.Subscription.DTOs;
+using DNSLab.Web.DTOs.Repositories.Subscription;
 using DNSLab.Web.Interfaces.Repositories;
 using Microsoft.AspNetCore.Components;
 
@@ -6,23 +8,25 @@ namespace DNSLab.Web.Components.Pages.Admin;
 
 partial class AllSubscriptions
 {
-    [Inject] ISubscriptionRepository _SubscriptionsRepository { get; set; }
+    [Inject] ISubscriptionApiClient SubscriptionApiClient { get; set; }
 
-    MudDataGrid<SubscriptionDTO> _Grid { get; set; }
-    private async Task<GridData<SubscriptionDTO>> ServerReload(GridState<SubscriptionDTO> state)
+    MudDataGrid<AllSubscriptionResponse> _Grid { get; set; }
+    private async Task<GridData<AllSubscriptionResponse>> ServerReload(GridState<AllSubscriptionResponse> state)
     {
-        IEnumerable<SubscriptionDTO>? data = await _SubscriptionsRepository.GetAllSubscribes();
+        var response = await SubscriptionApiClient.GetAllSubscribesAsync();
 
-        if (data is null)
+        if (!response.IsSuccess)
         {
-            return new GridData<SubscriptionDTO>();
+            return new GridData<AllSubscriptionResponse>();
         }
+
+        IEnumerable<AllSubscriptionResponse> data = response.Value!;
 
         var totalItems = data.Count();
 
-        var pagedData = data.OrderByDescending(x=>x.CreateDate).Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
+        var pagedData = data.OrderByDescending(x => x.CreateDate).Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
 
-        return new GridData<SubscriptionDTO>
+        return new GridData<AllSubscriptionResponse>
         {
             TotalItems = totalItems,
             Items = pagedData

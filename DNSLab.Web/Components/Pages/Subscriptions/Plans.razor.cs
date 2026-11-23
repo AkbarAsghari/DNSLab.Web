@@ -1,4 +1,6 @@
-﻿using DNSLab.Web.Components.Dialogs;
+﻿using DNSLab.Web.API.Subscription;
+using DNSLab.Web.API.Subscription.DTOs;
+using DNSLab.Web.Components.Dialogs;
 using DNSLab.Web.Components.Dialogs.Invoice;
 using DNSLab.Web.Components.Pages.ReverseProxy;
 using DNSLab.Web.DTOs.Repositories.Subscription;
@@ -14,16 +16,16 @@ namespace DNSLab.Web.Components.Pages.Subscriptions;
 partial class Plans
 {
     [Inject] AuthenticationStateProvider _AuthenticationStateProvider { get; set; }
-    [Inject] ISubscriptionRepository _SubscriptionRepository { get; set; }
+    [Inject] ISubscriptionApiClient SubscriptionApiClient { get; set; }
     [Inject] ISnackbar _Snackbar { get; set; }
     [Inject] NavigationManager _NavigationManager { get; set; }
     [Inject] IDialogService _DialogService { get; set; }
 
-    IEnumerable<PlanSectionDTO>? _PlanSections { get; set; }
+    IEnumerable<SectionResponse>? _PlanSections { get; set; }
 
-    PlanDiscountDTO? _SelectedPlanDiscount { get; set; }
+    DiscountResponse? _SelectedPlanDiscount { get; set; }
 
-    PlanDTO _SelectedPlan
+    PlanFullResponse? _SelectedPlan
     {
         get
         {
@@ -42,10 +44,14 @@ partial class Plans
 
     protected override async Task OnInitializedAsync()
     {
-        _PlanSections = await _SubscriptionRepository.GetPlans();
+        var response = await SubscriptionApiClient.GetPlansAsync();
+        if (response.IsSuccess) 
+        {
+            _PlanSections = response.Value!;
+        }
     }
 
-    void DiscountOnChange(PlanDiscountDTO discount)
+    void DiscountOnChange(DiscountResponse discount)
     {
         _SelectedPlanDiscount = discount;
         _SubscribeDialogVisible = true;
@@ -67,7 +73,7 @@ partial class Plans
             var parameters = new DialogParameters<InvoiceDialog>
             {
                 { x => x.InvoiceType, Enums.InvoiceTypeEnum.Subscription },
-                { x => x.Amount, _SelectedPlanDiscount!.Duration.DurationInMonth * (_SelectedPlan.BasePrice - (_SelectedPlan.BasePrice * _SelectedPlanDiscount.DiscountRate / 100)) },
+                { x => x.Amount, _SelectedPlanDiscount!.Duration.DurationInMonth * (_SelectedPlan!.BasePrice - (_SelectedPlan.BasePrice * _SelectedPlanDiscount.DiscountRate / 100)) },
                 { x => x.PlanId, _SelectedPlan.Id },
                 { x => x.DiscountId, _SelectedPlanDiscount.Id }
             };

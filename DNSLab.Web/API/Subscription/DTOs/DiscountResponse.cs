@@ -1,4 +1,6 @@
 ﻿namespace DNSLab.Web.API.Subscription.DTOs;
 
 public record DiscountResponse(
-    int DiscountRate);
+    int Id,
+    int DiscountRate,
+    DurationResponse Duration);

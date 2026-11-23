@@ -40,7 +40,6 @@ builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
 builder.Services.AddScoped<IToolRepository, ToolRepository>();
 builder.Services.AddScoped<IReverseProxyRepository, ReverseProxyRepository>();
 builder.Services.AddScoped<IReverseProxyTrafficRepository, ReverseProxyTrafficRepository>();
-builder.Services.AddScoped<ICouponRepository, CouponRepository>();
 
 ////////////////API////////////////
 builder.Services.Configure<ApiClientOptions>(

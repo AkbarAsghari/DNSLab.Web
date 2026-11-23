@@ -1,5 +1,7 @@
-﻿using DNSLab.Web.API.Billing.DTOs;
+﻿using DNSLab.Application.Coupon.DTOs;
+using DNSLab.Web.API.Billing.DTOs;
 using DNSLab.Web.API.Common.Result;
+using DNSLab.Web.API.Coupon;
 using DNSLab.Web.API.Wallet;
 using DNSLab.Web.API.Wallet.DTOs;
 using DNSLab.Web.DTOs.Repositories.Invoice;
@@ -15,8 +17,8 @@ partial class InvoiceDialog
     [Inject] public IWalletApiClient WalletApiClient { get; set; }
     [Inject] public ISubscriptionRepository _SubscriptionRepository { get; set; }
     [Inject] public IReverseProxyTrafficRepository _ReverseProxyTrafficRepository { get; set; }
-    [Inject] public ICouponRepository _CouponRepository { get; set; }
-    [Inject] public ISnackbar _Snackbar { get; set; }
+    [Inject] public ICouponApiClient CouponApiClient { get; set; }
+    [Inject] public ISnackbar Snackbar { get; set; }
     [Inject] public NavigationManager _NavigationManager { get; set; }
 
     [Parameter] public InvoiceTypeEnum InvoiceType { get; set; }
@@ -57,14 +59,17 @@ partial class InvoiceDialog
     long _CouponDiscountAmount { get; set; } = 0;
     async Task ProcessCouponCode()
     {
-        var existCoupon = await _CouponRepository.Validate(_CouponCode, Amount);
-        if (existCoupon != null)
+        var response = await CouponApiClient.ValidateAsync(
+            new ValidateCouponRequest(_CouponCode, Amount));
+
+        if (response.IsSuccess)
         {
-            _CouponDiscountAmount = existCoupon.DiscountAmount;
+            _CouponDiscountAmount = response.Value!.DiscountAmount;
         }
         else
         {
             _CouponDiscountAmount = 0;
+            Snackbar.Add(response.Error!.Message);
         }
     }
 
@@ -100,7 +105,7 @@ partial class InvoiceDialog
         {
             if (response.Value!.IsComplete)
             {
-                _Snackbar.Add("پرداخت با موفقیت انجام شد", Severity.Success);
+                Snackbar.Add("پرداخت با موفقیت انجام شد", Severity.Success);
                 _MudDialog.Close();
             }
             else

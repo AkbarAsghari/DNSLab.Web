@@ -1,4 +1,5 @@
-﻿@using DNSLab.Web.DTOs.Repositories.Payment
+﻿@using DNSLab.Web.API.Billing.DTOs
+@using DNSLab.Web.DTOs.Repositories.Payment
 @using DNSLab.Web.Utilities
 @attribute [Route(AllRoutes.AllPayments)]
 @attribute [Authorize(Roles = AuthorizeRoles.Admin)]
@@ -9,27 +10,27 @@
 
 <MudCard Elevation="0">
     <MudCardContent>
-        <MudDataGrid T="PaymentDTO" @ref="_Grid" ServerData="ServerReload" ExpandSingleRow Dense Hover Elevation="0" Filterable="false">
+        <MudDataGrid T="AllPaymentResponse" ServerData="ServerReload" ExpandSingleRow Dense Hover Elevation="0" Filterable="false">
             <NoRecordsContent>
                 <NoRecordFound />
             </NoRecordsContent>
             <Columns>
                 <TemplateColumn Title="کاربر">
                     <CellTemplate>
-                        @* <UserIcon UserInfo="@context.Item.User" /> *@
+                        <UserIcon UserInfo="@context.Item.User" />
                     </CellTemplate>
                 </TemplateColumn>
-                <PropertyColumn Property="x=>x.Amount.Separate3Digits()" Title="مبلغ (ريال)" />
-                <PropertyColumn Property="x=>x.CreateDate" Title="زمان">
+                <PropertyColumn Property="x => x.Amount.Separate3Digits()" Title="مبلغ (ريال)" />
+                <PropertyColumn Property="x => x.CreateDate" Title="زمان">
                     <CellTemplate>
                         <MudText>@context.Item.CreateDate.ToLocalTime().ToPersianDateTime()</MudText>
                     </CellTemplate>
                 </PropertyColumn>
-                <PropertyColumn Property="x=>x.Status" Title="وضعیت" />
-                <PropertyColumn Property="x=>x.Description" Title="توضیحات" />
+                <PropertyColumn Property="x => x.Status.GetDisplayName()" Title="وضعیت" />
+                <PropertyColumn Property="x => x.Description" Title="توضیحات" />
             </Columns>
             <PagerContent>
-                <MudDataGridPager T="PaymentDTO" RowsPerPageString="تعداد ردیف در هر صفحه" InfoFormat="{first_item}-{last_item} از {all_items}" />
+                <MudDataGridPager T="AllPaymentResponse" RowsPerPageString="تعداد ردیف در هر صفحه" InfoFormat="{first_item}-{last_item} از {all_items}" />
             </PagerContent>
         </MudDataGrid>
     </MudCardContent>

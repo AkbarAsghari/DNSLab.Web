@@ -1,35 +1,31 @@
-﻿using ApexCharts;
-using DNSLab.Web.DTOs.Repositories.Payment;
-using DNSLab.Web.DTOs.Repositories.Shared;
-using DNSLab.Web.DTOs.Repositories.Subscription;
-using DNSLab.Web.DTOs.Repositories.Wallet;
-using DNSLab.Web.Interfaces.Repositories;
-using DNSLab.Web.Repositories;
+﻿using DNSLab.Web.API.Billing;
+using DNSLab.Web.API.Billing.DTOs;
+using DNSLab.Web.API.Common.Pagination;
 using Microsoft.AspNetCore.Components;
 
 namespace DNSLab.Web.Components.Pages.Admin;
 
 partial class Payments
 {
-    [Inject] IPaymentRepository _PaymentRepository { get; set; }
+    [Inject] IPaymentApiClient PaymentApiClient { get; set; }
 
-    PagedResult<PaymentDTO>? _AllPayments;
-    MudDataGrid<PaymentDTO> _Grid { get; set; }
-    private async Task<GridData<PaymentDTO>> ServerReload(GridState<PaymentDTO> state)
+    private async Task<GridData<AllPaymentResponse>> ServerReload(GridState<AllPaymentResponse> state)
     {
-        PagedResult<PaymentDTO>? data = await _PaymentRepository.GetAllPayments(state.Page, state.PageSize);
+        var response = await PaymentApiClient.GetAllPaymentsAsync(
+            new PaginationRequest(state.Page, state.PageSize));
 
-        if (data is null)
+        if (!response.IsSuccess)
         {
-            return new GridData<PaymentDTO>();
+            return new GridData<AllPaymentResponse>();
         }
+        PaginationResponse<AllPaymentResponse>? data = response.Value!;
 
-        var totalItems = data.RowCount;
+        var totalItems = data.TotalCount;
 
-        return new GridData<PaymentDTO>
+        return new GridData<AllPaymentResponse>
         {
             TotalItems = totalItems,
-            Items = data.Results
+            Items = data.Items
         };
     }
 }

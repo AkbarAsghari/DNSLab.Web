@@ -1,4 +1,6 @@
-﻿using DNSLab.Web.Enums;
+﻿using DNSLab.Web.API.Billing;
+using DNSLab.Web.API.Billing.DTOs;
+using DNSLab.Web.Enums;
 using DNSLab.Web.Helpers;
 using DNSLab.Web.Interfaces.Repositories;
 using Microsoft.AspNetCore.Components;
@@ -7,7 +9,7 @@ namespace DNSLab.Web.Components.Pages.Payment;
 
 partial class CallBack
 {
-    [Inject] IPaymentRepository _PaymentRepository { get; set; }
+    [Inject] IPaymentApiClient PaymentApiClient { get; set; }
 
     [Parameter]
     [SupplyParameterFromQuery]
@@ -27,7 +29,12 @@ partial class CallBack
     protected override async Task OnInitializedAsync()
     {
         if (TrackId.HasValue)
-            IsVerified = await _PaymentRepository.Verify(TrackId.Value);
+        {
+            var response = await PaymentApiClient.VerifyPaymentAsync(
+                 new TrackIdRequest(TrackId.Value));
+
+            IsVerified = response.IsSuccess;
+        }
 
         if (Status.HasValue)
         {

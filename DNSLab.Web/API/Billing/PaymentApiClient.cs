@@ -10,9 +10,9 @@ public class PaymentApiClient(IApiClient apiClient) : IPaymentApiClient
 {
     const string _Prefix = "api/payment/";
 
-    public Task<Result<PaginationResponse<PaymentResponse>>> GetAllPaymentsAsync(PaginationRequest request, CancellationToken cancellationToken = default)
+    public Task<Result<PaginationResponse<AllPaymentResponse>>> GetAllPaymentsAsync(PaginationRequest request, CancellationToken cancellationToken = default)
     {
-        return apiClient.GetAsync<PaginationRequest, PaginationResponse<PaymentResponse>>(
+        return apiClient.GetAsync<PaginationRequest, PaginationResponse<AllPaymentResponse>>(
             $"{_Prefix}GetAllPayments",
             request,
             new ApiRequestOptions { RequiresAuthentication = true },

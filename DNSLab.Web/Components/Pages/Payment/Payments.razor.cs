@@ -1,4 +1,7 @@
-﻿using DNSLab.Web.DTOs.Repositories.Payment;
+﻿using DNSLab.Web.API.Billing;
+using DNSLab.Web.API.Billing.DTOs;
+using DNSLab.Web.API.Common.Pagination;
+using DNSLab.Web.DTOs.Repositories.Payment;
 using DNSLab.Web.DTOs.Repositories.Shared;
 using DNSLab.Web.DTOs.Repositories.Wallet;
 using DNSLab.Web.Interfaces.Repositories;
@@ -8,19 +11,25 @@ namespace DNSLab.Web.Components.Pages.Payment;
 
 partial class Payments
 {
-    [Inject] IPaymentRepository _PaymentRepository { get; set; }
+    [Inject] IPaymentApiClient PaymentApiClient { get; set; }
 
-    PagedResult<PaymentDTO>? _AllPayments;
-    protected override async Task OnInitializedAsync()
+    private async Task<GridData<PaymentResponse>> ServerReload(GridState<PaymentResponse> state)
     {
-        _AllPayments = await _PaymentRepository.GetPayments();
-    }
+        var response = await PaymentApiClient.GetUserPaymentsAsync( 
+            new PaginationRequest(state.Page, state.PageSize));
 
-    bool _Loading = false;
-    async Task PageChanged(int page)
-    {
-        _Loading = true;
-        _AllPayments = await _PaymentRepository.GetPayments(page);
-        _Loading = false;
+        if (!response.IsSuccess)
+        {
+            return new GridData<PaymentResponse>();
+        }
+        PaginationResponse<PaymentResponse>? data = response.Value!;
+
+        var totalItems = data.TotalCount;
+
+        return new GridData<PaymentResponse>
+        {
+            TotalItems = totalItems,
+            Items = data.Items
+        };
     }
 }

@@ -12,5 +12,6 @@ public record PaymentResponse(
     long? RefNumber,
     DateTime? PaidAt,
     DateTime? VerifiedAt,
-    string? CardNumber);
+    string? CardNumber,
+    DateTime CreateDate);
     

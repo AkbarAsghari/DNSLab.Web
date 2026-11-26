@@ -12,6 +12,6 @@ public interface IPaymentApiClient
     Task<Result<PaginationResponse<PaymentResponse>>> GetUserPaymentsAsync(
         PaginationRequest request, CancellationToken cancellationToken = default);
 
-    Task<Result<PaginationResponse<PaymentResponse>>> GetAllPaymentsAsync(
+    Task<Result<PaginationResponse<AllPaymentResponse>>> GetAllPaymentsAsync(
         PaginationRequest request, CancellationToken cancellationToken = default);
 }

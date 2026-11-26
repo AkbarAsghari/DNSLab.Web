@@ -1,4 +1,5 @@
-﻿using DNSLab.Web.Components.Dialogs.Invoice;
+﻿using DNSLab.Web.API.Billing;
+using DNSLab.Web.Components.Dialogs.Invoice;
 using DNSLab.Web.Components.Pages.ReverseProxy;
 using DNSLab.Web.Interfaces.Repositories;
 using Microsoft.AspNetCore.Components;
@@ -7,8 +8,6 @@ namespace DNSLab.Web.Components.Dialogs.Wallet;
 
 partial class IncreaseBalanceDialog
 {
-    [Inject] IPaymentRepository _PaymentRepository { get; set; }
-    [Inject] NavigationManager _NavigationManager { get; set; }
     [Inject] IDialogService _DialogService { get; set; }
 
     [CascadingParameter] IMudDialogInstance _MudDialog { get; set; }

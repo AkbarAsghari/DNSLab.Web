@@ -1,4 +1,6 @@
-﻿using DNSLab.Web.API.DNS;
+﻿using DNSLab.Web.API.Common.Pagination;
+using DNSLab.Web.API.DNS;
+using DNSLab.Web.API.DNS.DTOs;
 using DNSLab.Web.API.Subscription;
 using DNSLab.Web.API.Subscription.DTOs;
 using DNSLab.Web.API.Subscription.Enums;
@@ -15,10 +17,10 @@ partial class RecordChangesHistory
     [Inject] IDNSApiClient DNSApiClient { get; set; }
     [Inject] ISubscriptionApiClient SubscriptionApiClient { get; set; }
 
-    [SupplyParameterFromQuery] public Guid? RecordId { get; set; } = null;
+    [SupplyParameterFromQuery] public Guid RecordId { get; set; }
 
     bool? _IsSubscribeThisFeature { get; set; } = null;
-    MudDataGrid<RecordChangeDTO> _DataGrid { get; set; }
+    MudDataGrid<RecordChangeResponse> _DataGrid { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -32,44 +34,20 @@ partial class RecordChangesHistory
         }
     }
 
-    private async Task<GridData<RecordChangeDTO>> ServerReload(GridState<RecordChangeDTO> state)
+    private async Task<GridData<RecordChangeResponse>> ServerReload(GridState<RecordChangeResponse> state)
     {
-        IEnumerable<RecordChangeDTO>? data = null;
+        var response = await DNSApiClient.GetRecordChangeHistoryAsync(
+            new RecordChangeRequest(RecordId, new PaginationRequest(state.Page, state.PageSize)));
 
-        if (RecordId == null)
+        if (!response.IsSuccess)
         {
-            //data = await _RecordRepository.GetTodayRecordChangesHistory();
-        }
-        else
-        {
-            var response = await SubscriptionApiClient.CheckSubscriptionFeatureAsync(
-                new FeatureRequest(FeatureEnum.RecordChangesHistory));
-
-            _IsSubscribeThisFeature = response.IsSuccess;
-
-            if (_IsSubscribeThisFeature is not null && _IsSubscribeThisFeature == true)
-            {
-                //data = await _RecordRepository.GetRecordChangesHistory(RecordId.Value);
-            }
+            return new GridData<RecordChangeResponse>();
         }
 
-        if (data is null)
+        return new GridData<RecordChangeResponse>
         {
-            return new GridData<RecordChangeDTO>();
-        }
-
-        data = data.OrderByDescending(x => x.TimeStamp);
-
-        var totalItems = data.Count();
-
-        var pagedData = data.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
-
-        return new GridData<RecordChangeDTO>
-        {
-            TotalItems = totalItems,
-            Items = pagedData
+            TotalItems = response.Value!.TotalCount,
+            Items = response.Value!.Items
         };
     }
-
-
 }

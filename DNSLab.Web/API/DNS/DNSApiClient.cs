@@ -1,5 +1,7 @@
 ﻿using DNSLab.Web.API.Abstractions;
+using DNSLab.Web.API.Common.Pagination;
 using DNSLab.Web.API.Common.Result;
+using DNSLab.Web.API.DNS.DTOs;
 using DNSLab.Web.API.DNS.DTOs.Common;
 using DNSLab.Web.API.Zone.DTOs;
 
@@ -22,6 +24,15 @@ public class DNSApiClient(IApiClient apiClient) : IDNSApiClient
     {
         return apiClient.DeleteAsync(
             $"{_Prefix}DeleteRecord",
+            request,
+            new ApiRequestOptions { RequiresAuthentication = true },
+            cancellationToken);
+    }
+
+    public Task<Result<PaginationResponse<RecordChangeResponse>>> GetRecordChangeHistoryAsync(RecordChangeRequest request, CancellationToken cancellationToken = default)
+    {
+        return apiClient.GetAsync<RecordChangeRequest, PaginationResponse<RecordChangeResponse>>(
+            $"{_Prefix}GetRecordChangeHistory",
             request,
             new ApiRequestOptions { RequiresAuthentication = true },
             cancellationToken);

@@ -1,4 +1,7 @@
-﻿@using DNSLab.Web.DTOs.Repositories.Record
+﻿@using DNSLab.Web.API.DNS.DTOs
+@using DNSLab.Web.API.DNS.DTOs.Common
+@using DNSLab.Web.API.DNS.Enums
+@using DNSLab.Web.DTOs.Repositories.Record
 @using DNSLab.Web.Enums
 @attribute [Route(AllRoutes.RecordsHistory)]
 @attribute [Authorize]
@@ -15,147 +18,101 @@
         <CardHeaderActions>
             @if (_IsSubscribeThisFeature != null && _IsSubscribeThisFeature == true)
             {
-                <BaseButton Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" EndIcon="@DNSLabIcons.Refresh" OnClick="()=> _DataGrid.ReloadServerData()">بروزرسانی</BaseButton>
+                <BaseButton Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" EndIcon="@DNSLabIcons.Refresh" OnClick="() => _DataGrid.ReloadServerData()">بروزرسانی</BaseButton>
             }
         </CardHeaderActions>
     </MudCardHeader>
     <MudCardContent>
         @if (_IsSubscribeThisFeature != null)
         {
-            @if (RecordId is not null)
-            {
-                <MudOverlay Visible="_IsSubscribeThisFeature == false" DarkBackground="true" LockScroll Absolute="true" Style="height:100vh">
-                    <MudContainer>
-                        <MudText Color="MudBlazor.Color.Warning">اشتراک فعلی شما این قابلیت را پوشش نمیدهد لطفا اشتراک تهیه فرمایید</MudText>
-                        <MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="MudBlazor.Color.Primary" EndIcon="@DNSLabIcons.Subscriptions" Href="@AllRoutes.Plans">تهیه اشتراک</MudButton>
-                    </MudContainer>
-                </MudOverlay>
-                <MudAlert Class="mb-2" Dense Icon="@DNSLabIcons.Info" Variant="Variant.Outlined" ContentAlignment="HorizontalAlignment.Start">
-                    <MudText Typo="Typo.body2">در این بخش تاریخچه تغییرات رکورد ها نمایش داده میشود</MudText>
-                    <MudText Typo="Typo.body2">
-                        در صورت اعمال روی سرور ها با علامت
-                        <MudChip T="string" Icon="@DNSLabIcons.Check" Size="Size.Small" Color="Color.Success" Label="true">اعمال شده</MudChip>
-                        و در صورتی که در حال انجام باشد با علامت
-                        <MudChip T="string" Icon="@DNSLabIcons.Refresh" Size="Size.Small" Color="Color.Info" Label="true">در حال اعمال</MudChip>
-                        مشخص میگردد
-                    </MudText>
-                </MudAlert>
-            }
-            @if (_IsSubscribeThisFeature == true)
-            {
-                <MudDataGrid @ref="_DataGrid" T="RecordChangeDTO" ServerData="ServerReload" ExpandSingleRow Dense Hover Elevation="0" Filterable="false">
-                    <NoRecordsContent>
-                        <NoRecordFound />
-                    </NoRecordsContent>
-                    <Columns>
-                        <PropertyColumn Property="x=>x.TimeStamp.ToLocalTime().ToPersianDateTime()" Title="زمان" />
-                        <PropertyColumn Property="x=>x.OperationId" Title="عملیات">
-                            <CellTemplate>
-                                @switch ((RecordChangeOperationEnum)context.Item.OperationId)
+          
+            <MudOverlay Visible="_IsSubscribeThisFeature == false" DarkBackground="true" LockScroll Absolute="true" Style="height:100vh">
+                <MudContainer>
+                    <MudText Color="MudBlazor.Color.Warning">اشتراک فعلی شما این قابلیت را پوشش نمیدهد لطفا اشتراک تهیه فرمایید</MudText>
+                    <MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="MudBlazor.Color.Primary" EndIcon="@DNSLabIcons.Subscriptions" Href="@AllRoutes.Plans">تهیه اشتراک</MudButton>
+                </MudContainer>
+            </MudOverlay>
+            <MudAlert Class="mb-2" Dense Icon="@DNSLabIcons.Info" Variant="Variant.Outlined" ContentAlignment="HorizontalAlignment.Start">
+                <MudText Typo="Typo.body2">در این بخش تاریخچه تغییرات رکورد ها نمایش داده میشود</MudText>
+                <MudText Typo="Typo.body2">
+                    در صورت اعمال روی سرور ها با علامت
+                    <MudChip T="string" Icon="@DNSLabIcons.Check" Size="Size.Small" Color="Color.Success" Label="true">اعمال شده</MudChip>
+                    و در صورتی که در حال انجام باشد با علامت
+                    <MudChip T="string" Icon="@DNSLabIcons.Refresh" Size="Size.Small" Color="Color.Info" Label="true">در حال اعمال</MudChip>
+                    مشخص میگردد
+                </MudText>
+            </MudAlert>
+        }
+        @if (_IsSubscribeThisFeature == true)
+        {
+            <MudDataGrid T="RecordChangeResponse" @ref="_DataGrid" ServerData="ServerReload" ExpandSingleRow Dense Hover Elevation="0" Filterable="false">
+                <NoRecordsContent>
+                    <NoRecordFound />
+                </NoRecordsContent>
+                <Columns>
+                    <PropertyColumn Property="x => x.CreateDate.ToLocalTime().ToPersianDateTime()" Title="زمان" />
+                    <PropertyColumn Property="x => x.Operation" Title="عملیات">
+                        <CellTemplate>
+                            @switch (context.Item.Operation)
+                            {
+                                case ChangeOperation.Add:
+                                    <MudChip T="string" Color="Color.Success" Size="Size.Small" Label="true">ثبت</MudChip>
+                                    break;
+                                case ChangeOperation.Delete:
+                                    <MudChip T="string" Color="Color.Error" Size="Size.Small" Label="true">حذف</MudChip>
+                                    break;
+                                case ChangeOperation.Update:
+                                    <MudChip T="string" Color="Color.Info" Size="Size.Small" Label="true">ویرایش</MudChip>
+                                    break;
+                                case ChangeOperation.Disable:
+                                    <MudChip T="string" Color="Color.Warning" Size="Size.Small" Label="true">فعالیت</MudChip>
+                                    break;
+                            }
+                        </CellTemplate>
+                    </PropertyColumn>
+                    <PropertyColumn Property="x => x.PreviousData" Title="تغییرات" CellClass="dnslab-ltr dnslab-nano" Sortable="false">
+                        <CellTemplate>
+                            @if (context.Item.PreviousData is not null && context.Item.CurrentData is not null)
+                            {
+                                @foreach (var item in context.Item.PreviousData.CompareJson(context.Item.CurrentData))
                                 {
-                                    case RecordChangeOperationEnum.Insert:
-                                        <MudChip T="string" Color="Color.Success" Size="Size.Small" Label="true">ثبت</MudChip>
-                                        break;
-                                    case RecordChangeOperationEnum.Delete:
-                                        <MudChip T="string" Color="Color.Error" Size="Size.Small" Label="true">حذف</MudChip>
-                                        break;
-                                    case RecordChangeOperationEnum.Update:
-                                        <MudChip T="string" Color="Color.Info" Size="Size.Small" Label="true">ویرایش</MudChip>
-                                        break;
-                                    case RecordChangeOperationEnum.Disable:
-                                        <MudChip T="string" Color="Color.Warning" Size="Size.Small" Label="true">فعالیت</MudChip>
-                                        break;
+                                    <MudGrid Justify="Justify.SpaceBetween" Spacing="1">
+                                        <MudItem xs="3">
+                                            <MudChip Label="true" Size="Size.Small">@item.Path</MudChip>
+                                        </MudItem>
+                                        <MudItem xs="3">
+                                            <MudChip Label="true" Size="Size.Small">@item.OldValue</MudChip>
+                                        </MudItem>
+                                        <MudItem xs="3">
+                                            <MudChip Label="true" Size="Size.Small">></MudChip>
+                                        </MudItem>
+                                        <MudItem xs="3">
+                                            <MudChip Label="true" Size="Size.Small">@item.NewValue</MudChip>
+                                        </MudItem>
+                                    </MudGrid>
                                 }
-                            </CellTemplate>
-                        </PropertyColumn>
-                        <PropertyColumn Property="x => x.PreviousData" Title="قبل" CellClass="dnslab-ltr dnslab-nano" Sortable="false">
-                            <CellTemplate>
-                                @if (context.Item.PreviousData is not null)
-                                {
-                                    <MudText Typo="Typo.caption">
-                                        <text>Name : @(context.Item.PreviousData.Name)</text>
-                                        <MudFlexBreak />
-                                        @switch (context.Item.PreviousData.Type)
-                                        {
-                                            case Enums.RecordTypeEnum.A:
-                                                <text>IPv4 : @(context.Item.PreviousData.CastTo<ARecordDTO>()!.IPv4Address)</text>
-                                                break;
-                                            case Enums.RecordTypeEnum.AAAA:
-                                                <text>IPv6 : @(context.Item.PreviousData.CastTo<AAAARecordDTO>()!.IPv6Address)</text>
-                                                break;
-                                            case Enums.RecordTypeEnum.TXT:
-                                                <text>Text Data : @(context.Item.PreviousData.CastTo<TXTRecordDTO>()!.TextData)</text>
-                                                break;
-                                            case Enums.RecordTypeEnum.MX:
-                                                <text>Exchange : @(context.Item.PreviousData.CastTo<MXRecordDTO>()!.Exchange)</text>
-                                                <MudFlexBreak />
-                                                <text>Preference : @(context.Item.PreviousData.CastTo<MXRecordDTO>()!.Preference)</text>
-                                                break;
-                                            case Enums.RecordTypeEnum.CNAME:
-                                                <text>CName : @(context.Item.PreviousData.CastTo<CNAMERecordDTO>()!.CName)</text>
-                                                break;
-                                            default:
-                                                break;
-                                        }
-                                        <MudFlexBreak />
-                                        TTL : @context.Item.PreviousData.TTL
-                                    </MudText>
-                                }
-                            </CellTemplate>
-                        </PropertyColumn>
-                        <PropertyColumn Property="x => x.CurrentData" Title="بعد" CellClass="dnslab-ltr dnslab-nano" Sortable="false">
-                            <CellTemplate>
-                                @if (context.Item.CurrentData is not null)
-                                {
-                                    <MudText Typo="Typo.caption">
-                                        <text>Name : @(context.Item.CurrentData.Name)</text>
-                                        <MudFlexBreak />
-                                        @switch (context.Item.CurrentData.Type)
-                                        {
-                                            case Enums.RecordTypeEnum.A:
-                                                <text>IPv4 : @(context.Item.CurrentData.CastTo<ARecordDTO>()!.IPv4Address)</text>
-                                                break;
-                                            case Enums.RecordTypeEnum.AAAA:
-                                                <text>IPv6 : @(context.Item.CurrentData.CastTo<AAAARecordDTO>()!.IPv6Address)</text>
-                                                break;
-                                            case Enums.RecordTypeEnum.TXT:
-                                                <text>Text Data : @(context.Item.CurrentData.CastTo<TXTRecordDTO>()!.TextData)</text>
-                                                break;
-                                            case Enums.RecordTypeEnum.MX:
-                                                <text>Exchange : @(context.Item.CurrentData.CastTo<MXRecordDTO>()!.Exchange)</text>
-                                                <MudFlexBreak />
-                                                <text>Preference : @(context.Item.CurrentData.CastTo<MXRecordDTO>()!.Preference)</text>
-                                                break;
-                                            case Enums.RecordTypeEnum.CNAME:
-                                                <text>CName : @(context.Item.CurrentData.CastTo<CNAMERecordDTO>()!.CName)</text>
-                                                break;
-                                            default:
-                                                break;
-                                        }
-                                        <MudFlexBreak />
-                                        TTL : @context.Item.CurrentData.TTL
-                                    </MudText>
-                                }
-                            </CellTemplate>
-                        </PropertyColumn>
-                        <PropertyColumn Property="x=>x.IsProcessed" Title="وضعیت">
-                            <CellTemplate>
-                                @if (context.Item.IsProcessed)
-                                {
-                                    <MudChip T="string" Icon="@DNSLabIcons.Check" Size="Size.Small" Color="Color.Success" Label="true">اعمال شده</MudChip>
-                                }
-                                else
-                                {
-                                    <MudChip T="string" Icon="@DNSLabIcons.Refresh" Size="Size.Small" Color="Color.Info" Label="true">در حال اعمال</MudChip>
-                                }
-                            </CellTemplate>
-                        </PropertyColumn>
-                    </Columns>
-                    <PagerContent>
-                        <MudDataGridPager T="RecordChangeDTO" RowsPerPageString="تعداد ردیف در هر صفحه" InfoFormat="{first_item}-{last_item} از {all_items}" />
-                    </PagerContent>
-                </MudDataGrid>
-            }
+                            }
+                        </CellTemplate>
+                    </PropertyColumn>
+                    
+                    <PropertyColumn Property="x => x.IsProcessed" Title="وضعیت">
+                        <CellTemplate>
+                            @if (context.Item.IsProcessed)
+                            {
+                                <MudChip T="string" Icon="@DNSLabIcons.Check" Size="Size.Small" Color="Color.Success" Label="true">اعمال شده</MudChip>
+                            }
+                            else
+                            {
+                                <MudChip T="string" Icon="@DNSLabIcons.Refresh" Size="Size.Small" Color="Color.Info" Label="true">در حال اعمال</MudChip>
+                            }
+                        </CellTemplate>
+                    </PropertyColumn>
+                </Columns>
+                <PagerContent>
+                    <MudDataGridPager T="RecordChangeDTO" RowsPerPageString="تعداد ردیف در هر صفحه" InfoFormat="{first_item}-{last_item} از {all_items}" />
+                </PagerContent>
+            </MudDataGrid>
+        }
         }
     </MudCardContent>
 </MudCard>

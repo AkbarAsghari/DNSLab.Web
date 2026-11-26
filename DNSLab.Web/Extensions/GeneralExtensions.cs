@@ -41,9 +41,9 @@ namespace DNSLab.Web.Extensions
         public static string ToPersianDateTime(this DateTime value) => new PersianDateTime(value).ToString();
         public static string ToPersianDate(this DateTime value) => new PersianDateTime(value).ToShortDateString();
 
-        public static T? CastTo<T>(this BaseRecordDTO record) where T : BaseRecordDataDTO
+        public static T? CastTo<T>(this string json)
         {
-            return JsonSerializer.Deserialize<T>((JsonElement)record.RData, options: new JsonSerializerOptions
+            return JsonSerializer.Deserialize<T>(json, options: new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             });

@@ -6,7 +6,7 @@ namespace DNSLab.Web.API.DNS.DTOs.Common;
 public record AddRecordRequest(
     Guid ZoneId,
     string Name,
-    int Ttl,
+    uint TTL,
     string Comment,
     JsonElement Data,
     RecordType Type);

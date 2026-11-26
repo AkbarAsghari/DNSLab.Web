@@ -31,7 +31,7 @@ partial class RecordDialog
     //SameData
     string _Name { get; set; } = string.Empty;
     string _Comment { get; set; } = string.Empty;
-    int _Ttl { get; set; }
+    uint _TTL { get; set; }
     RecordType _Type { get; set; } = RecordType.A;
 
     //A
@@ -66,7 +66,7 @@ partial class RecordDialog
             Record = new(
                 RecordId: Guid.Empty,
                 Name: string.Empty,
-                Ttl: (IsDDNS ? 300 : 3600),
+                TTL: (uint)(IsDDNS ? 300 : 3600),
                 Comment: string.Empty,
                 Disable: false,
                 LastModified: DateTime.UtcNow,
@@ -106,7 +106,7 @@ partial class RecordDialog
         _Type = Record.Type;
         _Name = Record.Name;
         _Comment = Record.Comment;
-        _Ttl = Record.Ttl;
+        _TTL = Record.TTL;
     }
 
     async Task Submit()
@@ -135,23 +135,23 @@ partial class RecordDialog
 
         Result response;
 
-        switch (Record == default, IsDDNS)
+        switch (Record == default || Record.RecordId == Guid.Empty, IsDDNS)
         {
             case (true, true):
                 response = await DDNSApiClient.AddRecordAsync(
-                    new AddRecordRequest(Zone.Id, _Name, _Ttl, _Comment, data, _Type));
+                    new AddRecordRequest(Zone.Id, _Name, _TTL, _Comment, data, _Type));
                 break;
             case (true, false):
                 response = await DNSApiClient.AddRecordAsync(
-                    new AddRecordRequest(Zone.Id, _Name, _Ttl, _Comment, data, _Type));
+                    new AddRecordRequest(Zone.Id, _Name, _TTL, _Comment, data, _Type));
                 break;
             case (false, true):
                 response = await DDNSApiClient.UpdateRecordAsync(
-                    new UpdateRecordRequest(Zone.Id, _Name, _Ttl, _Comment, data, _Type));
+                    new UpdateRecordRequest(Record!.RecordId, _Name, _TTL, _Comment, data, _Type));
                 break;
             case (false, false):
                 response = await DNSApiClient.UpdateRecordAsync(
-                    new UpdateRecordRequest(Zone.Id, _Name, _Ttl, _Comment, data, _Type));
+                    new UpdateRecordRequest(Record!.RecordId, _Name, _TTL, _Comment, data, _Type));
                 break;
         }
 

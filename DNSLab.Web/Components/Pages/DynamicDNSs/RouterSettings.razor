@@ -53,11 +53,11 @@
     @if (_AllRecords != null)
     {
         <MudSelect T="string" Label="هاست‌نیم" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mb-2" @bind-Value="_SelectedHostName">
-            @foreach (var zone in _AllRecords.Where(x => x.Item2.Any()))
+            @foreach (var item in _AllRecords.Where(x => x.Records.Any()))
             {
-                @foreach (var record in zone.Item2)
+                @foreach (var record in item.Records)
                 {
-                    <MudSelectItem T="string" Value="@($"{record.Name}.{zone.Item1.Name}")">@($"{record.Name}.{zone.Item1.Name}")</MudSelectItem>
+                    <MudSelectItem T="string" Value="@($"{record.Name}.{item.Zone.Name}")">@($"{record.Name}.{item.Zone.Name}")</MudSelectItem>
                 }
             }
         </MudSelect>

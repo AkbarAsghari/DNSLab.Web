@@ -7,39 +7,24 @@ using Microsoft.AspNetCore.Components;
 using DNSLab.Web.DTOs.Repositories.Zone;
 using static MudBlazor.CategoryTypes;
 using System.Net.Http;
+using DNSLab.Web.API.DNS.DDNS;
+using DNSLab.Web.API.DNS.DTOs.Common;
 
 namespace DNSLab.Web.Components.Pages.Admin
 {
     partial class TodayChangesDDNS
     {
-        [Inject] IDDNSRepository _DDNSRepository { get; set; }
+        [Inject] IDDNSApiClient DDNSApiClient { get; set; }
 
-        private async Task<GridData<BaseRecordDTO>> ServerReload(GridState<BaseRecordDTO> state)
+        List<ZoneAndRecordsResponse>? _ZonesAndRecords { get; set; } = default;
+
+        protected override async Task OnInitializedAsync()
         {
-            IEnumerable<Tuple<ZoneDTO, IEnumerable<BaseRecordDTO>>>? data = await _DDNSRepository.GetTodayChangesDDNSDomainAndRecords();
-
-            if (data is null)
+            var response = await DDNSApiClient.GetTodayChangedZonesWithDDNSRecordsAsync();
+            if (response.IsSuccess)
             {
-                return new GridData<BaseRecordDTO>();
+                _ZonesAndRecords = response.Value;
             }
-
-            var totalItems = data.SelectMany(x => x.Item2).Count();
-
-            data.ToList().ForEach(x =>
-            {
-                x.Item2.ToList().ForEach(y =>
-                {
-                    y.Name = $"{y.Name}.{x.Item1.Name}";
-                });
-            });
-
-            var pagedData = data.SelectMany(x => x.Item2).OrderByDescending(x => x.LastModified ?? x.CreateDate).Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
-
-            return new GridData<BaseRecordDTO>
-            {
-                TotalItems = totalItems,
-                Items = pagedData
-            };
         }
     }
 }

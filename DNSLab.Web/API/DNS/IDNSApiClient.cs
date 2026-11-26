@@ -1,5 +1,6 @@
 ﻿using DNSLab.Web.API.Common.Result;
 using DNSLab.Web.API.DNS.DTOs.Common;
+using DNSLab.Web.API.Zone.DTOs;
 
 namespace DNSLab.Web.API.DNS;
 
@@ -14,6 +15,6 @@ public interface IDNSApiClient
     Task<Result> DeleteRecordAsync(
        DeleteRecordRequest request, CancellationToken cancellationToken = default);
 
-    Task<Result<List<ZoneAndRecordsResponse>>> GetZonesAndRecordsAsync(
-        CancellationToken cancellationToken = default);
+    Task<Result<ZoneAndRecordsResponse>> GetZoneRecordsAsync(
+        ZoneIdRequest request, CancellationToken cancellationToken = default);
 }

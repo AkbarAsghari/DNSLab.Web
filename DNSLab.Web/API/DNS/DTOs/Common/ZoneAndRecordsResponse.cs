@@ -1,6 +1,7 @@
-﻿namespace DNSLab.Web.API.DNS.DTOs.Common;
+﻿using DNSLab.Web.API.Zone.DTOs;
+
+namespace DNSLab.Web.API.DNS.DTOs.Common;
 
 public record ZoneAndRecordsResponse(
-    Guid ZoneId,
-    string Name,
+    ZoneResponse Zone,
     List<RecordResponse> Records);

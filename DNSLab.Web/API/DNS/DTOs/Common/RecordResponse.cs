@@ -8,5 +8,7 @@ public record RecordResponse(
     string Name,
     int Ttl,
     string Comment,
+    bool Disable,
+    DateTime? LastModified,
     JsonElement Data,
     RecordType Type);

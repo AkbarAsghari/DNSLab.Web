@@ -1,4 +1,6 @@
-﻿@using DNSLab.Web.DTOs.Repositories.DDNS
+﻿@using DNSLab.Web.API.DNS.DDNS.DTOs
+@using DNSLab.Web.API.DNS.DDNS.Enums
+@using DNSLab.Web.DTOs.Repositories.DDNS
 @attribute [Route(AllRoutes.UpdateTokens)]
 @attribute [Authorize]
 
@@ -19,7 +21,7 @@
         </CardHeaderActions>
     </MudCardHeader>
     <MudCardContent>
-        <MudDataGrid T="UpdateTokenDTO" Items="_Tokens" Loading="_IsLoading" Dense Hover Elevation="0">
+        <MudDataGrid T="TokenResponse" Items="_Tokens" Loading="_IsLoading" Dense Hover Elevation="0">
             <NoRecordsContent>
                 <NoRecordFound />
             </NoRecordsContent>
@@ -29,12 +31,12 @@
                     <TemplateColumn>
                         <CellTemplate>
                             <MudStack Row Justify="Justify.FlexStart" Spacing="1">
-                                <BaseButton EndIcon="@DNSLabIcons.Check" Size="Size.Small" DropShadow="false" Color="Color.Primary" Variant="Variant.Filled" OnClick="()=> SelectToken(context.Item)">انتخاب</BaseButton>
+                                <BaseButton EndIcon="@DNSLabIcons.Check" Size="Size.Small" DropShadow="false" Color="Color.Primary" Variant="Variant.Filled" OnClick="() => SelectToken(context.Item)">انتخاب</BaseButton>
                             </MudStack>
                         </CellTemplate>
                     </TemplateColumn>
                 }
-                <PropertyColumn Property="x=>x.Name" Title="نام" />
+                <PropertyColumn Property="x => x.Name" Title="نام" />
                 <TemplateColumn Title="کلید">
                     <CellTemplate>
                         <MudChip T="string" Color="Color.Default" Size="Size.Small" Label="true" Icon="@DNSLabIcons.Key">@context.Item.Key</MudChip>
@@ -46,22 +48,22 @@
                         <CellTemplate>
                             <MudGrid Justify="Justify.Center" Spacing="1">
                                 <MudItem>
-                                    <BaseButton OnClick="()=> CopyLink(context.Item)" DropShadow="false" Color="Color.Default" Size="Size.Small" Variant="Variant.Filled" EndIcon="@DNSLabIcons.Copy">
+                                    <BaseButton OnClick="() => CopyLink(context.Item)" DropShadow="false" Color="Color.Default" Size="Size.Small" Variant="Variant.Filled" EndIcon="@DNSLabIcons.Copy">
                                         <MudText Typo="Typo.body2">Link</MudText>
                                     </BaseButton>
                                 </MudItem>
                                 <MudItem>
-                                    <BaseButton OnClick="()=> DownloadScript(context.Item.Id,1)" DropShadow="false" Color="Color.Default" Size="Size.Small" Variant="Variant.Filled" EndIcon="@DNSLabIcons.Document">
+                                    <BaseButton OnClick="() => DownloadScript(context.Item.TokenId, ScriptType.Shell, CodeType.wget)" DropShadow="false" Color="Color.Default" Size="Size.Small" Variant="Variant.Filled" EndIcon="@DNSLabIcons.Document">
                                         <MudText Typo="Typo.body2">Shell (Wget)</MudText>
                                     </BaseButton>
                                 </MudItem>
                                 <MudItem>
-                                    <BaseButton OnClick="()=> DownloadScript(context.Item.Id,2)" DropShadow="false" Color="Color.Default" Size="Size.Small" Variant="Variant.Filled" EndIcon="@DNSLabIcons.Document">
+                                    <BaseButton OnClick="() => DownloadScript(context.Item.TokenId, ScriptType.Shell, CodeType.cURL)" DropShadow="false" Color="Color.Default" Size="Size.Small" Variant="Variant.Filled" EndIcon="@DNSLabIcons.Document">
                                         <MudText Typo="Typo.body2">Shell (Curl)</MudText>
                                     </BaseButton>
                                 </MudItem>
                                 <MudItem>
-                                    <BaseButton OnClick="()=> DownloadScript(context.Item.Id,3)" DropShadow="false" Color="Color.Default" Size="Size.Small" Variant="Variant.Filled" EndIcon="@DNSLabIcons.Document">
+                                    <BaseButton OnClick="() => DownloadScript(context.Item.TokenId, ScriptType.PowerShell, CodeType.RestMethod)" DropShadow="false" Color="Color.Default" Size="Size.Small" Variant="Variant.Filled" EndIcon="@DNSLabIcons.Document">
                                         <MudText Typo="Typo.body2">PowerShell (RestMethod)</MudText>
                                     </BaseButton>
                                 </MudItem>
@@ -72,9 +74,9 @@
                 <TemplateColumn>
                     <CellTemplate>
                         <MudStack Row Justify="Justify.FlexEnd" Spacing="1">
-                            <BaseIconButton OnClick="()=> EditToken(context.Item)" DropShadow="false" Size="Size.Small" Variant="Variant.Filled" Icon="@DNSLabIcons.Edit" />
-                            <BaseIconButton OnClick="()=> RevokeTokenKey(context.Item)" DropShadow="false" Size="Size.Small" Variant="Variant.Filled" Icon="@DNSLabIcons.ChangeKey" />
-                            <BaseIconButton OnClick="()=> DeleteToken(context.Item)" DropShadow="false" Color="Color.Error" Size="Size.Small" Variant="Variant.Filled" Icon="@DNSLabIcons.Delete" />
+                            <BaseIconButton OnClick="() => EditToken(context.Item)" DropShadow="false" Size="Size.Small" Variant="Variant.Filled" Icon="@DNSLabIcons.Edit" />
+                            <BaseIconButton OnClick="() => RevokeTokenKey(context.Item)" DropShadow="false" Size="Size.Small" Variant="Variant.Filled" Icon="@DNSLabIcons.ChangeKey" />
+                            <BaseIconButton OnClick="() => DeleteToken(context.Item)" DropShadow="false" Color="Color.Error" Size="Size.Small" Variant="Variant.Filled" Icon="@DNSLabIcons.Delete" />
                         </MudStack>
                     </CellTemplate>
                 </TemplateColumn>

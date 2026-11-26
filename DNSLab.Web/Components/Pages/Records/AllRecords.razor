@@ -1,4 +1,7 @@
-﻿@using DNSLab.Web.DTOs.Repositories.Record
+﻿@using DNSLab.Web.API.DNS.DTOs.Common
+@using DNSLab.Web.API.DNS.DTOs.Common.RecordsData
+@using DNSLab.Web.API.DNS.Enums
+@using DNSLab.Web.DTOs.Repositories.Record
 @attribute [Route(AllRoutes.AllRecords + "/{ZoneId:guid}")]
 @attribute [Authorize]
 <SeoProvider Title="رکورد های دامنه" />
@@ -10,19 +13,19 @@
     <MudCardHeader>
         <CardHeaderContent>
             <MudStack Spacing="1">
-                @if (_Zone != null)
+                @if (_ZoneAndRecordsResponse != default)
                 {
                     <MudStack Row Spacing="1" AlignItems="AlignItems.Center">
-                        <MudText Typo="Typo.h5">@_Zone.Name</MudText>
-                        <BaseIconButton Icon="@Icons.Material.Filled.Sync" Variant="Variant.Filled" DropShadow="false" Size="Size.Small" OnClick="Refresh" />
+                        <MudText Typo="Typo.h5">@_ZoneAndRecordsResponse.Zone.Name</MudText>
+                        <BaseIconButton Icon="@Icons.Material.Filled.Sync" Variant="Variant.Filled" DropShadow="false" Size="Size.Small" OnClick="OnInitializedAsync" />
                         <BaseButton Variant="Variant.Filled" Size="Size.Small" Color="Color.Default" DropShadow="false" StartIcon="@Icons.Material.Rounded.ArrowForward" Href="@AllRoutes.AllZones">بازگشت</BaseButton>
                     </MudStack>
                     <MudStack Row Spacing="0">
                         <MudChip T="string" Size="Size.Small" Color="Color.Primary" Label="true" Variant="Variant.Filled">
                             <MudText Typo="Typo.body2">Primary</MudText>
                         </MudChip>
-                        <MudChip T="string" Size="Size.Small" Color="@(_Zone.Disable ? Color.Warning : Color.Success)" Label="true" Variant="Variant.Filled">
-                            <MudText Typo="Typo.body2">@(_Zone.Disable ? "غیر فعال" : "فعال")</MudText>
+                        <MudChip T="string" Size="Size.Small" Color="@(_ZoneAndRecordsResponse.Zone.Disable ? Color.Warning : Color.Success)" Label="true" Variant="Variant.Filled">
+                            <MudText Typo="Typo.body2">@(_ZoneAndRecordsResponse.Zone.Disable ? "غیر فعال" : "فعال")</MudText>
                         </MudChip>
                     </MudStack>
                 }
@@ -71,72 +74,75 @@
             </MudAlert>
         }
 
-        <MudDataGrid @ref="_Grid" T="BaseRecordDTO" ServerData="ServerReload" ExpandSingleRow Dense Hover Elevation="0" Filterable="false">
-            <NoRecordsContent>
-                <NoRecordFound />
-            </NoRecordsContent>
-            <Columns>
-                <PropertyColumn Property="x=>x.Name" Title="نام" />
-                <PropertyColumn Property="x=>x.Type" Title="نوع">
-                    <CellTemplate>
-                        <MudChip T="string" Color="Color.Primary" Size="Size.Small" Label="true">@context.Item.Type</MudChip>
-                    </CellTemplate>
-                </PropertyColumn>
-                <PropertyColumn Property="x=>x.TTL" Title="TTL(s)" />
-                <PropertyColumn Property="x => x.RData" Title="مقدار" CellClass="dnslab-ltr dnslab-nano" Sortable="false">
-                    <CellTemplate>
-                        <MudText Typo="Typo.body2">
-                            @switch (context.Item.Type)
+        @if (_ZoneAndRecordsResponse != default)
+        {
+            <MudDataGrid T="RecordResponse" Items="_ZoneAndRecordsResponse!.Records" ExpandSingleRow Dense Hover Elevation="0" Filterable="false">
+                <NoRecordsContent>
+                    <NoRecordFound />
+                </NoRecordsContent>
+                <Columns>
+                    <PropertyColumn Property="x => x.Name" Title="نام" />
+                    <PropertyColumn Property="x => x.Type" Title="نوع">
+                        <CellTemplate>
+                            <MudChip T="string" Color="Color.Primary" Size="Size.Small" Label="true">@context.Item.Type</MudChip>
+                        </CellTemplate>
+                    </PropertyColumn>
+                    <PropertyColumn Property="x => x.Ttl" Title="TTL(s)" />
+                    <PropertyColumn Property="x => x.Data" Title="مقدار" CellClass="dnslab-ltr dnslab-nano" Sortable="false">
+                        <CellTemplate>
+                            <MudText Typo="Typo.body2">
+                                @switch (context.Item.Type)
+                                {
+                                    case RecordType.A:
+                                        <text>IPv4 : @(((ARecordData)context.Item.Data.Parse(context.Item.Type)).IPv4Address)</text>
+                                        break;
+                                    case RecordType.AAAA:
+                                        <text>IPv6 : @(((AAAARecordData)context.Item.Data.Parse(context.Item.Type)).IPv6Address)</text>
+                                        break;
+                                    case RecordType.CNAME:
+                                        <text>CName : @(((CNAMERecordData)context.Item.Data.Parse(context.Item.Type)).CName)</text>
+                                        break;
+                                    case RecordType.TXT:
+                                        <text>TextData : @(((TXTRecordData)context.Item.Data.Parse(context.Item.Type)).TextData)</text>
+                                        break;
+                                    case RecordType.MX:
+                                        <text>Preference : @(((MXRecordData)context.Item.Data.Parse(context.Item.Type)).Preference)</text>
+                                        <text>Exchange : @(((MXRecordData)context.Item.Data.Parse(context.Item.Type)).Exchange)</text>
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            </MudText>
+                        </CellTemplate>
+                    </PropertyColumn>
+                    <PropertyColumn Property="x => x.Comment" Title="یادداشت" />
+                    <PropertyColumn Property="x => x.Disable" Title="وضعیت">
+                        <CellTemplate>
+                            @if (context.Item.Disable)
                             {
-                                case Enums.RecordTypeEnum.A:
-                                    <text>IPv4 : @(context.Item.CastTo<ARecordDTO>()!.IPv4Address)</text>
-                                    break;
-                                case Enums.RecordTypeEnum.AAAA:
-                                    <text>IPv6 : @(context.Item.CastTo<AAAARecordDTO>()!.IPv6Address)</text>
-                                    break;
-                                case Enums.RecordTypeEnum.TXT:
-                                    <text>Text Data : @(context.Item.CastTo<TXTRecordDTO>()!.TextData)</text>
-                                    break;
-                                case Enums.RecordTypeEnum.MX:
-                                    <text>Exchange : @(context.Item.CastTo<MXRecordDTO>()!.Exchange)</text>
-                                    <MudFlexBreak />
-                                    <text>Preference : @(context.Item.CastTo<MXRecordDTO>()!.Preference)</text>
-                                    break;
-                                case Enums.RecordTypeEnum.CNAME:
-                                    <text>CName : @(context.Item.CastTo<CNAMERecordDTO>()!.CName)</text>
-                                    break;
-                                default:
-                                    break;
+                                <MudChip T="string" Color="Color.Warning" Size="Size.Small" Label="true">غیرفعال</MudChip>
                             }
-                        </MudText>
-                    </CellTemplate>
-                </PropertyColumn>
-                <PropertyColumn Property="x=>x.Comment" Title="یادداشت" />
-                <PropertyColumn Property="x=>x.Disable" Title="وضعیت">
-                    <CellTemplate>
-                        @if (context.Item.Disable)
-                        {
-                            <MudChip T="string" Color="Color.Warning" Size="Size.Small" Label="true">غیرفعال</MudChip>
-                        }
-                        else
-                        {
-                            <MudChip T="string" Color="Color.Success" Size="Size.Small" Label="true">فعال</MudChip>
-                        }
-                    </CellTemplate>
-                </PropertyColumn>
-                <TemplateColumn StickyLeft>
-                    <CellTemplate>
-                        <MudStack Row Justify="Justify.FlexEnd" Spacing="1">
-                            <BaseIconButton OnClick="()=> EditRecord(context.Item)" DropShadow="false" Size="Size.Small" Variant="Variant.Filled" Icon="@DNSLabIcons.Edit" />
-                            <BaseIconButton OnClick="()=> DisableRecord(context.Item)" DropShadow="false" Size="Size.Small" Variant="Variant.Filled" Icon="@(context.Item.Disable? Icons.Material.Filled.ToggleOn : Icons.Material.Outlined.ToggleOff)" />
-                            <BaseIconButton OnClick="()=>  DeleteRecord(context.Item)" Color="Color.Error" Size="Size.Small" Variant="Variant.Filled" Icon="@DNSLabIcons.Delete" />
-                        </MudStack>
-                    </CellTemplate>
-                </TemplateColumn>
-            </Columns>
-            <PagerContent>
-                <MudDataGridPager T="BaseRecordDTO" RowsPerPageString="تعداد ردیف در هر صفحه" InfoFormat="{first_item}-{last_item} از {all_items}" />
-            </PagerContent>
-        </MudDataGrid>
+                            else
+                            {
+                                <MudChip T="string" Color="Color.Success" Size="Size.Small" Label="true">فعال</MudChip>
+                            }
+                        </CellTemplate>
+                    </PropertyColumn>
+                    <TemplateColumn StickyLeft>
+                        <CellTemplate>
+                            <MudStack Row Justify="Justify.FlexEnd" Spacing="1">
+                                <BaseIconButton OnClick="() => EditRecord(context.Item)" DropShadow="false" Size="Size.Small" Variant="Variant.Filled" Icon="@DNSLabIcons.Edit" />
+                                @* <BaseIconButton OnClick="()=> DisableRecord(context.Item)" DropShadow="false" Size="Size.Small" Variant="Variant.Filled" Icon="@(context.Item.Disable? Icons.Material.Filled.ToggleOn : Icons.Material.Outlined.ToggleOff)" /> *@
+                                <BaseIconButton OnClick="() => DeleteRecord(context.Item)" Color="Color.Error" Size="Size.Small" Variant="Variant.Filled" Icon="@DNSLabIcons.Delete" />
+                            </MudStack>
+                        </CellTemplate>
+                    </TemplateColumn>
+                </Columns>
+                <PagerContent>
+                    <MudDataGridPager T="RecordResponse" RowsPerPageString="تعداد ردیف در هر صفحه" InfoFormat="{first_item}-{last_item} از {all_items}" />
+                </PagerContent>
+            </MudDataGrid>
+        }
+        
     </MudCardContent>
 </MudCard>

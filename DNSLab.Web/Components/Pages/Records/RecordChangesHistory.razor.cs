@@ -1,4 +1,5 @@
-﻿using DNSLab.Web.API.Subscription;
+﻿using DNSLab.Web.API.DNS;
+using DNSLab.Web.API.Subscription;
 using DNSLab.Web.API.Subscription.DTOs;
 using DNSLab.Web.API.Subscription.Enums;
 using DNSLab.Web.DTOs.Repositories.Record;
@@ -11,7 +12,7 @@ namespace DNSLab.Web.Components.Pages.Records;
 
 partial class RecordChangesHistory
 {
-    [Inject] IRecordRepository _RecordRepository { get; set; }
+    [Inject] IDNSApiClient DNSApiClient { get; set; }
     [Inject] ISubscriptionApiClient SubscriptionApiClient { get; set; }
 
     [SupplyParameterFromQuery] public Guid? RecordId { get; set; } = null;
@@ -37,7 +38,7 @@ partial class RecordChangesHistory
 
         if (RecordId == null)
         {
-            data = await _RecordRepository.GetTodayRecordChangesHistory();
+            //data = await _RecordRepository.GetTodayRecordChangesHistory();
         }
         else
         {
@@ -48,7 +49,7 @@ partial class RecordChangesHistory
 
             if (_IsSubscribeThisFeature is not null && _IsSubscribeThisFeature == true)
             {
-                data = await _RecordRepository.GetRecordChangesHistory(RecordId.Value);
+                //data = await _RecordRepository.GetRecordChangesHistory(RecordId.Value);
             }
         }
 

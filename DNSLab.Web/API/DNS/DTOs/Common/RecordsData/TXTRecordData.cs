@@ -1,5 +1,6 @@
-﻿namespace DNSLab.Web.API.DNS.DTOs.Common.RecordsData;
+﻿using DNSLab.Web.API.DNS.Interfaces;
+
+namespace DNSLab.Web.API.DNS.DTOs.Common.RecordsData;
 
 public record TXTRecordData(
-    string CName,
-    string TextData);
+    string TextData) : IRecordData;

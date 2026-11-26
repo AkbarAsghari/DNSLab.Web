@@ -1,46 +1,45 @@
-﻿@using DNSLab.Web.Enums
+﻿@using DNSLab.Web.API.DNS.Enums
+@using DNSLab.Web.Enums
 <MudDialog ContentClass="py-2">
     <DialogContent>
         <MudStack>
             <MudStack Row AlignItems="AlignItems.Center" Spacing="0">
                 <MudTextField T="string" Class="dnslab-ltr dnslab-nano" Variant="Variant.Outlined" ReadOnly Label="دامنه" Text="@($".{Zone.Name}")" />
-                <MudTextField T="string" @bind-Value="Record.Name" Variant="Variant.Outlined" Placeholder="@("@")" Class="dnslab-ltr dnslab-nano" FullWidth Label="نام" />
+                <MudTextField T="string" @bind-Value="_Name" Variant="Variant.Outlined" Placeholder="@("@")" Class="dnslab-ltr dnslab-nano" FullWidth Label="نام" />
             </MudStack>
-            <MudSelect T="RecordTypeEnum" @bind-Value="Record.Type" Variant="Variant.Outlined" Label="نوع" Disabled="Record.Id != Guid.Empty">
-                @foreach (RecordTypeEnum item in (IsDDNS ? DNSSettings.SupportedRecordForDDNS : DNSSettings.SupportedRecordForDomain))
+            <MudSelect T="RecordType" @bind-Value="_Type" Variant="Variant.Outlined" Label="نوع" Disabled="Record != default">
+                @foreach (RecordType item in (IsDDNS ? DNSSettings.SupportedRecordForDDNS : DNSSettings.SupportedRecordForDomain))
                 {
-                    <MudSelectItem T="RecordTypeEnum" Value="item">@item</MudSelectItem>
+                    <MudSelectItem T="RecordType" Value="item">@item</MudSelectItem>
                 }
             </MudSelect>
             <MudTooltip Text="@(_IsAbleToChangeTTL ? String.Empty : "اشتراک فعلی شما قابلیت ویرایش TTL را پوشش نمیدهد لطفا اشتراک تهیه فرمایید")">
-                <MudNumericField T="uint" @bind-Value="Record.TTL" Disabled="!_IsAbleToChangeTTL" Variant="Variant.Outlined" Min="0" Max="uint.MaxValue" Placeholder="60" Label="TTL(s)" />
+                <MudNumericField T="int" @bind-Value="_Ttl" Disabled="!_IsAbleToChangeTTL" Variant="Variant.Outlined" Min="0" Max="int.MaxValue" Placeholder="60" Label="TTL(s)" />
             </MudTooltip>
-            @switch (Record.Type)
+            @switch (_Type)
             {
-                case RecordTypeEnum.A:
-                    <MudTextField T="string" @bind-Value="_ARecord.IPv4Address" Variant="Variant.Outlined" Placeholder="@_HttpContextAccessor.HttpContext?.Connection?.RemoteIpAddress!.ToString()" Class="dnslab-ltr dnslab-nano" Label="IPv4" />
+                case RecordType.A:
+                    <MudTextField T="string" @bind-Value="_IPv4Address" Variant="Variant.Outlined" Placeholder="@_HttpContextAccessor.HttpContext?.Connection?.RemoteIpAddress!.ToString()" Class="dnslab-ltr dnslab-nano" Label="IPv4" />
                     break;
-                case RecordTypeEnum.AAAA:
-                    <MudTextField T="string" @bind-Value="_AAARecord.IPv6Address" Variant="Variant.Outlined" Placeholder="2001:0000:130F:0000:0000:09C0:876A:130B" Class="dnslab-ltr dnslab-nano" Label="IPv6" />
+                case RecordType.AAAA:
+                    <MudTextField T="string" @bind-Value="_IPv6Address" Variant="Variant.Outlined" Placeholder="2001:0000:130F:0000:0000:09C0:876A:130B" Class="dnslab-ltr dnslab-nano" Label="IPv6" />
                     break;
-                case RecordTypeEnum.TXT:
-                    <MudTextField T="string" @bind-Value="_TXTRecord.TextData" Variant="Variant.Outlined" Lines="3" MaxLines="5" Placeholder="Text Data ..." Class="dnslab-ltr dnslab-nano" Label="Text Data" />
+                case RecordType.TXT:
+                    <MudTextField T="string" @bind-Value="_TextData" Variant="Variant.Outlined" Lines="3" MaxLines="5" Placeholder="Text Data ..." Class="dnslab-ltr dnslab-nano" Label="Text Data" />
                     break;
-                case RecordTypeEnum.CNAME:
-                    <MudTextField T="string" @bind-Value="_CNAMERecord.CName" Variant="Variant.Outlined" Placeholder="api.dnslab.link" Class="dnslab-ltr dnslab-nano" Label="CName" />
+                case RecordType.CNAME:
+                    <MudTextField T="string" @bind-Value="_CName" Variant="Variant.Outlined" Placeholder="api.dnslab.link" Class="dnslab-ltr dnslab-nano" Label="CName" />
                     break;
-                case RecordTypeEnum.MX:
-                    <MudTextField T="string" @bind-Value="_MXRecord.Exchange" Variant="Variant.Outlined" Placeholder="api.dnslab.link" Class="dnslab-ltr dnslab-nano" Label="Exchange" />
-                    <MudNumericField T="UInt16" @bind-Value="_MXRecord.Preference" Variant="Variant.Outlined" Min="UInt16.MinValue" Max="UInt16.MaxValue" Placeholder="1" Label="Preference" />
-                    break;
-                default:
+                case RecordType.MX:
+                    <MudTextField T="string" @bind-Value="_Exchange" Variant="Variant.Outlined" Placeholder="api.dnslab.link" Class="dnslab-ltr dnslab-nano" Label="Exchange" />
+                    <MudNumericField T="UInt16" @bind-Value="_Preference" Variant="Variant.Outlined" Min="UInt16.MinValue" Max="UInt16.MaxValue" Placeholder="1" Label="Preference" />
                     break;
             }
-            <MudTextField T="string" @bind-Value="Record.Comment" Variant="Variant.Outlined" Lines="3" MaxLines="5" Label="یادداشت" />
+            <MudTextField T="string" @bind-Value="_Comment" Variant="Variant.Outlined" Lines="3" MaxLines="5" Label="یادداشت" />
         </MudStack>
     </DialogContent>
     <DialogActions>
         <BaseButton OnClick="Cancel">انصراف</BaseButton>
-        <BaseButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Submit">@(Record.Id == Guid.Empty ? "ایجاد رکورد" : "ویرایش")</BaseButton>
+        <BaseButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Submit">@(Record == default ? "ایجاد رکورد" : "ویرایش")</BaseButton>
     </DialogActions>
 </MudDialog>

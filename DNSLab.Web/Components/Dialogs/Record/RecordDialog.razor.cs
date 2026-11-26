@@ -1,10 +1,16 @@
-﻿using DNSLab.Web.API.Subscription;
+﻿using ApexCharts;
+using DNSLab.Web.API.Common.Result;
+using DNSLab.Web.API.DNS;
+using DNSLab.Web.API.DNS.DDNS;
+using DNSLab.Web.API.DNS.DTOs.Common;
+using DNSLab.Web.API.DNS.DTOs.Common.RecordsData;
+using DNSLab.Web.API.DNS.Enums;
+using DNSLab.Web.API.Subscription;
 using DNSLab.Web.API.Subscription.DTOs;
 using DNSLab.Web.API.Subscription.Enums;
-using DNSLab.Web.DTOs.Repositories.Record;
-using DNSLab.Web.DTOs.Repositories.Zone;
-using DNSLab.Web.Interfaces.Repositories;
+using DNSLab.Web.API.Zone.DTOs;
 using Microsoft.AspNetCore.Components;
+using System.Text.Json;
 
 namespace DNSLab.Web.Components.Dialogs.Record;
 
@@ -12,20 +18,37 @@ partial class RecordDialog
 {
     [CascadingParameter] IMudDialogInstance _MudDialog { get; set; }
 
-    [Inject] IRecordRepository _RecordRepository { get; set; }
-    [Inject] IDDNSRepository _DDNSRepository { get; set; }
+    [Inject] IDDNSApiClient DDNSApiClient { get; set; }
+    [Inject] IDNSApiClient DNSApiClient { get; set; }
     [Inject] IHttpContextAccessor _HttpContextAccessor { get; set; }
     [Inject] ISubscriptionApiClient SubscriptionApiClient { get; set; }
+    [Inject] ISnackbar Snackbar { get; set; }
 
-    [Parameter] public ZoneDTO Zone { get; set; }
-    [Parameter] public BaseRecordDTO Record { get; set; } = new() { Name = String.Empty, Type = Enums.RecordTypeEnum.A, TTL = 3600 };
+    [Parameter] public ZoneResponse Zone { get; set; }
+    [Parameter] public RecordResponse? Record { get; set; } = default;
     [Parameter] public bool IsDDNS { get; set; } = false;
 
-    ARecordDTO _ARecord = new();
-    AAAARecordDTO _AAARecord = new();
-    TXTRecordDTO _TXTRecord = new();
-    CNAMERecordDTO _CNAMERecord = new();
-    MXRecordDTO _MXRecord = new();
+    //SameData
+    string _Name { get; set; } = string.Empty;
+    string _Comment { get; set; } = string.Empty;
+    int _Ttl { get; set; }
+    RecordType _Type { get; set; } = RecordType.A;
+
+    //A
+    string _IPv4Address { get; set; }
+
+    //AAAA
+    string _IPv6Address { get; set; }
+
+    //TXT
+    string _TextData { get; set; }
+
+    //CName
+    string _CName { get; set; }
+
+    //MX
+    string _Exchange { get; set; }
+    ushort _Preference { get; set; }
 
     bool _IsAbleToChangeTTL = false;
     protected override async Task OnInitializedAsync()
@@ -35,97 +58,113 @@ partial class RecordDialog
 
         _IsAbleToChangeTTL = response.IsSuccess;
     }
+
     protected override void OnInitialized()
     {
-        if (Record.RData != null)
+        if (Record is null)
+        {
+            Record = new(
+                RecordId: Guid.Empty,
+                Name: string.Empty,
+                Ttl: (IsDDNS ? 300 : 3600),
+                Comment: string.Empty,
+                Disable: false,
+                LastModified: DateTime.UtcNow,
+                Data: default,
+                Type: RecordType.A);
+        }
+        else
         {
             switch (Record.Type)
             {
-                case Enums.RecordTypeEnum.A:
-                    _ARecord = Record.CastTo<ARecordDTO>()!;
+                case RecordType.A:
+                    var A = (ARecordData)Record.Data.Parse(Record.Type);
+                    _IPv4Address = A.IPv4Address;
                     break;
-                case Enums.RecordTypeEnum.AAAA:
-                    _AAARecord = Record.CastTo<AAAARecordDTO>()!;
+                case RecordType.AAAA:
+                    var AAAA = (AAAARecordData)Record.Data.Parse(Record.Type);
+                    _IPv6Address = AAAA.IPv6Address;
                     break;
-                case Enums.RecordTypeEnum.TXT:
-                    _TXTRecord = Record.CastTo<TXTRecordDTO>()!;
+                case RecordType.TXT:
+                    var TXT = (TXTRecordData)Record.Data.Parse(Record.Type);
+                    _TextData = TXT.TextData;
                     break;
-                case Enums.RecordTypeEnum.CNAME:
-                    _CNAMERecord = Record.CastTo<CNAMERecordDTO>()!;
+                case RecordType.CNAME:
+                    var CName = (CNAMERecordData)Record.Data.Parse(Record.Type);
+                    _CName = CName.CName;
                     break;
-                case Enums.RecordTypeEnum.MX:
-                    _MXRecord = Record.CastTo<MXRecordDTO>()!;
+                case RecordType.MX:
+                    var MX = (MXRecordData)Record.Data.Parse(Record.Type);
+                    _Preference = MX.Preference;
+                    _Exchange = MX.Exchange;
                     break;
                 default:
                     break;
             }
         }
-        else
-        {
-            Record.TTL = (uint)(IsDDNS ? 300 : 3600);
-        }
+
+        _Type = Record.Type;
+        _Name = Record.Name;
+        _Comment = Record.Comment;
+        _Ttl = Record.Ttl;
     }
 
     async Task Submit()
     {
-        switch (Record.Type)
+        JsonElement data = default;
+        switch (_Type)
         {
-            case Enums.RecordTypeEnum.A:
+            case RecordType.A:
                 //Set User IP if ipv4 address was empty
-                _ARecord.IPv4Address ??= _HttpContextAccessor.HttpContext?.Connection?.RemoteIpAddress!.ToString()!;
-                Record.RData = _ARecord;
+                var ip = _IPv4Address ??= _HttpContextAccessor.HttpContext?.Connection?.RemoteIpAddress!.ToString()!;
+                data = JsonSerializer.SerializeToElement(new ARecordData(ip));
                 break;
-            case Enums.RecordTypeEnum.AAAA:
-                Record.RData = _AAARecord;
+            case RecordType.AAAA:
+                data = JsonSerializer.SerializeToElement(new AAAARecordData(_IPv6Address));
                 break;
-            case Enums.RecordTypeEnum.TXT:
-                Record.RData = _TXTRecord;
+            case RecordType.TXT:
+                data = JsonSerializer.SerializeToElement(new TXTRecordData(_TextData));
                 break;
-            case Enums.RecordTypeEnum.CNAME:
-                Record.RData = _CNAMERecord;
+            case RecordType.CNAME:
+                data = JsonSerializer.SerializeToElement(new CNAMERecordData(_CName));
                 break;
-            case Enums.RecordTypeEnum.MX:
-                Record.RData = _MXRecord;
-                break;
-            default:
+            case RecordType.MX:
+                data = JsonSerializer.SerializeToElement(new MXRecordData(_Preference, _Exchange));
                 break;
         }
 
-        if (IsDDNS)
+        Result response;
+
+        switch (Record == default, IsDDNS)
         {
-            if (Record.Id == Guid.Empty)
-            {
-                if (await _DDNSRepository.AddRecord(Zone.Id, Record))
-                {
-                    _MudDialog.Close(DialogResult.Ok(true));
-                }
-            }
-            //else
-            //{
-            //    if (await _DDNSRepository.UpdateRecord(Record))
-            //    {
-            //        _MudDialog.Close(DialogResult.Ok(true));
-            //    }
-            //}
+            case (true, true):
+                response = await DDNSApiClient.AddRecordAsync(
+                    new AddRecordRequest(Zone.Id, _Name, _Ttl, _Comment, data, _Type));
+                break;
+            case (true, false):
+                response = await DNSApiClient.AddRecordAsync(
+                    new AddRecordRequest(Zone.Id, _Name, _Ttl, _Comment, data, _Type));
+                break;
+            case (false, true):
+                response = await DDNSApiClient.UpdateRecordAsync(
+                    new UpdateRecordRequest(Zone.Id, _Name, _Ttl, _Comment, data, _Type));
+                break;
+            case (false, false):
+                response = await DNSApiClient.UpdateRecordAsync(
+                    new UpdateRecordRequest(Zone.Id, _Name, _Ttl, _Comment, data, _Type));
+                break;
+        }
+
+
+        if (response.IsSuccess)
+        {
+            Snackbar.Add($"رکورد با موفقیت {(Record == default ? "اضافه" : "ویرایش")} شد", Severity.Success);
+            _MudDialog.Close(DialogResult.Ok(true));
         }
         else
         {
-            if (Record.Id == Guid.Empty)
-            {
-                if (await _RecordRepository.AddRecord(Zone.Id, Record))
-                {
-                    _MudDialog.Close(DialogResult.Ok(true));
-                }
-            }
-            else
-            {
-                if (await _RecordRepository.UpdateRecord(Record))
-                {
-                    _MudDialog.Close(DialogResult.Ok(true));
-                }
-            }
+            Snackbar.Add(response.Error!.Message, Severity.Warning);
         }
-
 
     }
 

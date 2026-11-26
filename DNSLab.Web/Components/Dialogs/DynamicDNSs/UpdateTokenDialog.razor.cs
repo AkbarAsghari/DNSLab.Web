@@ -1,4 +1,8 @@
-﻿using DNSLab.Web.Components.Pages.Records;
+﻿using DNSLab.Web.API.Common.Result;
+using DNSLab.Web.API.DNS.DDNS;
+using DNSLab.Web.API.DNS.DDNS.DTOs;
+using DNSLab.Web.API.DNS.DTOs.Common;
+using DNSLab.Web.Components.Pages.Records;
 using DNSLab.Web.DTOs.Repositories.DDNS;
 using DNSLab.Web.DTOs.Repositories.Record;
 using DNSLab.Web.DTOs.Repositories.Zone;
@@ -12,44 +16,65 @@ partial class UpdateTokenDialog
 {
     [CascadingParameter] IMudDialogInstance _MudDialog { get; set; }
 
-    [Inject] IDDNSRepository _DDNSRepository { get; set; }
+    [Inject] IDDNSApiClient DDNSApiClient { get; set; }
+    [Inject] ISnackbar Snackbar { get; set; }
 
-    [Parameter] public UpdateTokenAndRecordsDTO Token { get; set; } = new() { Records = new() };
+    [Parameter] public UpdateTokenRequest? Token { get; set; } = default;
 
-    IEnumerable<Tuple<ZoneDTO, IEnumerable<BaseRecordDTO>>>? _AllRecords { get; set; }
+    List<ZoneAndRecordsResponse>? _ZoneAndRecordsResponses { get; set; }
+
+    string _Name = string.Empty;
+    List<Guid> _SelectedRecordIds = new List<Guid>();
 
     protected override async Task OnInitializedAsync()
     {
-        _AllRecords = await _DDNSRepository.GetDDNSDomainAndRecordsForToken();
+        var response = await DDNSApiClient.GetZonesAndARecordsAsync();
+
+        if (response.IsSuccess)
+        {
+            _ZoneAndRecordsResponses = response.Value!;
+        }
+
+        if (Token != default)
+        {
+            _Name = Token.Name;
+            _SelectedRecordIds = Token.RecordIds;
+        }
     }
 
     void RecordCheckChange(Guid recordId, bool check)
     {
-        if (check && !Token.Records.Contains(recordId))
+        if (check && !_SelectedRecordIds.Contains(recordId))
         {
-            Token.Records.Add(recordId);
+            _SelectedRecordIds.Add(recordId);
         }
         else
         {
-            Token.Records.Remove(recordId);
+            _SelectedRecordIds.Remove(recordId);
         }
     }
 
     async Task Submit()
     {
-        if (Token.Id == Guid.Empty)
+        Result response;
+        if (Token == default)
         {
-            if (await _DDNSRepository.AddToken(Token))
-            {
-                _MudDialog.Close(DialogResult.Ok(true));
-            }
+            response = await DDNSApiClient.CreateTokenAsync(
+                 new CreateTokenRequest(_Name, _SelectedRecordIds));
         }
         else
         {
-            if (await _DDNSRepository.UpdateToken(Token))
-            {
-                _MudDialog.Close(DialogResult.Ok(true));
-            }
+            response = await DDNSApiClient.UpdateTokenAsync(
+               new UpdateTokenRequest(Token.TokenId, _Name, _SelectedRecordIds));
+        }
+
+        if (response.IsSuccess)
+        {
+            _MudDialog.Close(DialogResult.Ok(true));
+        }
+        else
+        {
+            Snackbar.Add(response.Error!.Message);
         }
     }
 

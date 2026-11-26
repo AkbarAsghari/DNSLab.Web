@@ -34,9 +34,7 @@ builder.Services.AddScoped<HttpResponseExceptionHander>();
 builder.Services.AddScoped<IHttpServiceProvider, HttpServiceProvider>();
 
 //Repository
-builder.Services.AddScoped<IRecordRepository, RecordRepository>();
 builder.Services.AddScoped<IDNSClientRepository, DNSClientRepository>();
-builder.Services.AddScoped<IDDNSRepository, DDNSRepository>();
 builder.Services.AddScoped<IStaticRepository, StaticRepository>();
 builder.Services.AddScoped<IToolRepository, ToolRepository>();
 builder.Services.AddScoped<IReverseProxyRepository, ReverseProxyRepository>();

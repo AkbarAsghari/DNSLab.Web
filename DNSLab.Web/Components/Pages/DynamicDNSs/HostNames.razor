@@ -1,4 +1,9 @@
-﻿@using DNSLab.Web.DTOs.Repositories.Record
+﻿@using DNSLab.Web.API.DNS.DTOs.Common
+@using DNSLab.Web.API.DNS.DTOs.Common.RecordsData
+@using DNSLab.Web.API.DNS.Enums
+@using DNSLab.Web.API.Zone.DTOs
+@using DNSLab.Web.DTOs.Repositories.Record
+@using DNSLab.Web.Extensions;
 @attribute [Route(AllRoutes.DDNSHostNames)]
 @attribute [Authorize]
 <SeoProvider Title="هاست نیم ها" />
@@ -10,51 +15,51 @@
     برای شروع با توجه به دامنه مد نظر خودتون بر روی دکمه افزودن هاست‌نیم کلیک کنید
 </MudText>
 
-@if (_AllRecords == null)
+@if (_ZonesAndRecords == default)
 {
 
 }
 else
 {
-    @foreach (var zone in _AllRecords.OrderByDescending(x => x.Item2.Count()))
+    @foreach (var item in _ZonesAndRecords.OrderBy(x => x.Zone.Name))
     {
         <MudCard Class="mb-2" Elevation="0">
             <MudCardHeader>
                 <CardHeaderContent>
-                    <MudText Typo="Typo.h5">@zone.Item1.Name</MudText>
+                    <MudText Typo="Typo.h5">@item.Zone.Name</MudText>
                 </CardHeaderContent>
                 <CardHeaderActions>
-                    <MudButton Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" EndIcon="@DNSLabIcons.Add" OnClick="()=> NewRecord(zone.Item1)">افزودن هاست نِیم</MudButton>
+                    <MudButton Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" EndIcon="@DNSLabIcons.Add" OnClick="() => NewRecord(item.Zone)">افزودن هاست نِیم</MudButton>
                 </CardHeaderActions>
             </MudCardHeader>
             <MudCardContent>
-                @if (zone.Item2.Count() > 0)
+                @if (item.Records.Count() > 0)
                 {
-                    <MudDataGrid T="BaseRecordDTO" Items="zone.Item2.OrderBy(x=>x.Name)" Dense Hover Elevation="0">
+                    <MudDataGrid T="RecordResponse" Items="item.Records.OrderBy(x => x.Name)" Dense Hover Elevation="0">
                         <NoRecordsContent>
                             <NoRecordFound />
                         </NoRecordsContent>
                         <Columns>
-                            <PropertyColumn Property='x=>$"{x.Name}.{zone.Item1.Name}"' Title="نام" />
-                            <PropertyColumn Property="x=>x.Type" Title="نوع">
+                            <PropertyColumn Property='x => $"{x.Name}.{item.Zone.Name}"' Title="نام" />
+                            <PropertyColumn Property="x => x.Type" Title="نوع">
                                 <CellTemplate>
                                     <MudChip T="string" Color="Color.Primary" Size="Size.Small" Label="true">@context.Item.Type</MudChip>
                                 </CellTemplate>
                             </PropertyColumn>
-                            <PropertyColumn Property="x=>x.TTL" Title="TTL(s)" />
-                            <PropertyColumn Property="x => x.RData" Title="مقدار" CellClass="dnslab-ltr dnslab-nano" Sortable="false">
+                            <PropertyColumn Property="x => x.Ttl" Title="TTL(s)" />
+                            <PropertyColumn Property="x => x.Data" Title="مقدار" CellClass="dnslab-ltr dnslab-nano" Sortable="false">
                                 <CellTemplate>
                                     <MudText Typo="Typo.body2">
                                         @switch (context.Item.Type)
                                         {
-                                            case Enums.RecordTypeEnum.A:
-                                                <text>IPv4 : @(context.Item.CastTo<ARecordDTO>()!.IPv4Address)</text>
+                                            case RecordType.A:
+                                                <text>IPv4 : @(((ARecordData)context.Item.Data.Parse(context.Item.Type)).IPv4Address)</text>
                                                 break;
-                                            case Enums.RecordTypeEnum.AAAA:
-                                                <text>IPv6 : @(context.Item.CastTo<AAAARecordDTO>()!.IPv6Address)</text>
+                                            case RecordType.AAAA:
+                                                <text>IPv6 : @(((AAAARecordData)context.Item.Data.Parse(context.Item.Type)).IPv6Address)</text>
                                                 break;
-                                            case Enums.RecordTypeEnum.CNAME:
-                                                <text>CName : @(context.Item.CastTo<CNAMERecordDTO>()!.CName)</text>
+                                            case RecordType.CNAME:
+                                                <text>CName : @(((CNAMERecordData)context.Item.Data.Parse(context.Item.Type)).CName)</text>
                                                 break;
                                             default:
                                                 break;
@@ -62,12 +67,12 @@ else
                                     </MudText>
                                 </CellTemplate>
                             </PropertyColumn>
-                            <PropertyColumn Property="x=>x.LastModified" Title="آخرین تغییر">
+                            <PropertyColumn Property="x => x.Data" Title="آخرین تغییر">
                                 <CellTemplate>
                                     <MudText Typo="Typo.body2">@(context.Item.LastModified.HasValue ? context.Item.LastModified.Value.ToLocalTime().ToPersianDateTime() : "بدون تغییر")</MudText>
                                 </CellTemplate>
                             </PropertyColumn>
-                            <PropertyColumn Property="x=>x.Disable" Title="وضعیت">
+                            <PropertyColumn Property="x => x.Disable" Title="وضعیت">
                                 <CellTemplate>
                                     @if (context.Item.Disable)
                                     {
@@ -79,15 +84,15 @@ else
                                     }
                                 </CellTemplate>
                             </PropertyColumn>
-                            <PropertyColumn Property="x=>x.Comment" Title="یادداشت" />
+                            <PropertyColumn Property="x => x.Comment" Title="یادداشت" />
                             <TemplateColumn StickyLeft>
                                 <CellTemplate>
                                     <MudStack Row Justify="Justify.FlexEnd" Spacing="1">
-                                        <BaseIconButton OnClick="()=> CopyLink(context.Item, zone.Item1)" DropShadow="false" Size="Size.Small" Variant="Variant.Filled" Icon="@DNSLabIcons.Copy" />
-                                        <BaseIconButton Href="@(AllRoutes.RecordsHistory+"?RecordId="+context.Item.Id)" DropShadow="false" Size="Size.Small" Variant="Variant.Filled" Icon="@DNSLabIcons.History" />
-                                        <BaseIconButton OnClick="()=> EditRecord(context.Item, zone.Item1)" DropShadow="false" Size="Size.Small" Variant="Variant.Filled" Icon="@DNSLabIcons.Edit" />
-                                        <BaseIconButton OnClick="()=> DisableRecord(context.Item, zone.Item1.Name)" DropShadow="false" Size="Size.Small" Variant="Variant.Filled" Icon="@(context.Item.Disable? Icons.Material.Filled.ToggleOn : Icons.Material.Outlined.ToggleOff)" />
-                                        <BaseIconButton OnClick="()=> DeleteRecord(context.Item, zone.Item1.Name)" DropShadow="false" Color="Color.Error" Size="Size.Small" Variant="Variant.Filled" Icon="@DNSLabIcons.Delete" />
+                                        <BaseIconButton OnClick="() => CopyLink(context.Item, item.Zone)" DropShadow="false" Size="Size.Small" Variant="Variant.Filled" Icon="@DNSLabIcons.Copy" />
+                                        <BaseIconButton Href="@(AllRoutes.RecordsHistory + "?RecordId=" + context.Item.RecordId)" DropShadow="false" Size="Size.Small" Variant="Variant.Filled" Icon="@DNSLabIcons.History" />
+                                        <BaseIconButton OnClick="() => EditRecord(context.Item, item.Zone)" DropShadow="false" Size="Size.Small" Variant="Variant.Filled" Icon="@DNSLabIcons.Edit" />
+                                        @* <BaseIconButton OnClick="()=> DisableRecord(context.Item, zone.Item1.Name)" DropShadow="false" Size="Size.Small" Variant="Variant.Filled" Icon="@(context.Item.Disable? Icons.Material.Filled.ToggleOn : Icons.Material.Outlined.ToggleOff)" /> *@
+                                        <BaseIconButton OnClick="() => DeleteRecord(context.Item, item.Zone.Name)" DropShadow="false" Color="Color.Error" Size="Size.Small" Variant="Variant.Filled" Icon="@DNSLabIcons.Delete" />
                                     </MudStack>
                                 </CellTemplate>
                             </TemplateColumn>

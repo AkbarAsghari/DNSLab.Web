@@ -1,9 +1,8 @@
-﻿@using DNSLab.Web.DTOs.Repositories.Record
-<MudDialog ContentClass="py-2">
+﻿<MudDialog ContentClass="py-2">
     <DialogContent>
-        @if (_AllRecords != null)
+        @if (_ZoneAndRecordsResponses != default)
         {
-            @if (_AllRecords.Where(x => x.Item2.Count() > 0).Count() == 0)
+            @if (_ZoneAndRecordsResponses.Where(x => x.Records.Count() > 0).Count() == 0)
             {
                 <MudAlert Severity="Severity.Warning" ContentAlignment="HorizontalAlignment.Start" Dense>
                     <MudText Typo="Typo.body2">برای ایجاد کلید باید هاست نِیم ایجاد گردد</MudText>
@@ -11,18 +10,18 @@
             }
             else
             {
-                <MudTextField T="string" @bind-Value="Token.Name" Variant="Variant.Outlined" Label="نام کلید" />
+                <MudTextField T="string" @bind-Value="_Name" Variant="Variant.Outlined" Label="نام کلید" />
                 <MudAlert Class="my-2" Severity="Severity.Info" NoIcon ContentAlignment="HorizontalAlignment.Start" Dense>
                     <MudText Typo="Typo.body2">هاست نِیم هایی که میخواهید با این کلید بروزرسانی شوند را انتخاب نمایید</MudText>
                 </MudAlert>
-                @foreach (var zone in _AllRecords.Where(x => x.Item2.Count() > 0))
+                @foreach (var item in _ZoneAndRecordsResponses!.Where(x => x.Records.Count() > 0))
                 {
                     <MudPaper Class="mb-1 pa-2 dnslab-ltr dnslab-nano" Elevation="0" Outlined>
-                        <MudText Typo="Typo.h6">@zone.Item1.Name</MudText>
-                        @foreach (var record in zone.Item2)
+                        <MudText Typo="Typo.h6">@item.Zone.Name</MudText>
+                        @foreach (var record in item.Records)
                         {
-                            <MudCheckBox T="bool" Dense Color="Color.Primary" ValueChanged="(x)=> RecordCheckChange(record.Id,x)" Value="Token.Records.Contains(record.Id)">
-                                @($"{record.Name}.{zone.Item1.Name}")
+                            <MudCheckBox T="bool" Dense Color="Color.Primary" ValueChanged="(x) => RecordCheckChange(record.RecordId, x)" Value="_SelectedRecordIds.Contains(record.RecordId)">
+                                @($"{record.Name}.{item.Zone.Name}")
                             </MudCheckBox>
                         }
                     </MudPaper>
@@ -32,9 +31,9 @@
     </DialogContent>
     <DialogActions>
         <BaseButton OnClick="Cancel">انصراف</BaseButton>
-        @if (_AllRecords != null && _AllRecords.Where(x => x.Item2.Count() > 0).Count() > 0)
+        @if (_ZoneAndRecordsResponses != null && _ZoneAndRecordsResponses.Where(x => x.Records.Count() > 0).Count() > 0)
         {
-            <BaseButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Submit">@(Token.Id == Guid.Empty ? "ایجاد کلید" : "ویرایش")</BaseButton>
+            <BaseButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Submit">@(Token == default ? "ایجاد کلید" : "ویرایش")</BaseButton>
         }
     </DialogActions>
 </MudDialog>

@@ -1,26 +1,33 @@
 ﻿using DNSLab.Web.Components.Dialogs.Record;
 using DNSLab.Web.Components.Dialogs;
 using DNSLab.Web.DTOs.Repositories.Record;
-using DNSLab.Web.Interfaces.Repositories;
-using DNSLab.Web.Repositories;
 using Microsoft.AspNetCore.Components;
 using DNSLab.Web.DTOs.Repositories.Zone;
 using Microsoft.JSInterop;
+using DNSLab.Web.API.DNS.DDNS;
+using DNSLab.Web.API.DNS;
+using DNSLab.Web.API.DNS.DTOs.Common;
+using DNSLab.Web.API.Zone.DTOs;
 
 namespace DNSLab.Web.Components.Pages.DynamicDNSs
 {
     partial class HostNames
     {
-        [Inject] IDDNSRepository _DDNSRepository { get; set; }
-        [Inject] IRecordRepository _RecordRepository { get; set; }
+        [Inject] IDDNSApiClient DDNSApiClient { get; set; }
+        [Inject] IDNSApiClient DNSApiClient { get; set; }
         [Inject] IDialogService _DialogService { get; set; }
         [Inject] IJSRuntime _JSRuntime { get; set; }
+        [Inject] ISnackbar Snackbar { get; set; }
 
-        IEnumerable<Tuple<ZoneDTO, IEnumerable<BaseRecordDTO>>>? _AllRecords { get; set; }
+        List<ZoneAndRecordsResponse>? _ZonesAndRecords { get; set; } = default;
 
         protected override async Task OnInitializedAsync()
         {
-            _AllRecords = await _DDNSRepository.GetDDNSDomainAndRecords();
+            var response = await DDNSApiClient.GetZonesAndRecordsAsync();
+            if (response.IsSuccess)
+            {
+                _ZonesAndRecords = response.Value;
+            }
         }
 
         async Task Refresh()
@@ -28,37 +35,37 @@ namespace DNSLab.Web.Components.Pages.DynamicDNSs
             await OnInitializedAsync();
         }
 
-        async Task DisableRecord(BaseRecordDTO record, string zoneName)
-        {
-            bool _continue = true;
+        //async Task DisableRecord(BaseRecordDTO record, string zoneName)
+        //{
+        //    bool _continue = true;
 
-            if (record.Disable == false)
-            {
-                var parameters = new DialogParameters<BaseDialog>
-                {
-                    { x => x.ContentText, $"شما در حال غیر فعال سازی {record.Name}.{zoneName} میباشید آیا تایید میکنید؟" },
-                    { x => x.ButtonText, "غیر فعال" },
-                    { x => x.Color, Color.Warning }
-                };
+        //    if (record.Disable == false)
+        //    {
+        //        var parameters = new DialogParameters<BaseDialog>
+        //        {
+        //            { x => x.ContentText, $"شما در حال غیر فعال سازی {record.Name}.{zoneName} میباشید آیا تایید میکنید؟" },
+        //            { x => x.ButtonText, "غیر فعال" },
+        //            { x => x.Color, Color.Warning }
+        //        };
 
-                var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+        //        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
 
-                var dialog = await _DialogService.ShowAsync<BaseDialog>("غیر فعال سازی", parameters, options);
-                var result = await dialog.Result;
+        //        var dialog = await _DialogService.ShowAsync<BaseDialog>("غیر فعال سازی", parameters, options);
+        //        var result = await dialog.Result;
 
-                if (result!.Canceled)
-                {
-                    _continue = false;
-                }
-            }
+        //        if (result!.Canceled)
+        //        {
+        //            _continue = false;
+        //        }
+        //    }
 
-            if (_continue && await _RecordRepository.DisableRecord(record.Type, record.Id))
-            {
-                record.Disable = !record.Disable;
-            }
-        }
+        //    if (_continue && await DDNSApiClient.(record.Type, record.Id))
+        //    {
+        //        record.Disable = !record.Disable;
+        //    }
+        //}
 
-        async Task DeleteRecord(BaseRecordDTO record, string zoneName)
+        async Task DeleteRecord(RecordResponse record, string zoneName)
         {
             var parameters = new DialogParameters<BaseDialog>
             {
@@ -73,16 +80,24 @@ namespace DNSLab.Web.Components.Pages.DynamicDNSs
             var result = await dialog.Result;
             if (!result!.Canceled)
             {
-                if (await _RecordRepository.DeleteRecord(record.Type, record.Id))
+                var response = await DDNSApiClient.DeleteRecordAsync(
+                    new DeleteRecordRequest(record.RecordId, record.Type));
+
+                if (response.IsSuccess)
                 {
+                    Snackbar.Add("رکورد با موفقیت حذف شد", Severity.Success);
                     await Refresh();
+                }
+                else
+                {
+                    Snackbar.Add(response.Error!.Message, Severity.Warning);
                 }
             }
         }
 
-        async Task EditRecord(BaseRecordDTO record , ZoneDTO zone)
+        async Task EditRecord(RecordResponse record, ZoneResponse zone)
         {
-            var parameters = new DialogParameters<RecordDialog>() { { "Zone", zone }, { "Record", record.Clone() } };
+            var parameters = new DialogParameters<RecordDialog>() { { "Zone", zone }, { "Record", record } };
 
             var options = new DialogOptions() { CloseButton = true, FullWidth = true, MaxWidth = MaxWidth.Small };
 
@@ -94,7 +109,7 @@ namespace DNSLab.Web.Components.Pages.DynamicDNSs
             }
         }
 
-        async Task NewRecord(ZoneDTO zone)
+        async Task NewRecord(ZoneResponse zone)
         {
             var parameters = new DialogParameters<RecordDialog>() { { "Zone", zone }, { "IsDDNS", true } };
 
@@ -108,7 +123,7 @@ namespace DNSLab.Web.Components.Pages.DynamicDNSs
             }
         }
 
-        async Task CopyLink(BaseRecordDTO record, ZoneDTO zone)
+        async Task CopyLink(RecordResponse record, ZoneResponse zone)
         {
             await _JSRuntime.InvokeAsync<bool>("clipboardCopy.copyText", $"http://{record.Name}.{zone.Name}".ToLower());
         }

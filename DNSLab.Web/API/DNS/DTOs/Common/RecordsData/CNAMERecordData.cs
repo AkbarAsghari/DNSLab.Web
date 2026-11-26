@@ -1,4 +1,6 @@
-﻿namespace DNSLab.Web.API.DNS.DTOs.Common.RecordsData;
+﻿using DNSLab.Web.API.DNS.Interfaces;
+
+namespace DNSLab.Web.API.DNS.DTOs.Common.RecordsData;
 
 public record CNAMERecordData(
-    string CName);
+    string CName) : IRecordData;

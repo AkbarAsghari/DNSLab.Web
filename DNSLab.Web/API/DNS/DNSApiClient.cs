@@ -1,6 +1,7 @@
 ﻿using DNSLab.Web.API.Abstractions;
 using DNSLab.Web.API.Common.Result;
 using DNSLab.Web.API.DNS.DTOs.Common;
+using DNSLab.Web.API.Zone.DTOs;
 
 namespace DNSLab.Web.API.DNS;
 
@@ -26,10 +27,11 @@ public class DNSApiClient(IApiClient apiClient) : IDNSApiClient
             cancellationToken);
     }
 
-    public Task<Result<List<ZoneAndRecordsResponse>>> GetZonesAndRecordsAsync(CancellationToken cancellationToken = default)
+    public Task<Result<ZoneAndRecordsResponse>> GetZoneRecordsAsync(ZoneIdRequest request, CancellationToken cancellationToken = default)
     {
-        return apiClient.GetAsync<List<ZoneAndRecordsResponse>>(
-            $"{_Prefix}GetZonesAndRecords",
+        return apiClient.GetAsync<ZoneIdRequest, ZoneAndRecordsResponse>(
+            $"{_Prefix}GetZoneAndRecords",
+            request,
             new ApiRequestOptions { RequiresAuthentication = true },
             cancellationToken);
     }

@@ -5,6 +5,7 @@ using DNSLab.Web.API.Authentication;
 using DNSLab.Web.API.Billing;
 using DNSLab.Web.API.Coupon;
 using DNSLab.Web.API.DNS;
+using DNSLab.Web.API.DNS.DDNS;
 using DNSLab.Web.API.Page;
 using DNSLab.Web.API.Profile;
 using DNSLab.Web.API.Subscription;
@@ -64,6 +65,7 @@ builder.Services.AddScoped<ISubscriptionApiClient, SubscriptionApiClient>();
 builder.Services.AddScoped<IPaymentApiClient, PaymentApiClient>();
 builder.Services.AddScoped<IZoneApiClient, ZoneApiClient>();
 builder.Services.AddScoped<IDNSApiClient, DNSApiClient>();
+builder.Services.AddScoped<IDDNSApiClient, DDNSApiClient>();
 
 builder.Services.AddHttpContextAccessor();
 

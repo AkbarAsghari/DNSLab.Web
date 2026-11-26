@@ -19,7 +19,7 @@ partial class UpdateTokenDialog
     [Inject] IDDNSApiClient DDNSApiClient { get; set; }
     [Inject] ISnackbar Snackbar { get; set; }
 
-    [Parameter] public UpdateTokenRequest? Token { get; set; } = default;
+    [Parameter] public TokenAndRecordsResponse? Token { get; set; } = default;
 
     List<ZoneAndRecordsResponse>? _ZoneAndRecordsResponses { get; set; }
 
@@ -38,7 +38,7 @@ partial class UpdateTokenDialog
         if (Token != default)
         {
             _Name = Token.Name;
-            _SelectedRecordIds = Token.RecordIds;
+            _SelectedRecordIds = Token.Records.Select(x => x.RecordId).ToList();
         }
     }
 
@@ -70,11 +70,12 @@ partial class UpdateTokenDialog
 
         if (response.IsSuccess)
         {
+            Snackbar.Add("با موفقیت انجام شد", Severity.Success);
             _MudDialog.Close(DialogResult.Ok(true));
         }
         else
         {
-            Snackbar.Add(response.Error!.Message);
+            Snackbar.Add(response.Error!.Message, Severity.Warning);
         }
     }
 

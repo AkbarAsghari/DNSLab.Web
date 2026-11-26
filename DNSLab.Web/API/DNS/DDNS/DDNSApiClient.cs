@@ -116,7 +116,7 @@ public class DDNSApiClient(IApiClient apiClient) : IDDNSApiClient
     public Task<Result> UpdateTokenAsync(UpdateTokenRequest request, CancellationToken cancellationToken = default)
     {
         return apiClient.PutAsync(
-            $"{_Prefix}UpdateRecord",
+            $"{_Prefix}UpdateToken",
             request,
             new ApiRequestOptions { RequiresAuthentication = true },
             cancellationToken);

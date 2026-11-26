@@ -70,7 +70,7 @@ partial class InvoiceDialog
         else
         {
             _CouponDiscountAmount = 0;
-            Snackbar.Add(response.Error!.Message);
+            Snackbar.Add(response.Error!.Message, Severity.Warning);
         }
     }
 

@@ -1,4 +1,6 @@
 ﻿using DNSLab.Web.API.Common.Pagination;
+using DNSLab.Web.API.Subscription;
+using DNSLab.Web.API.Subscription.DTOs;
 using DNSLab.Web.API.Wallet;
 using DNSLab.Web.API.Wallet.DTOs;
 using DNSLab.Web.DTOs.Repositories.Shared;
@@ -12,20 +14,18 @@ partial class WalletTransactions
 {
     [Inject] IWalletApiClient WalletApiClient { get; set; }
 
-    PaginationResponse<WalletTransactionResponse>? _AllTransactions;
-    protected override async Task OnInitializedAsync()
+    private async Task<GridData<WalletTransactionResponse>> ServerReload(GridState<WalletTransactionResponse> state)
     {
-    }
-
-    bool _Loading = false;
-    async Task PageChanged(int page)
-    {
-        _Loading = true;
-        var responnse = await WalletApiClient.GetWalletTransactionsAsync(new PaginationRequest(page, PageSize: 10));
-        if (responnse.IsSuccess)
+        var responnse = await WalletApiClient.GetWalletTransactionsAsync(new PaginationRequest(state.Page, PageSize: state.PageSize));
+        if (!responnse.IsSuccess)
         {
-            _AllTransactions = responnse.Value;
+            return new GridData<WalletTransactionResponse>();
         }
-        _Loading = false;
+
+        return new GridData<WalletTransactionResponse>
+        {
+            TotalItems = responnse.Value!.TotalCount,
+            Items = responnse.Value!.Items
+        };
     }
 }

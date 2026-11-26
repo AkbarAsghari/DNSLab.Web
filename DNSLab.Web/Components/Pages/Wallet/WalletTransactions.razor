@@ -9,29 +9,27 @@
 
 <MudCard Elevation="0">
     <MudCardContent>
-        @if (_AllTransactions != null)
-        {
-            <MudDataGrid T="WalletTransactionResponse" Items="_AllTransactions.Items" Dense Hover Elevation="0" FixedHeader SortMode="SortMode.None" Striped Loading="_Loading">
-                <NoRecordsContent>
-                    <NoRecordFound />
-                </NoRecordsContent>
-                <Columns>
-                    <PropertyColumn Property="x=>x.TransactionType" Title="نوع" />
-                    <TemplateColumn Title="مبغ(ريال)">
-                        <CellTemplate>
-                            <MudText>@context.Item.Amount.Separate3Digits()</MudText>
-                        </CellTemplate>
-                    </TemplateColumn>
-                    <PropertyColumn Property="x=>x.Description" Title="توضیحات" />
-                    <PropertyColumn Property="x=>x.CreateDate" Title="زمان">
-                        <CellTemplate>
-                            <MudText>@context.Item.CreateDate.ToLocalTime().ToPersianDateTime()</MudText>
-                        </CellTemplate>
-                    </PropertyColumn>
-                </Columns>
-            </MudDataGrid>
-
-            <MudPagination Rectangular="true" Variant="Variant.Filled" DropShadow="false" Count="_AllTransactions.TotalPages" Class="mt-2" SelectedChanged="PageChanged" />
-        }
+        <MudDataGrid T="WalletTransactionResponse" ServerData="ServerReload" Dense Hover Elevation="0" FixedHeader SortMode="SortMode.None" Striped>
+            <NoRecordsContent>
+                <NoRecordFound />
+            </NoRecordsContent>
+            <Columns>
+                <PropertyColumn Property="x => x.TransactionType.GetDisplayName()" Title="نوع" />
+                <TemplateColumn Title="مبغ(ريال)">
+                    <CellTemplate>
+                        <MudText>@context.Item.Amount.Separate3Digits()</MudText>
+                    </CellTemplate>
+                </TemplateColumn>
+                <PropertyColumn Property="x => x.Description" Title="توضیحات" />
+                <PropertyColumn Property="x => x.CreateDate" Title="زمان">
+                    <CellTemplate>
+                        <MudText>@context.Item.CreateDate.ToLocalTime().ToPersianDateTime()</MudText>
+                    </CellTemplate>
+                </PropertyColumn>
+            </Columns>
+            <PagerContent>
+                <MudDataGridPager T="WalletTransactionResponse" RowsPerPageString="تعداد ردیف در هر صفحه" InfoFormat="{first_item}-{last_item} از {all_items}" />
+            </PagerContent>
+        </MudDataGrid>
     </MudCardContent>
 </MudCard>

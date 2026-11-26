@@ -38,7 +38,7 @@ public class WalletApiClient(IApiClient apiClient) : IWalletApiClient
 
     public Task<Result<InvoiceCreationResponse>> TopupAsync(PurchaseTopupRequest request, CancellationToken cancellationToken = default)
     {
-        return apiClient.GetAsync<PurchaseTopupRequest, InvoiceCreationResponse>(
+        return apiClient.PostAsync<PurchaseTopupRequest, InvoiceCreationResponse>(
             $"{_Prefix}Topup",
             request,
             new ApiRequestOptions { RequiresAuthentication = true },

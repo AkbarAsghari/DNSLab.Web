@@ -53,7 +53,7 @@
                             <PropertyColumn Property="x => x.TransactionType.GetDisplayName()" Title="نوع" />
                             <TemplateColumn Title="مبلغ (ریال)">
                                 <CellTemplate>
-                                    <MudAlert Severity="@(context.Item.TransactionType == WalletTransactionType.Withdrawal ? Severity.Success : Severity.Error)" NoIcon Dense ContentAlignment="HorizontalAlignment.Center">
+                                    <MudAlert Severity="@(context.Item.TransactionType == WalletTransactionType.Withdrawal ? Severity.Error : Severity.Success)" NoIcon Dense ContentAlignment="HorizontalAlignment.Center">
                                         <MudText>@context.Item.Amount.Separate3Digits()</MudText>
                                     </MudAlert>
                                 </CellTemplate>

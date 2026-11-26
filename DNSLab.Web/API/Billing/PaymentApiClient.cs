@@ -22,7 +22,7 @@ public class PaymentApiClient(IApiClient apiClient) : IPaymentApiClient
     public Task<Result<PaginationResponse<PaymentResponse>>> GetUserPaymentsAsync(PaginationRequest request, CancellationToken cancellationToken = default)
     {
         return apiClient.GetAsync<PaginationRequest, PaginationResponse<PaymentResponse>>(
-            $"{_Prefix}GetAllPayments",
+            $"{_Prefix}GetUserPayments",
             request,
             new ApiRequestOptions { RequiresAuthentication = true },
             cancellationToken);
@@ -31,7 +31,7 @@ public class PaymentApiClient(IApiClient apiClient) : IPaymentApiClient
     public Task<Result> VerifyPaymentAsync(TrackIdRequest request, CancellationToken cancellationToken = default)
     {
         return apiClient.GetAsync(
-            $"{_Prefix}GetAllPayments",
+            $"{_Prefix}VerifyPayment",
             request,
             new ApiRequestOptions { RequiresAuthentication = true },
             cancellationToken);

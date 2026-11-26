@@ -1,4 +1,6 @@
-﻿using DNSLab.Web.Components.Dialogs;
+﻿using DNSLab.Web.API.Zone;
+using DNSLab.Web.API.Zone.DTOs;
+using DNSLab.Web.Components.Dialogs;
 using DNSLab.Web.Components.Dialogs.Record;
 using DNSLab.Web.Components.Dialogs.Zone;
 using DNSLab.Web.DTOs.Repositories.Record;
@@ -10,23 +12,27 @@ namespace DNSLab.Web.Components.Pages.Records;
 
 partial class AllRecords
 {
-    [Inject] IZoneRepository _ZoneRepository { get; set; }
+    [Inject] IZoneApiClient ZoneApiClient { get; set; }
     [Inject] IRecordRepository _RecordRepository { get; set; }
     [Inject] IDialogService _DialogService { get; set; }
 
     [Parameter] public Guid ZoneId { get; set; }
 
-    ZoneDTO? _Zone { get; set; }
+    ZoneResponse? _Zone { get; set; }
     IEnumerable<string>? _RequiredToUpdateNameServers { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            _Zone = await _ZoneRepository.GetZone(ZoneId);
-            await CheckNameServers();
+            var response = await ZoneApiClient.GetZoneAsync(
+                new ZoneIdRequest(ZoneId));
 
-            await InvokeAsync(StateHasChanged);
+            if (response.IsSuccess)
+            {
+                _Zone = response.Value!;
+                await InvokeAsync(StateHasChanged);
+            }
         }
     }
 
@@ -52,12 +58,6 @@ partial class AllRecords
     }
 
     async Task Refresh() => await _Grid.ReloadServerData();
-
-
-    async Task CheckNameServers()
-    {
-        _RequiredToUpdateNameServers = await _ZoneRepository.GetRequiredToUpdateNameServers(ZoneId);
-    }
 
     async Task DisableRecord(BaseRecordDTO record)
     {

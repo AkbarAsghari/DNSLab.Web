@@ -40,7 +40,6 @@
                 <MudText Typo="Typo.body2">برای استفاده از خدمات DNSLab ، باید NS زیر را به جای مقادیر قبلی در تنظیمات دامنه‌ی خود وارد کنید.</MudText>
                 <MudText Typo="Typo.body2">
                     توجه داشته باشید که تغییر NS در دامنه ممکن است تا 72 ساعت زمان ببرد.
-                    <BaseButton Variant="Variant.Text" Color="Color.Default" Size="Size.Small" EndIcon="@Icons.Material.Filled.Refresh" OnClick="CheckNameServers">بررسی مجدد</BaseButton>
                 </MudText>
                 <MudGrid Justify="Justify.SpaceBetween">
                     @if (!_RequiredToUpdateNameServers.All(x => String.IsNullOrEmpty(x)))

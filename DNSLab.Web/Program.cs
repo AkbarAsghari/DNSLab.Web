@@ -9,6 +9,7 @@ using DNSLab.Web.API.Profile;
 using DNSLab.Web.API.Subscription;
 using DNSLab.Web.API.Ticket;
 using DNSLab.Web.API.Wallet;
+using DNSLab.Web.API.Zone;
 using DNSLab.Web.Components;
 using DNSLab.Web.Exceptions;
 using DNSLab.Web.Interfaces.Providers;
@@ -31,7 +32,6 @@ builder.Services.AddScoped<HttpResponseExceptionHander>();
 builder.Services.AddScoped<IHttpServiceProvider, HttpServiceProvider>();
 
 //Repository
-builder.Services.AddScoped<IZoneRepository, ZoneRepository>();
 builder.Services.AddScoped<IRecordRepository, RecordRepository>();
 builder.Services.AddScoped<IDNSClientRepository, DNSClientRepository>();
 builder.Services.AddScoped<IDDNSRepository, DDNSRepository>();
@@ -61,6 +61,7 @@ builder.Services.AddScoped<ITicketApiClient, TicketApiClient>();
 builder.Services.AddScoped<ICouponApiClient, CouponApiClient>();
 builder.Services.AddScoped<ISubscriptionApiClient, SubscriptionApiClient>();
 builder.Services.AddScoped<IPaymentApiClient, PaymentApiClient>();
+builder.Services.AddScoped<IZoneApiClient, ZoneApiClient>();
 
 builder.Services.AddHttpContextAccessor();
 

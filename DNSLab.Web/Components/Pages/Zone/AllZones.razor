@@ -1,4 +1,6 @@
-﻿@using DNSLab.Web.DTOs.Repositories.Zone
+﻿@using DNSLab.Web.API.Zone.DTOs
+@using DNSLab.Web.API.Zone.Enums
+@using DNSLab.Web.DTOs.Repositories.Zone
 @using DNSLab.Web.Enums
 
 @attribute [Route(AllRoutes.AllZones)]
@@ -24,12 +26,12 @@
         </CardHeaderActions>
     </MudCardHeader>
     <MudCardContent>
-        <MudDataGrid @ref="_Grid" T="ZoneDTO" ServerData="ServerReload" ExpandSingleRow Dense Hover Elevation="0" Filterable="false">
+        <MudDataGrid @ref="_Grid" T="ZoneResponse" ServerData="ServerReload" ExpandSingleRow Dense Hover Elevation="0" Filterable="false">
             <NoRecordsContent>
                 <NoRecordFound />
             </NoRecordsContent>
             <Columns>
-                <PropertyColumn Property="x=>x.Name" Title="دامنه" />
+                <PropertyColumn Property="x => x.Name" Title="دامنه" />
                 <TemplateColumn Title="نوع">
                     <CellTemplate>
                         <MudChip T="string" Color="Color.Primary" Size="Size.Small" Label="true">Primary</MudChip>
@@ -37,27 +39,22 @@
                 </TemplateColumn>
                 <TemplateColumn Title="وضعیت نیم سرور">
                     <CellTemplate>
-                        @if (@context.Item.Status is not null)
+                        @switch (@context.Item.Status)
                         {
-                            <MudTooltip Text="@context.Item.Status!.Description">
-                                @switch ((ZoneStatusEnum)context.Item.Status.Id)
-                                {
-                                    case ZoneStatusEnum.Pending:
-                                        <MudChip T="string" Color="Color.Default" Size="Size.Small" Label="true">@context.Item.Status.Name</MudChip>
-                                        break;
-                                    case ZoneStatusEnum.Active:
-                                        <MudChip T="string" Color="Color.Success" Size="Size.Small" Label="true">@context.Item.Status.Name</MudChip>
-                                        break;
-                                    case ZoneStatusEnum.Warning:
-                                        <MudChip T="string" Color="Color.Warning" Size="Size.Small" Label="true">@context.Item.Status.Name</MudChip>
-                                        break;
-                                    case ZoneStatusEnum.Expired:
-                                    case ZoneStatusEnum.Deleted:
-                                    case ZoneStatusEnum.Suspended:
-                                        <MudChip T="string" Color="Color.Error" Size="Size.Small" Label="true">@context.Item.Status.Name</MudChip>
-                                        break;
-                                }
-                            </MudTooltip>
+                            case ZoneStatus.Pending:
+                                <MudChip T="string" Color="Color.Default" Size="Size.Small" Label="true">@context.Item.Status.GetDisplayName()</MudChip>
+                                break;
+                            case ZoneStatus.Active:
+                                <MudChip T="string" Color="Color.Success" Size="Size.Small" Label="true">@context.Item.Status.GetDisplayName()</MudChip>
+                                break;
+                            case ZoneStatus.Warning:
+                                <MudChip T="string" Color="Color.Warning" Size="Size.Small" Label="true">@context.Item.Status.GetDisplayName()</MudChip>
+                                break;
+                            case ZoneStatus.Expired:
+                            case ZoneStatus.Deleted:
+                            case ZoneStatus.Suspended:
+                                <MudChip T="string" Color="Color.Error" Size="Size.Small" Label="true">@context.Item.Status.GetDisplayName()</MudChip>
+                                break;
                         }
                     </CellTemplate>
                 </TemplateColumn>
@@ -77,16 +74,16 @@
                     <CellTemplate>
                         <MudStack Row Justify="Justify.FlexEnd" Spacing="1">
                             <MudTooltip Arrow Text="ویرایش رکورد ها">
-                                <BaseIconButton Href="@(AllRoutes.AllRecords+"/"+context.Item.Id)" DropShadow="false" Size="Size.Small" Variant="Variant.Filled" Icon="@DNSLabIcons.Edit" />
+                                <BaseIconButton Href="@(AllRoutes.AllRecords + "/" + context.Item.Id)" DropShadow="false" Size="Size.Small" Variant="Variant.Filled" Icon="@DNSLabIcons.Edit" />
                             </MudTooltip>
-                            <BaseIconButton OnClick="()=> DisableZone(context.Item)" DropShadow="false" Size="Size.Small" Variant="Variant.Filled" Icon="@(context.Item.Disable? Icons.Material.Filled.ToggleOn : Icons.Material.Outlined.ToggleOff)" />
-                            <BaseIconButton OnClick="()=>  DeleteZone(context.Item)" DropShadow="false" Color="Color.Error" Size="Size.Small" Variant="Variant.Filled" Icon="@DNSLabIcons.Delete" />
+                            <BaseIconButton OnClick="() => DisableZone(context.Item)" DropShadow="false" Size="Size.Small" Variant="Variant.Filled" Icon="@(context.Item.Disable ? Icons.Material.Filled.ToggleOn : Icons.Material.Outlined.ToggleOff)" />
+                            <BaseIconButton OnClick="() => DeleteZone(context.Item)" DropShadow="false" Color="Color.Error" Size="Size.Small" Variant="Variant.Filled" Icon="@DNSLabIcons.Delete" />
                         </MudStack>
                     </CellTemplate>
                 </TemplateColumn>
             </Columns>
             <PagerContent>
-                <MudDataGridPager T="ZoneDTO" RowsPerPageString="تعداد ردیف در هر صفحه" InfoFormat="{first_item}-{last_item} از {all_items}" />
+                <MudDataGridPager T="ZoneResponse" RowsPerPageString="تعداد ردیف در هر صفحه" InfoFormat="{first_item}-{last_item} از {all_items}" />
             </PagerContent>
         </MudDataGrid>
     </MudCardContent>

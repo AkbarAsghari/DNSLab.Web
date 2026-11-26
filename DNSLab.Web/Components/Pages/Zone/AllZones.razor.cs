@@ -1,46 +1,43 @@
 ﻿
+using DNSLab.Web.API.Common.Result;
 using DNSLab.Web.API.Subscription;
+using DNSLab.Web.API.Zone;
+using DNSLab.Web.API.Zone.DTOs;
 using DNSLab.Web.Components.Dialogs;
 using DNSLab.Web.Components.Dialogs.Zone;
-using DNSLab.Web.DTOs.Repositories.Record;
 using DNSLab.Web.DTOs.Repositories.Zone;
-using DNSLab.Web.Interfaces.Repositories;
-using DNSLab.Web.Repositories;
 using Microsoft.AspNetCore.Components;
-using MudBlazor.Charts;
-using static MudBlazor.CategoryTypes;
 
 namespace DNSLab.Web.Components.Pages.Zone
 {
     partial class AllZones
     {
-        [Inject] IZoneRepository _ZoneRepository { get; set; }
+        [Inject] IZoneApiClient ZoneApiClient { get; set; }
         [Inject] IDialogService _DialogService { get; set; }
         [Inject] ISubscriptionApiClient SubscriptionApiClient { get; set; }
+        [Inject] ISnackbar Snackbar { get; set; }
 
-        MudDataGrid<ZoneDTO> _Grid { get; set; }
+        MudDataGrid<ZoneResponse> _Grid { get; set; }
 
-        private async Task<GridData<ZoneDTO>> ServerReload(GridState<ZoneDTO> state)
+        private async Task<GridData<ZoneResponse>> ServerReload(GridState<ZoneResponse> state)
         {
-            IEnumerable<ZoneDTO>? data = await _ZoneRepository.GetZones();
+            var response = await ZoneApiClient.GetZonesAsync();
 
-            if (data is null)
+            if (!response.IsSuccess)
             {
-                return new GridData<ZoneDTO>();
+                return new GridData<ZoneResponse>();
             }
+
+            var data = response.Value!;
 
             var totalItems = data.Count();
 
-            var pagedData = data.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
-
-            return new GridData<ZoneDTO>
+            return new GridData<ZoneResponse>
             {
                 TotalItems = totalItems,
-                Items = pagedData
+                Items = data
             };
         }
-
-        async Task Refresh() => await _Grid.ReloadServerData();
 
         async Task NewZone()
         {
@@ -54,7 +51,7 @@ namespace DNSLab.Web.Components.Pages.Zone
             }
         }
 
-        async Task DeleteZone(ZoneDTO zone)
+        async Task DeleteZone(ZoneResponse zone)
         {
             var parameters = new DialogParameters<BaseDialog>
             {
@@ -69,14 +66,22 @@ namespace DNSLab.Web.Components.Pages.Zone
             var result = await dialog.Result;
             if (!result!.Canceled)
             {
-                if (await _ZoneRepository.DeleteZone(zone.Id))
+                var response = await ZoneApiClient.DeleteZoneAsync(
+                    new ZoneIdRequest(zone.Id));
+
+                if (response.IsSuccess)
                 {
                     await _Grid.ReloadServerData();
+                    Snackbar.Add("دامنه با موفقیت حذف شد", Severity.Success);
+                }
+                else
+                {
+                    Snackbar.Add(response.Error!.Message, Severity.Warning);
                 }
             }
         }
 
-        async Task DisableZone(ZoneDTO zone)
+        async Task DisableZone(ZoneResponse zone)
         {
             bool _continue = true;
 
@@ -100,9 +105,28 @@ namespace DNSLab.Web.Components.Pages.Zone
                 }
             }
 
-            if (_continue && await _ZoneRepository.DisableZone(zone.Id))
+            Result response;
+
+            if (zone.Disable)
             {
-                zone.Disable = !zone.Disable;
+                response = await ZoneApiClient.EnableZoneAsync(
+                    new ZoneIdRequest(zone.Id));
+            }
+            else
+            {
+                response = await ZoneApiClient.DisableZoneAsync(
+                    new ZoneIdRequest(zone.Id));
+            }
+            
+
+            if (_continue && response.IsSuccess)
+            {
+                await _Grid.ReloadServerData();
+                Snackbar.Add("تغییرات انجام شد", Severity.Success);
+            }
+            else
+            {
+                Snackbar.Add(response.Error!.Message, Severity.Warning);
             }
         }
     }

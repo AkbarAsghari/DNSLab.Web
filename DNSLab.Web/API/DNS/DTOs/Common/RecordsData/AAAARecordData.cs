@@ -1,4 +1,4 @@
-﻿using DNSLab.Application.Common.Parsers.DNSRecord;
+﻿using DNSLab.Web.API.Common.Parsers.DNSRecord;
 
 namespace DNSLab.Web.API.DNS.DTOs.Common.RecordsData;
 

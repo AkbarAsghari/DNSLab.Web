@@ -1,4 +1,4 @@
-﻿using DNSLab.Domain.DNS.Enums;
+﻿using DNSLab.Web.API.DNS.Enums;
 using System.Text.Json;
 
 namespace DNSLab.Web.API.DNS.DTOs.Common;

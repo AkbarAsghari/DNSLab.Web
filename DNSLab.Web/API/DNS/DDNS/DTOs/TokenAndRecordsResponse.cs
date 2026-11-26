@@ -1,4 +1,4 @@
-﻿using DNSLab.Application.DNS.DTOs.Common;
+﻿using DNSLab.Web.API.DNS.DTOs.Common;
 
 namespace DNSLab.Web.API.DNS.DDNS.DTOs;
 
